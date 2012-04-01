@@ -1,0 +1,75 @@
+#/bin/bash
+source D-LFS.functions #
+
+AUTO_BUILD="" #if=3, the "Enter YES ..." prompt below would be skipped
+BUILD_LOG="/tmp/$(basename $0).log"
+
+clear
+echo
+echo "This script must be run from a directory that is NOT on the target file system."
+echo -e "The current directory (pwd) is: ${BOLD}`pwd`${NORMAL}"
+echo
+echo -e "LFS_USER = "${YELLOW} $LFS_USER ${NORMAL}
+echo -e "LFS      = "${YELLOW} $LFS      ${NORMAL}
+echo -e "DEV_LFS  = "${YELLOW} $DEV_LFS  ${NORMAL}
+echo
+echo About to:
+echo "   1) Undo 6.02 (umount virtual kernal file system)"
+echo "   2) delete the $LFS_USER user account & files from the host system"
+echo "   3) delete /tools & $D_LFS_WORKING_DIR symlinks"
+echo "   4) delete $TMP_BUILD_LOGS"
+if [[ "$2" == "f" ]]; then
+   echo -e "   5) ${YELLOW}reformat the LFS partition: $DEV_LFS ${NORMAL}"
+fi
+echo
+
+if [[ "$1" != "Y" ]]; then  Enter_YES_to_continue;  fi 
+
+
+echo -n "Working... "
+
+echo $DIVIDER >> $BUILD_LOG
+echo `date` >> $BUILD_LOG
+echo $DIVIDER >> $BUILD_LOG
+
+umount $LFS/dev/shm         &>> $BUILD_LOG   #virtual fs from 6.02
+umount $LFS/dev/pts         &>> $BUILD_LOG   #virtual fs from 6.02
+umount $LFS/dev             &>> $BUILD_LOG   #virtual fs from 6.02
+umount $LFS/proc            &>> $BUILD_LOG   #virtual fs from 6.02
+umount $LFS/sys             &>> $BUILD_LOG   #virtual fs from 6.02
+
+echo                        &>> $BUILD_LOG
+umount $DEV_LFS             &>> $BUILD_LOG
+umount $LFS                 &>> $BUILD_LOG   #redundant of prior line
+
+echo                        &>> $BUILD_LOG
+userdel -rf $LFS_USER       &>> $BUILD_LOG
+
+echo                        &>> $BUILD_LOG
+rmdir -v $LFS               &>> $BUILD_LOG
+
+echo                        &>> $BUILD_LOG
+rm -v   /tools              &>> $BUILD_LOG   #symlink to $LFS/tools
+echo                        &>> $BUILD_LOG
+rm -v   $D_LFS_WORKING_DIR  &>> $BUILD_LOG   #symlink to $LFS/WORKING_BASE
+echo                        &>> $BUILD_LOG
+rm -vrf $TMP_BUILD_LOGS     &>> $BUILD_LOG   #in case still there
+
+echo                        &>> $BUILD_LOG
+if [[ "$2" == "f" ]]; then
+  mke2fs -jv $DEV_LFS -L NEW  &>> $BUILD_LOG
+fi
+
+echo "Done."
+echo $DIVIDER          | tee -a $BUILD_LOG
+
+if [[ "$1" == "Y" ]]; then
+  rm -f $BUILD_LOG
+  exit
+fi
+
+Press_R_to_Review_build_log;
+#echo                   | tee -a $BUILD_LOG
+rm -i $BUILD_LOG
+echo
+

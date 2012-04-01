@@ -1,0 +1,29 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME="binutils-2.21.1"  #unzipped folder from pkg source is w/o the "a"
+PACKAGE_FILE="binutils-2.21.1a.tar.bz2"
+PACKAGE_DESC=": Pass 2"
+SBUS="1.1"
+
+source D-LFS.functions
+
+header_log_prep
+
+mkdir -v $BUILD_DIR  &>> BUILD_LOG
+cd       $BUILD_DIR  &>> BUILD_LOG
+
+CC="$LFS_TGT-gcc -B/tools/lib/" \
+   AR=$LFS_TGT-ar RANLIB=$LFS_TGT-ranlib \
+   ../$PACKAGE_NAME/configure --prefix=/tools \
+   --disable-nls --with-lib-path=/tools/lib  &>> $BUILD_LOG
+
+make  &>> $BUILD_LOG
+
+make install  &>> $BUILD_LOG
+
+make -C ld clean  &>> $BUILD_LOG
+make -C ld LIB_PATH=/usr/lib:/lib  &>> $BUILD_LOG
+cp -v ld/ld-new /tools/bin  &>> $BUILD_LOG
+
+cleanup_log_footer

@@ -1,0 +1,15 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME="lfs-bootscripts-20111017"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.bz2"
+PACKAGE_DESC=""
+SBUS="0.0"
+
+source D-LFS.functions
+
+header_log_prep
+
+make install                &>> $BUILD_LOG
+
+cleanup_log_footer

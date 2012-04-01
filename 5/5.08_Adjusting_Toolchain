@@ -1,0 +1,36 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME=""
+PACKAGE_FILE=""
+PACKAGE_DESC="Adjusting the Toolchain"
+SBUS="0.0"
+
+source D-LFS.functions
+
+header
+
+SPECS=`dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/specs 
+$LFS_TGT-gcc -dumpspecs | sed \
+  -e 's@/lib\(64\)\?/ld@/tools&@g' \
+  -e "/^\*cpp:$/{n;s,$, -isystem /tools/include,}" > $SPECS 
+echo "New specs file is:"  &>> $BUILD_LOG
+echo $SPECS                &>> $BUILD_LOG
+unset SPECS
+
+echo &>> $BUILD_LOG
+
+echo 'main(){}' > dummy.c
+$LFS_TGT-gcc -B/tools/lib dummy.c
+readelf -l a.out | grep ': /tools'  &>> $BUILD_LOG
+echo '=== The above should resemble the following: ==='  &>> $BUILD_LOG
+echo '     ' [Requesting program interpreter: /tools/lib/ld-linux.so.2]  &>> $BUILD_LOG
+
+echo &>> $BUILD_LOG
+rm -v dummy.c a.out  &>> $BUILD_LOG
+
+
+echo "Results from a test of the toolchain can be found in the build log."
+echo "Be sure to review the log to ensure success of the test."
+
+footer

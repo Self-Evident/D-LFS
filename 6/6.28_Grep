@@ -1,0 +1,20 @@
+
+######################################################################
+#
+PACKAGE_NAME="grep-2.9"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.2"  #0.4
+
+source D-LFS.functions 
+
+header_log_prep
+
+sed -i 's/cp/#&/' tests/unibyte-bracket-expr
+
+./configure --prefix=/usr --bindir=/bin &>> $BUILD_LOG 
+make                         &>> $BUILD_LOG
+# make check                 &>> $BUILD_LOG
+make install                 &>> $BUILD_LOG
+
+cleanup_log_footer

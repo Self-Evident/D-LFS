@@ -1,0 +1,67 @@
+#!/tools/bin/bash
+#
+# Most of chapter 6 must be run from within the chroot envinronment of 6.04.
+# However, run the following three scripts from the host envinronment first:
+# 6/6.00_Confirm, 6/6.02_Preparing_Virtual_FS, 6/6.04_Chroot
+# (Then you can run this script.)
+#
+set -e
+
+6/6.05_Create_Directories
+6/6.06_Essential_Files
+6/6.07_Linux_API_Headers
+6/6.08_Man-pages
+6/6.09_Glibc
+6/6.10_Re-adjust_Toolchain
+6/6.11_Zlib
+6/6.12_File
+6/6.13_Binutils
+6/6.14_GMP
+6/6.15_MPFR
+6/6.16_MPC
+6/6.17_GCC
+6/6.18_Sed
+6/6.19_Bzip2
+6/6.20_Ncurses
+6/6.21_Util-linux
+6/6.22_E2fsprogs
+6/6.23_Coreutils
+6/6.24_Iana-Etc
+6/6.25_M4
+6/6.26_Bison
+6/6.27_Procps
+6/6.28_Grep
+6/6.29_Readline
+6/6.30_Bash
+6/6.31_Libtool
+6/6.32_GDBM
+6/6.33_Inetutils
+6/6.34_Perl
+6/6.35_Autoconf
+6/6.36_Automake
+6/6.37_Diffutils
+6/6.38_Gawk
+6/6.39_Findutils
+6/6.40_Flex
+6/6.41_Gettext
+6/6.42_Groff
+#6/6.43_Grub_2   #if uncommented, also uncomment its "SBUS=" line.
+6/6.44_Gzip
+6/6.45_IPRoute2
+6/6.46_Kbd
+6/6.47_Less
+6/6.48_Libpipeline
+6/6.49_Make
+6/6.50_Xz
+6/6.51_Man-DB
+6/6.52_Module-Init-Tools
+6/6.53_Patch
+6/6.54_Psmisc
+6/6.55_Shadow
+6/6.56_Sysklogd
+6/6.57_Sysvinit
+6/6.58_Tar
+6/6.59_Texinfo
+6/6.60_Udev
+6/6.61_Vim
+6/6.63_Stripping_Again

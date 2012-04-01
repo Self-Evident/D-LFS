@@ -1,0 +1,19 @@
+
+######################################################################
+#
+PACKAGE_NAME="texinfo-4.13"  #unzipped folder from package file is w/o the "a"
+PACKAGE_FILE="texinfo-4.13a.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.2"  #0.3
+
+source D-LFS.functions 
+
+header_log_prep
+
+./configure --prefix=/usr   &>> $BUILD_LOG
+make                        &>> $BUILD_LOG
+# make check                  &>> $BUILD_LOG
+make install                &>> $BUILD_LOG
+make TEXMF=/usr/share/texmf install-tex &>> $BUILD_LOG
+
+cleanup_log_footer

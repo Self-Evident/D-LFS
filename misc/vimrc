@@ -1,0 +1,14 @@
+" Begin /etc/vimrc
+
+set nocompatible
+set backspace=2
+set ruler
+syntax on
+
+if (&term == "iterm") || (&term == "putty")
+  set background=dark
+endif
+
+set t_ti= t_te=
+
+" End /etc/vimrc

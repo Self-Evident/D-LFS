@@ -1,0 +1,20 @@
+
+######################################################################
+#
+PACKAGE_NAME="groff-1.21"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.5"  #0.4
+
+source D-LFS.functions 
+
+header_log_prep
+
+PAGE=letter ./configure --prefix=/usr   &>> $BUILD_LOG
+make                        &>> $BUILD_LOG
+make install                &>> $BUILD_LOG
+
+ln -sv eqn /usr/bin/geqn  &>> $BUILD_LOG
+ln -sv tbl /usr/bin/gtbl  &>> $BUILD_LOG
+
+cleanup_log_footer

@@ -1,0 +1,56 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME=""
+PACKAGE_FILE=""
+PACKAGE_DESC="Preparing the Virtual Kernel File Systems"
+SBUS="0.0"
+
+source D-LFS.functions 
+
+header 0 < 0/ENTER  #0 suppresses log_start_time in header
+                    #"< 0/ENTER" skips "Press Enter to continue:"
+
+echo "Run this script as root of the host system, and only if:"
+echo
+echo "  1) This is your first time starting chapter 6."
+echo "  2) Or, you unmounted the virtual file system,"
+echo "     either manually or thru a reboot."
+echo
+Enter_YES_to_continue  # Will exit if YES is not entered.
+
+
+echo "First, let's make sure they're not already mounted..."  &>> $BUILD_LOG
+#(This prevents mtab from getting cluttered if 6.02 is re-ran more than once.)
+umount -v $LFS/dev/pts   &>> $BUILD_LOG
+umount -v $LFS/dev/shm   &>> $BUILD_LOG
+umount -v $LFS/dev       &>> $BUILD_LOG
+umount -v $LFS/proc      &>> $BUILD_LOG
+umount -v $LFS/sys       &>> $BUILD_LOG
+echo                     &>> $BUILD_LOG
+
+echo "Now to create and mount the virtual filesystem..."  &>> $BUILD_LOG
+mkdir -pv $LFS/{dev,proc,sys}         &>> $BUILD_LOG
+mknod -m 600 $LFS/dev/console c 5 1   &>> $BUILD_LOG
+mknod -m 666 $LFS/dev/null c 1 3      &>> $BUILD_LOG
+
+mount -v --bind /dev $LFS/dev         &>> $BUILD_LOG
+
+mount -vt devpts devpts $LFS/dev/pts  &>> $BUILD_LOG
+mount -vt tmpfs shm $LFS/dev/shm      &>> $BUILD_LOG
+mount -vt proc proc $LFS/proc         &>> $BUILD_LOG
+mount -vt sysfs sysfs $LFS/sys        &>> $BUILD_LOG
+
+
+echo "Virtual file system created."
+
+echo
+echo -e "\
+We will now also create the directory 'root'.\n\
+In the LFS book, it is not created until 6.05. However, we create it here \n\
+to prepare for using a .profile when entering the chroots.\n\
+(see the 6.04, 6.64, and supergo-all scripts)"
+
+install -dv -m 0755 $LFS/root    | tee -a $BUILD_LOG
+
+footer 0  #0 suppresses log_end_time

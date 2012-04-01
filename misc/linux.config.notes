@@ -1,0 +1,29 @@
+List of Linux kernal config options changed using make menuconfig.
+
+When running "make menuconfig", option settings are generally:
+  * (for selected), blank (not selected), or M (Module)
+The Help text for any given option generally refers to settings as:
+  Y (select),       N (don't select),     or M (Module)
+
+Note that some options had preset values (selected/not selected)
+that were not the same as values suggested in the Help test. 
+(ie: Option was pre-selected, but Help suggested N)
+
+===============================================================================
+General Setup/ Prompt for development and/or incomplete...    :Y > N
+General Setup/ Enable task/process statistics...(EXPERIMANTAL):Y > N
+General Setup/ IRQ subsystem/ Support sparse irq numbering    :Y > N
+Device Drivers/ Parallel port support :N > Y
+Device Drivers/ Multimedia support/ Video for Linux :N > Y
+Device Drivers/ ATA/ATAPI/MFM/RLL support/ PCMCIA IDE support :N > Y
+      "       /          "               / IDE/ACPI supporti  :N > Y
+      "       / Input Device support/ Provide legacy /dev/psaux device :N > Y
+      "       /          "          / Misc. devices/ PC Speaker support :N > Y
+File systems/ Filesystem wide access notification  :N > Y
+File systems/ The Extended 4 (ext4) filesystem  :N > Y
+File systems/ FUSE support/ :N > Y
+File systems/ CD-ROM,DVD Filesystems/ UDF support :N > Y
+File systems/ DOS,FAT,NT Filessytems/ NTFS support :N > Y
+   (did not select associated (partial) Write support options)
+File systems/ Partition types/ Windows Logical Disk Manager support :N > Y
+                                  (Dynamic Disk)

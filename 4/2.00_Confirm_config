@@ -1,0 +1,30 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME=""
+PACKAGE_FILE=""
+PACKAGE_DESC="Confirm settings in D-LFS.config"
+SBUS="0.0"
+
+source D-LFS.functions
+
+
+header
+
+
+echo -e \
+"Per values provided in ${YELLOW}D-LFS.config${NORMAL}: \n\n"\
+"> ${YELLOW}${DEV_LFS}${NORMAL} will be formatted, so be sure any data on it is backed up!\n"\
+"> LFS will be built on: ${YELLOW} ${DEV_LFS} ${NORMAL} "\
+           " mounted at: ${YELLOW} ${LFS}     ${NORMAL}\n"\
+"> ${BOLD}../scripts & ../sources${NORMAL} will be copied to "\
+"    : $YELLOW ${LFS}/${WORKING_BASE} $NORMAL \n"\
+"> Username and group created and used for chapter 5:"\
+$YELLOW $LFS_USER $NORMAL                                  | tee -a $BUILD_LOG
+echo
+echo -e "${YELLOW}If anything needs correcting- DO IT NOW.${NORMAL}"
+echo
+
+
+footer
+

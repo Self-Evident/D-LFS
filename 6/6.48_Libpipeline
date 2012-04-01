@@ -1,0 +1,19 @@
+
+######################################################################
+#
+PACKAGE_NAME="libpipeline-1.2.0"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.1"
+
+source D-LFS.functions 
+
+header_log_prep
+
+./configure CHECK_CFLAGS=-I/tools/include \
+    CHECK_LIBS="-L/tools/lib -lcheck" --prefix=/usr &>> $BUILD_LOG
+make                                        &>> $BUILD_LOG
+#make check                                  &>> $BUILD_LOG
+make install                                &>> $BUILD_LOG
+
+cleanup_log_footer

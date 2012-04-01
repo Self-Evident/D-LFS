@@ -1,0 +1,11 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME="texinfo-4.13"  #unzipped folder from package source is w/o the "a"
+PACKAGE_FILE="texinfo-4.13a.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.2"
+
+source D-LFS.functions
+
+Build_Common_Package /tools

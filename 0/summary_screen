@@ -1,0 +1,51 @@
+#!/bin/bash
+###########################################################################
+#
+PACKAGE_NAME="Summary Screen"
+PACKAGE_FILE=""
+PACKAGE_DESC=""
+SBUS="0.0"
+
+source D-LFS.functions
+
+Calculate_ABUT_and_ABTT  #and ABTT_long
+
+BUILD_TIME=$[ $FINISH_TIME - $START_TIME ] #Includes any down time between
+TBT=`date -ud @$BUILD_TIME +%H:%M:%S`      #packages, waiting for prompts, etc
+
+cd $BUILD_LOGS
+
+{ #braces group commands for easier save of output to the log
+echo $DIVIDER
+echo "Congratulations - your LFS build is complete!"
+echo "               Finish Time:   $FINISH_TIME_long"
+echo "               Start  Time:   $START_TIME_long"
+echo $DIVIDER
+echo -n "               Total Time to build LFS = $TBT"
+echo " (includes non-building time)"
+echo
+echo "Estimated SBUs = $SBUT x (1 SBU=$SBU_long) = $EBTT_long"
+echo "Actual SBUs   ~= $ABUT                  = $ABTT_long"
+echo 
+echo -en "Build logs can be found in:  ${BOLD}$BUILD_LOGS${NORMAL}"
+echo
+
+cat <<"EOF"
+It may be a good idea to take a look and check for build errors, particularly
+if the actual build time is significantly less than the estimated build time.
+A good start is to run the following commands from the build logs directory:
+  grep "Stop." *
+  grep "Error " *
+However, results from those commands may not be all inclusive,
+nor necessarily indicative, of any actual issues.
+
+In any case, when ready, configure your boot manager, and reboot!
+EOF
+
+echo $DIVIDER
+} &>> $BUILD_LOG  #close group, save output
+
+clear
+cat $BUILD_LOG
+
+### ALL DONE! ###

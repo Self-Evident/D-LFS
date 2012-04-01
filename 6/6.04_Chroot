@@ -1,0 +1,28 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME=""
+PACKAGE_FILE=""
+PACKAGE_DESC="Entering the chroot environment"
+SBUS="0.0"
+
+source D-LFS.functions 
+
+header 0  #0 suppresses log_start_time in header
+
+Prepare_chroot_profile
+
+Change_HOST_to  LFS-chroot
+
+echo "Entering the 6.04 chroot environment... HOST=$HOST "  | tee -a $BUILD_LOG
+
+chroot $LFS /tools/bin/env -i \
+   HOME=/root TERM=$TERM PS1='[\u@$HOST] \w \$ ' \
+   PATH=/bin:/usr/bin:/sbin:/usr/sbin:/tools/bin \
+   /tools/bin/bash --login +h 
+
+Change_HOST_to  $(hostname)
+echo
+echo "Exited/logged out of the 6.04 chroot... HOST=$HOST "  | tee -a $BUILD_LOG
+
+footer 0  #0 suppresses log_end_time

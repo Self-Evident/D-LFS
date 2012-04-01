@@ -1,0 +1,29 @@
+
+######################################################################
+#
+PACKAGE_NAME="gmp-5.0.2" #GMP USED TO BUILD GCC IN CH5, NEEDS UPDATED THERE ALSO
+PACKAGE_FILE="${PACKAGE_NAME}.tar.bz2"
+PACKAGE_DESC=""
+SBUS="0.6"  #1.7 including test suites
+
+source D-LFS.functions 
+
+header_log_prep
+
+sed -i 's/np + dn, qn/& - dn/' mpn/generic/dcpi1_bdiv_q.c
+
+./configure --prefix=/usr --enable-cxx --enable-mpbsd &>> $BUILD_LOG 
+make   &>> $BUILD_LOG
+
+# make check  | tee gmp-check-log &>> $BUILD_LOG
+#echo '### Ensure all 162 tests passed ***'  >> $BUILD_LOG
+#awk '/tests passed/{total+=$2} ; END{print total}' gmp-check-log &>> $BUILD_LOG
+#echo >> $BUILD_LOG
+
+make install                &>> $BUILD_LOG
+
+mkdir -v /usr/share/doc/${PACKAGE_NAME} &>> $BUILD_LOG
+cp    -v doc/{isa_abi_headache,configuration} doc/*.html \
+         /usr/share/doc/${PACKAGE_NAME} &>> $BUILD_LOG
+
+cleanup_log_footer

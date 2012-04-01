@@ -1,0 +1,39 @@
+
+######################################################################
+#
+PACKAGE_NAME="binutils-2.21.1" #unzipped folder from package file is w/o the "a"
+PACKAGE_FILE="binutils-2.21.1a.tar.bz2"
+PACKAGE_DESC=""
+SBUS="1.2"  #1.9
+
+source D-LFS.functions 
+
+header_log_prep
+
+echo -e "\n========================================" &>> $BUILD_LOG 
+expect -c "spawn ls"                                 &>> $BUILD_LOG 
+echo                                                 &>> $BUILD_LOG 
+echo The above line should match the following line. &>> $BUILD_LOG 
+echo                                                 &>> $BUILD_LOG 
+echo spawn ls                                        &>> $BUILD_LOG 
+echo -e "========================================\n" &>> $BUILD_LOG 
+
+
+rm -fv etc/standards.info &>> $BUILD_LOG 
+sed -i.bak '/^INFO/s/standards.info //' etc/Makefile.in 
+
+sed -i "/exception_defines.h/d" ld/testsuite/ld-elf/new.cc
+sed -i "s/-fvtable-gc //" ld/testsuite/ld-selective/selective.exp
+
+mkdir -v $BUILD_DIR  &>> BUILD_LOG
+cd       $BUILD_DIR  &>> BUILD_LOG
+
+../$PACKAGE_NAME/configure --prefix=/usr --enable-shared &>> $BUILD_LOG 
+
+make tooldir=/usr &>> $BUILD_LOG 
+# make -k check &>> $BUILD_LOG 
+make tooldir=/usr install  &>> $BUILD_LOG 
+
+cp -v ../$PACKAGE_NAME/include/libiberty.h /usr/include &>> $BUILD_LOG 
+
+cleanup_log_footer

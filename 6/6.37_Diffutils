@@ -1,0 +1,11 @@
+
+######################################################################
+#
+PACKAGE_NAME="diffutils-3.2"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.2"  #0.2
+
+source D-LFS.functions 
+
+Build_Common_Package /usr

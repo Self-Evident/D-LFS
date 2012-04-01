@@ -1,0 +1,23 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME="expect5.45"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.1"
+
+source D-LFS.functions
+
+header_log_prep
+
+cp -v configure{,.orig}  &>> $BUILD_LOG
+sed 's:/usr/local/bin:/bin:' configure.orig > configure
+
+./configure --prefix=/tools --with-tcl=/tools/lib \
+  --with-tclinclude=/tools/include  &>> $BUILD_LOG
+
+make  &>> $BUILD_LOG
+
+make SCRIPTS="" install  &>> $BUILD_LOG
+
+cleanup_log_footer

@@ -1,0 +1,19 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME="linux-3.1"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.bz2"
+PACKAGE_DESC="API Headers"
+SBUS="0.3"  #0.1
+
+source D-LFS.functions
+
+header_log_prep
+
+make mrproper  &>> $BUILD_LOG
+
+make headers_check  &>> $BUILD_LOG
+make INSTALL_HDR_PATH=dest headers_install  &>> $BUILD_LOG
+cp -rv dest/include/* /tools/include  &>> $BUILD_LOG
+
+cleanup_log_footer

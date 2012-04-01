@@ -1,0 +1,22 @@
+###############################################################################
+# ~/.bash_profile  (executed at start of login shells)
+
+exec env -i HOME=$HOME TERM=$TERM /bin/bash
+
+# This command replaces the running shell with a new shell. 
+# The "env -i" starts the new shell with a completely empty environment,
+# except for, in this case, HOME and TERM.
+#
+# Starting a new shell this way ensures that no unwanted and potentially 
+# hazardous environment variables from the host system leak into the build 
+# environment. 
+#
+# The new shell will be a non-login shell, which will subsequently call
+# ~/.bashrc, but not ~/.bash_profile (this file), or /etc/profile.
+#
+# In the LFS book, the PS1 environment variable is also passed in the exec 
+# command above (as PS1='\u:\w\$ '). However, in the D-LFS scripts, PS1 is 
+# set in ~/.bashrc, or /etc/profile.
+#
+# END   ~/.bash_profile   #####################################################
+

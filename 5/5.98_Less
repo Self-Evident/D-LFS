@@ -1,0 +1,17 @@
+#!/bin/bash
+######################################################################
+#                               # While not in the book at this point,
+PACKAGE_NAME="less-444"         # less is usefull while in the chroot
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.1"
+
+source D-LFS.functions 
+
+header_log_prep
+
+./configure --prefix=/tools --sysconfdir=/tools &>> $BUILD_LOG
+make                                            &>> $BUILD_LOG
+make install                                    &>> $BUILD_LOG
+
+cleanup_log_footer

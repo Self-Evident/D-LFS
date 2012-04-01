@@ -1,0 +1,30 @@
+
+######################################################################
+#
+PACKAGE_NAME="module-init-tools-3.16"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.bz2"
+PACKAGE_DESC=""
+SBUS="0.0"  #0.1
+
+source D-LFS.functions 
+
+header_log_prep
+
+patch -Np1 -i ../${PACKAGE_NAME}-man_pages-1.patch   &>> $BUILD_LOG
+
+echo '.so man5/modprobe.conf.5' > modprobe.d.5
+
+##Test suites##
+#DOCBOOKTOMAN=/bin/true ./configure
+#make check
+#sed -i -e 's@../../configure@DOCBOOKTOMAN=/bin/true &@' tests/runtests
+#./tests/runtests
+#make clean
+
+DOCBOOKTOMAN=/bin/true ./configure --prefix=/ \
+    --enable-zlib-dynamic --mandir=/usr/share/man  &>> $BUILD_LOG
+
+make                               &>> $BUILD_LOG
+make INSTALL=install install       &>> $BUILD_LOG
+
+cleanup_log_footer

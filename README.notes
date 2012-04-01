@@ -1,0 +1,298 @@
+################################################################################
+# D-LFS scripts
+#
+# Author: David W. Gay 
+# See D-LFS.License for copyright details.
+# Copyright applies recursively to every file in, and sub-directory of,
+# the scripts directory, except for the misc directory.
+#
+# Indivudual scripts may contain computer instructions extracted from the book:
+# Linux From Scratch.  Such content (c) Gerard Beekmans under the MIT License.
+
+================================================================================
+D-LFS README
+================================================================================
+(If you don't want to README, just start ./1.00_START.)
+
+About:
+  D-LFS Scripts is a collection of (mostly) simple scripts that follows the
+  book (for the most part), Linux From Scratch, to compile an entire, basic,
+  Linux system from scratch. 
+  
+
+Objective:
+  KISS*
+  Automate the compilation/build of a Linux system from source.
+     Achieved by starting a single script, or by running an individual script
+     for each package, allowing you to following along with the LFS book, 
+     without having to actually type in the commands from the book.
+  Keep the scripts simple, clear, and easy to read, update, or modify.
+
+Requirements:
+  A somewhat more than basic understanding of *nix's.
+  (see the LFS book for details)
+  Linux, a free partition, enough RAM, enough HD space.
+  (again, see the LFS book for details)
+  To have already downloaded the source files.
+  (Yep, see the book - section 3.1.)
+
+History:
+
+When I began my attempt to build an LFS system, I immediatly realized the 
+foolishness of trying to actualy type in every command.  Besides there being a 
+lot to type, one obscure mistake/typo could ruin hours of work. So, I figured
+I would just create a seperate script for each section/package, by just copying 
+everything from the book, and then run those one at a time.  Well, even that got
+a bit tedious.  So, I figured, "how hard can it be to write a script that
+simply calls every other script"?   Sounds simple, doesn't it.  Right?? 
+
+Well, I'm sure it could have been, but I did it this way...
+
+Anyway, after a few hunderd hours of learning more about bash, date, grep, sed,
+cut, redirected stout/sterr, and numourous other things I've probably already 
+forgotten, you are now reading this...
+
+================================================================================
+Prequesites/requirements:
+
+The primary prerequesites to using these scripts are:
+  1) Read the LFS book
+  2) Know what you are doing
+
+Well, ok, there's a little more:                                                
+  
+3) Run 0/version_check.sh, and resolve any host system requirements.
+
+4) Make sure these scripts are in a directory called "scripts".
+
+5) Download source files and required patches (see section 3.1 in the LFS book).
+   Place them in a directory called "sources" that is NOT on $LFS
+
+6) The "sources" and "scripts" directories must be in the same directory.
+   This location must NOT be be on your future LFS partion.
+
+7) Prepare a Linux partion to house your LFS build.
+   (See section 2.2 in the LFS book)
+
+Configure your setup in the D-LFS.config file.
+(The only values that usually need changed are DEV_LFS & DEV_SWP)
+MAKE SURE DEV_LFS IS CORRECT!
+(You may also like to change others values, such as IP info, but DEV_LFS
+ is the biggie.)
+
+=============
+How it works:
+
+In a nutshell:  D-LFS Scripts contains the commands needed to compile each
+package needed to build an entire, if basic, Linux system. 
+The scripts are numbered/named to coorespond to sections in the LFS book.
+
+Now, out of the nushell, D-LFS Scripts does just a little more than described
+above.  For instance, they also contain code to help automate and document the
+build process.  Additionally, during runtime, they provide estimates on the
+time each package is going to take to complete.
+
+===
+Always start scripts from the ./scripts directory, and NOT from the directory
+they are in. (The single exception is 0/version_check.sh - it may be started
+from anywhere). For example, if running the scripts one at a time, after
+1.00_START is done, the next script is 2.00_Confirm, which is in directory "1".
+Do not cd into directory "1".  Just run it from the scripts directory:
+/D-LFS_Scripts/scripts$ 1/2.00_Confirm
+
+================================================================================
+=======================================
+Outline of build envinronments/contexts
+=======================================
+
+    |    root on host    |  lfs on host  |    chroot    |
+ ---+--------------------+---------------+--------------+
+ 1  |<= ch4              |               |              |
+ ---+--------------------+---------------+--------------+
+ 2  |                    |ch5 thru 5.34  |              |
+ ---+--------------------+---------------+--------------+
+    |5.35 chown          |               |              |
+ 3  |6.02 Prep Virtual FS|               |              |
+    |6.04 chroot         |               |              |
+ ---+--------------------+---------------+--------------+
+    |                    |               |ch6 thru 6.61 |
+    +--------------------+---------------+--------------+
+ 4  |6.63 new chroot (optional)|         |              |
+    +--------------------+---------------+--------------+
+    |                    |               |6.63 Stripping|
+ ---+--------------------+---------------+--------------+
+ 5  |6.64 Cleaning Up/   |               |              |
+    |     New chroot     |               |              |
+ ---+--------------------+---------------+--------------+
+ 6  |                    |               |  ch7,8,...   |
+ ---+--------------------+---------------+--------------+
+ 7  |  final cleanup     |               |              |
+ ---+--------------------+---------------+--------------+
+
+
+
+
+================================================================================
+==========
+MISC NOTES
+(ie: a few things I've learned along the way)
+==========
+
+========================================
+Uses bash only functionality. bc, perl, or other scripting tools may not be
+available during portions of build.
+
+
+
+========================================
+#! / hash-bang / she-bang 
+
+Ok, I just learned (mostly) about this line. I have left it out of ch6 scripts
+that are installed while in the chroot for two reasons:
+1) While in the chroot, bash is the only shell available, so it is unnecessary.
+2) For packages installed prior to the installation of bash (6.30), the line
+   would have to be:   #!/tools/bin/bash
+   However, by not including it, the scripts for those packages can also be used
+   after the tools directory has been removed. 
+
+In any case, it should not be a problem either way, as long as bash is the shell
+used to start the scripts. (ie: the shell for root & the lfs user of the host)
+
+
+
+========================================
+cat -vs- echo
+
+In the LFS book, instructions for creating certain files are provided as:
+
+cat > /some/file << "EOF"
+line in file
+another line in file
+EOF
+
+However, this method does not work if we wish to use the value of a bash 
+variable, such as those found in D-LFS.config, in "/some/file".  For example, 
+this won't work as might be expected:
+
+cat > /some/file << "EOF"
+SOMESETTING=$SOMEVAR
+EOF
+
+Instead of the value of $SOMEVAR getting inserted in our file, the line, 
+exactly as it appears after the cat command, is what ends up in the file.
+
+Therefore, in order to accommodate values that may be configured in
+D-LFS.config, and subsequently used, for example, in some etc config file, 
+these scripts use the following method in a few places:
+
+echo #Example config file        >  /etc/some/config/file
+echo "SOMESETTING=$SOMEVAR"      >> /etc/some/config/file
+echo #End of example config file >> /etc/some/config/file
+
+
+A note about the "EOF" indicator:
+The line used to terminate the cat command, EOF in the example above, should
+have absolutely no other characters on that line, not even a space, or "cat"
+will continue to read from stdin, and subsequent commands in a script will fail.
+
+Also, it is ok to use something other than the string "EOF" to end a cat.
+For example, "EndOftheLine" would work just the same.
+
+========================================
+
+
+========================================
+cat -vs- cp
+
+In addition to echo, in a few other places these scripts also simply copy a 
+pre-existing/ previously created file (usually from the /misc directory) to 
+the appropriate location within the new LFS build. 
+
+For example, passwd and group are created this way in 6.06_Essential_Files.
+========================================
+
+
+========================================
+SBUT (Standard Build Units, Total)
+
+The SBUT is figured by  grep|sed|cut'ing every file in 1/,/5,/6,/7 and /B for 
+the "SBUS=" line. So, any file in any of those directories that is not used 
+for a given build, but that has such a line, will skew the results. This is of
+no consequence to the actual build, of course, but I thought some might like 
+to be aware of it. (commenting out the line takes care of this issue)
+========================================
+
+
+========================================
+Issues Redirecting stout & using pipes
+
+Running a script, and want to see errors from a 'cd' on screen, AND save those 
+errors to a log file at the same time?  Well, do not try to redirect & pipe 
+stout from a 'cd' command, as the 'cd' will fail.
+
+For example:
+cd some/directory    2>&1 | tee -a log_file
+
+Let's say that 'some/directory' doesn't exist. With the above, any sterr msgs
+from the cd are sent to it's stout (2>&1), which are then piped into to tee,
+which displays the output to the screen, and appends it to log_file.
+
+However, in the example, if 'some/directory' DOES exist, cd is silent on 
+sterr & stout, but DOES NOT actually 'cd' into 'some/directory'.  So, any 
+subsequent commands relying on being in the new directory, will fail.
+
+It seems that cd doesn't like to pipe; but std i/o redirects are ok.
+
+For example:
+cd some/directory   >> log_file
+
+seems to work, with either the success or failure of the cd.
+
+Other commands that may have similar issues with pipes & redirects: tar, rm, sed
+Of course, while this can cause problems if you are not aware of this issue, it
+is not neccessarily a "bug" with the commands - it is simply an inherent aspect
+of their intended and desired functions.  I guess.  I don't really know... This
+is just a reminder for me so I don't end up chasing obscure errors for hours...
+again...
+
+
+================================================================================
+
+*Footnote:
+
+KISS, of course, stands for "Keep It Simple Stupid".  However, as is often 
+the case, particularly with programming projects, the opposite is achieved. 
+That is, one looses site of the original goal (what ever it may have been),
+and ends up with a potential Rube-Goldberg entry.
+
+To describe such scenerios, there is YAAc (Yet Another Acronym). (Not to be 
+confused with "YACC", which means...oh, go look it up.)  Anyway, the YAAc of 
+which I speak has a couple of forms, depending on the user, and its intended 
+application.  (That is, by whatever the user thinks sounds better). Its main 
+form is: SCEECOA (pronounced: "see-ko-ah"). Or, alternativly, COSEECA
+(pronounced "ko-see-kah").
+
+It stands for:
+
+Sophisticated   (or)  Complicated
+Complicated           Obscure
+Eccentric             Sophisticated
+Esoteric              Eccentric
+Complex               Esoteric
+Obscure               Complex
+Arcane                Arcane
+
+Now, it may also take on a few other variations.  For instance, someone might
+consider Obscure and Esoteric to be redundant. So, they drop the O from SCEECOA,
+and end up with just SCEECA (pronounced "see-kah").  Or, one might wish to take
+it one step further and shorten it even more, by also dropping one E and one C,
+leaving only SECA (still pronounced "see-kah").
+
+However, the shorter variations are, in essence, simply an attempt to make
+COSEECA (aka SCEECOA) less COSEECA, and more KISS.  And since KISS is the
+antithesis of SCEECOA, et all, that is just wrong.  
+
+(Historical note: SCEECA (or maybe it was even just SECA, I don't remember),
+was actually the first form of SCEECOA.  However, as even SCEECA wasn't SCEECA
+enough, it naturally evolved into its longer, less natural form.)
+

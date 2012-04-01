@@ -1,0 +1,25 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME="tcl8.5.10"
+PACKAGE_FILE="${PACKAGE_NAME}-src.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.4"  #0.3
+
+source D-LFS.functions
+
+header_log_prep
+
+cd unix
+./configure --prefix=/tools  &>> $BUILD_LOG
+
+make  &>> $BUILD_LOG
+
+#TZ=UTC make test
+
+make install  &>> $BUILD_LOG
+chmod -v u+w /tools/lib/libtcl8.5.so  &>> $BUILD_LOG
+make install-private-headers  &>> $BUILD_LOG
+ln -sv tclsh8.5 /tools/bin/tclsh  &>> $BUILD_LOG
+
+cleanup_log_footer

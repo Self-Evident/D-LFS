@@ -1,0 +1,18 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME=""
+PACKAGE_FILE=""
+PACKAGE_DESC='Creating the $LFS/tools Directory'
+SBUS="0.0"
+
+source D-LFS.functions
+
+header
+
+mkdir -v  $LFS/tools      | tee -a $BUILD_LOG
+echo -n "Creating symlink on host: "
+ln -sv    $LFS/tools  /   | tee -a $BUILD_LOG
+
+footer
+

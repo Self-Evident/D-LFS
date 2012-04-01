@@ -1,0 +1,50 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME=""
+PACKAGE_FILE=""
+PACKAGE_DESC="Final Details Before 1st Boot"
+SBUS="0.0"
+
+source D-LFS.functions
+
+header
+
+cd $LFS_SCRIPTS/misc
+
+{ #braces group commands for easier save of output to the log
+
+echo -n "Section 7.07:  "
+cp -v  inittab  /etc/              2>&1
+
+echo -n "        7.08:  "
+echo  "HOSTNAME=$HOSTNAME" > /etc/sysconfig/network
+echo  "Created /etc/sysconfig/network."
+
+echo -n "        7.09:  "
+cp -v  clock    /etc/sysconfig/    2>&1
+
+echo -n "        7.10:  "
+cp -v  console  /etc/sysconfig/    2>&1
+
+echo -n "        7.13:  "
+cp -v  profile  /etc/              2>&1
+
+echo -n "        7.14:  "
+cp -v  inputrc  /etc/              2>&1
+
+echo -n "        9.01:  "
+echo $LFS_VERSION > /etc/lfs-release
+echo  "Created /etc/lfs-release"
+
+echo -n "(from BLFS) :  "
+cp -v  issue    /etc/issue         2>&1
+
+} | tee -a $BUILD_LOG    #close group, save output
+
+
+footer
+
+#Record finish time for entire build. Used in summary screen.
+echo FINISH_TIME=$($TIMESTAMP)                >> $BUILD_DATA
+echo FINISH_TIME_long=\"$($TIMESTAMP_long)\"  >> $BUILD_DATA

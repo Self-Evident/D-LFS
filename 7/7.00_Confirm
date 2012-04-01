@@ -1,0 +1,21 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME=""
+PACKAGE_FILE=""
+PACKAGE_DESC="Confirm a few things before we continue"
+SBUS="0.0"
+
+source D-LFS.functions
+
+
+header
+
+echo
+echo "Like ch6, do not run ch7 scripts directly from your host environment."
+echo "Make sure the 6.02 virtual file system is mounted, and that you have"
+echo -e "entered the ${BOLD}6.64 New chroot${NORMAL}."
+echo
+echo "Note: Several sections from ch7 are accomplished in 7/9.99_Final_Details"
+
+footer

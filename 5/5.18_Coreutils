@@ -1,0 +1,20 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME="coreutils-8.14"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
+PACKAGE_DESC=""
+SBUS="0.8"  #0.7
+
+source D-LFS.functions
+
+header_log_prep
+
+./configure --prefix=/tools --enable-install-program=hostname &>> $BUILD_LOG 
+make   &>> $BUILD_LOG
+# make RUN_EXPENSIVE_TESTS=yes check   &>> $BUILD_LOG
+make install   &>> $BUILD_LOG
+
+cp -v src/su /tools/bin/su-tools  &>> $BUILD_LOG
+
+cleanup_log_footer

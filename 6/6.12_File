@@ -1,0 +1,11 @@
+
+######################################################################
+#
+PACKAGE_NAME="file-5.09"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.1"  #0.2
+
+source D-LFS.functions 
+
+Build_Common_Package /usr

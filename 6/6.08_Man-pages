@@ -1,0 +1,15 @@
+
+######################################################################
+#
+PACKAGE_NAME="man-pages-3.35"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.0"
+
+source D-LFS.functions 
+
+header_log_prep
+
+make install  &>> $BUILD_LOG
+
+cleanup_log_footer
