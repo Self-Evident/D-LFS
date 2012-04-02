@@ -42,14 +42,13 @@ mount -vt proc proc $LFS/proc         &>> $BUILD_LOG
 mount -vt sysfs sysfs $LFS/sys        &>> $BUILD_LOG
 
 
-echo "Virtual file system created."
+cat << "EOF"
+Virtual file system created.
 
-echo
-echo -e "\
-We will now also create the directory 'root'.\n\
-In the LFS book, it is not created until 6.05. However, we create it here \n\
-to prepare for using a .profile when entering the chroots.\n\
-(see the 6.04, 6.64, and supergo-all scripts)"
+We will now also create the directory '/root'. In the LFS book, it is not
+created until 6.05. However, we create it here to prepare a .profile for use
+when entering the 6.04 chroot.
+EOF
 
 install -dv -m 0755 $LFS/root    | tee -a $BUILD_LOG
 

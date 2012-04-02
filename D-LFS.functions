@@ -347,16 +347,15 @@ function Calculate_Estimated_Build_Time_Total {
 
 function Display_Estimated_Times_Total {
    # Display Estimated Times for Entire Build
-         
+ 
    echo -n "Entire LFS system:  $START_TIME_long, $SBUT SBUs"
-   
+ 
    #Check if SBU has been determined (by 5.04).
    if [[ $SBU_ -le "0" ]] ; then  #can't display estimated times...
       echo "  (est. times unavailable)"
-      return 0
+   else
+      echo " = $EBTT_long, $EFTT_long"
    fi
-
-   echo " = $EBTT_long, $EFTT_long"
 
    } #END Display_Estimated_Times_Total
 

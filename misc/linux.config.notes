@@ -6,7 +6,7 @@ The Help text for any given option generally refers to settings as:
   Y (select),       N (don't select),     or M (Module)
 
 Note that some options had preset values (selected/not selected)
-that were not the same as values suggested in the Help test. 
+that were not the same as values suggested in the Help text. 
 (ie: Option was pre-selected, but Help suggested N)
 
 ===============================================================================
