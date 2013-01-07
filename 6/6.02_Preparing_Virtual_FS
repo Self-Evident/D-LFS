@@ -52,8 +52,8 @@ cat << "EOF"
 Virtual file system created.
 
 We will now also create the directory '/root'. In the LFS book, it is not
-created until 6.05. However, we create it here to prepare a .profile for use
-when entering the 6.04 chroot.
+created until 6.05. However, we create it here to prepare for a .profile that 
+will be used when entering the 6.04 chroot.
 EOF
 
 install -dv -m 0755 $LFS/root    | tee -a $BUILD_LOG

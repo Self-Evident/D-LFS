@@ -4,7 +4,7 @@
 PACKAGE_NAME="binutils-2.22"
 PACKAGE_FILE="$PACKAGE_NAME.tar.bz2"
 PACKAGE_DESC=""
-SBUS="1.2"  #1.9
+SBUS="1.3"  #1.9
 
 source D-LFS.functions 
 
@@ -19,18 +19,18 @@ echo spawn ls                                        &>> $BUILD_LOG
 echo -e "========================================\n" &>> $BUILD_LOG 
 
 
-rm -fv etc/standards.info &>> $BUILD_LOG 
+rm -fv etc/standards.info &>> $BUILD_LOG   &>> BUILD_LOG
 sed -i.bak '/^INFO/s/standards.info //' etc/Makefile.in 
 
-patch -Np1 -i ../${PACKAGE_NAME}-build_fix-1.patch
+patch -Np1 -i ../${PACKAGE_NAME}-build_fix-1.patch  &>> BUILD_LOG
 
 mkdir -v $BUILD_DIR  &>> BUILD_LOG
 cd       $BUILD_DIR  &>> BUILD_LOG
 
 ../$PACKAGE_NAME/configure --prefix=/usr --enable-shared &>> $BUILD_LOG 
 
-make tooldir=/usr &>> $BUILD_LOG 
-# make -k check &>> $BUILD_LOG 
+make tooldir=/usr          &>> $BUILD_LOG 
+# make -k check             &>> $BUILD_LOG 
 make tooldir=/usr install  &>> $BUILD_LOG 
 
 cp -v ../$PACKAGE_NAME/include/libiberty.h /usr/include &>> $BUILD_LOG 

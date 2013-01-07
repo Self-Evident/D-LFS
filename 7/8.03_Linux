@@ -4,7 +4,7 @@ VERSION=3.5.2  #Linux Kernel Version
 PACKAGE_NAME="linux-${VERSION}"
 PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
 PACKAGE_DESC=""
-SBUS="6.3"  #5.0
+SBUS="6.8"  #5.0
 
 source D-LFS.functions
 
@@ -12,23 +12,23 @@ header 0  #0 suppresses log_start_time in header
 
 echo "Select kernel config method: "
 echo " 1) Use a pre-existing .config to build the Linux kernel (default)."
-echo "    (will cp scripts/misc/linux.config to .config)"
+echo "    (cp scripts/misc/linux.config.${VERSION} to .config)"
 echo " 2) Use make menuconfig to configure kernel options."
 
 if [[ "$AUTO_BUILD" == "3" ]]; then OPTION=1;
 else read -p "Enter 1 (default) or 2: " OPTION; fi
 
-if [ "$OPTION" != "2" ]; then OPTION=1; fi #If not 2, then 1
+if [ "$OPTION" != "2" ]; then OPTION=1; fi 
 echo "Option $OPTION selected. "  | tee -a $BUILD_LOG
 
 
 log_start_time
 
-prepare_package
+prepare_package  0  #The 0 supresses echo of "Building package..."
+
 
 echo "Preparing kernel source..."
 make mrproper  &>> $BUILD_LOG
-
 
 if [ "$OPTION" == "2" ]; then
    make LANG=en_US.UTF-8 LC_ALL= menuconfig
@@ -36,11 +36,9 @@ else
    cp -v $LFS_SCRIPTS/misc/linux.config .config      &>> $BUILD_LOG
 fi
 
-
 echo 'Building Linux kernel...'  | tee -a $BUILD_LOG
-make                                  &>> $BUILD_LOG
-make modules_install                  &>> $BUILD_LOG
-
+make                 &>> $BUILD_LOG
+make modules_install &>> $BUILD_LOG
 
 cp -v arch/x86/boot/bzImage  /boot/vmlinuz-$VERSION  &>> $BUILD_LOG
 cp -v System.map  /boot/System.map-$VERSION          &>> $BUILD_LOG
@@ -59,6 +57,6 @@ install uhci_hcd /sbin/modprobe ehci_hcd ; /sbin/modprobe -i uhci_hcd ; true
 EOF
 
 
-ln -sv  /boot/vmlinux-$VERSION  /boot/vmlinuz        &>> $BUILD_LOG
+ln -sv  /boot/vmlinuz-$VERSION  /boot/vmlinuz        &>> $BUILD_LOG
 
 cleanup_log_footer

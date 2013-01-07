@@ -4,7 +4,7 @@
 PACKAGE_NAME="bison-2.6.2"
 PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
 PACKAGE_DESC=""
-SBUS="0.4"  #1.3
+SBUS="0.3"  #1.3
 
 source D-LFS.functions 
 

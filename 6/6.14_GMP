@@ -10,7 +10,8 @@ source D-LFS.functions
 
 header_log_prep
 
-#ABI=32 ./configure ... #See book for purpose of this line.
+#If building for 32-bit x86, but using a 64bit CPU, see book for info.
+#ABI=32 ./configure ...
 
 ./configure --prefix=/usr --enable-cxx --enable-mpbsd &>> $BUILD_LOG 
 make   &>> $BUILD_LOG

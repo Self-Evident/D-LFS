@@ -10,12 +10,13 @@ source D-LFS.functions
 
 header_log_prep
 
-patch -Np1 -i ../${PACKAGE_NAME}-fixes-8.patch   &>> $BUILD_LOG 
+patch -Np1 -i ../${PACKAGE_NAME}-fixes-8.patch  &>> $BUILD_LOG 
+echo >> $BUILD_LOG
 
 ./configure --prefix=/tools --without-bash-malloc &>> $BUILD_LOG 
-make                        &>> $BUILD_LOG
-#make tests                 &>> $BUILD_LOG
-make install                &>> $BUILD_LOG
-ln -vs bash /tools/bin/sh   &>> $BUILD_LOG
+make                       &>> $BUILD_LOG
+#make tests                &>> $BUILD_LOG
+make install               &>> $BUILD_LOG
+ln -vs bash /tools/bin/sh  &>> $BUILD_LOG
 
 cleanup_log_footer

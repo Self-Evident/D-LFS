@@ -4,7 +4,7 @@
 PACKAGE_NAME="linux-3.5.2"
 PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
 PACKAGE_DESC="API Headers"
-SBUS="0.3"  #0.1
+SBUS="0.2"  #0.1
 
 source D-LFS.functions 
 

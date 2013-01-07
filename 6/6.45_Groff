@@ -4,7 +4,7 @@
 PACKAGE_NAME="groff-1.21"
 PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
 PACKAGE_DESC=""
-SBUS="0.5"  #0.5
+SBUS="0.6"  #0.5
 
 source D-LFS.functions 
 

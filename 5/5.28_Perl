@@ -4,19 +4,20 @@ VERSION="5.16.1"
 PACKAGE_NAME="perl-${VERSION}"
 PACKAGE_FILE="${PACKAGE_NAME}.tar.bz2"
 PACKAGE_DESC=""
-SBUS="1.9"  #1.8
+SBUS="2.0"  #1.8
 
 source D-LFS.functions
 
 header_log_prep
 
 patch -Np1 -i ../perl-5.16.1-libc-2.patch  &>> $BUILD_LOG
-sh Configure -des -Dprefix=/tools &>> $BUILD_LOG
+echo >> $BUILD_LOG
 
-make  &>> $BUILD_LOG
+sh Configure -des -Dprefix=/tools  &>> $BUILD_LOG
+make                               &>> $BUILD_LOG
 
-cp -v perl cpan/podlators/pod2man /tools/bin   &>> $BUILD_LOG
-mkdir -pv /tools/lib/perl5/${VERSION}          &>> $BUILD_LOG
-cp -Rv lib/* /tools/lib/perl5/${VERSION}       &>> $BUILD_LOG
+cp -v perl cpan/podlators/pod2man /tools/bin  &>> $BUILD_LOG
+mkdir -pv /tools/lib/perl5/${VERSION}         &>> $BUILD_LOG
+cp -Rv lib/* /tools/lib/perl5/${VERSION}      &>> $BUILD_LOG
 
 cleanup_log_footer

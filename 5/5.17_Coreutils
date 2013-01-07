@@ -4,7 +4,7 @@
 PACKAGE_NAME="coreutils-8.19"
 PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
 PACKAGE_DESC=""
-SBUS="0.8"  #0.7
+SBUS="0.7"  #0.7
 
 source D-LFS.functions
 

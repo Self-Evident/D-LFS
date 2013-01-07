@@ -4,7 +4,7 @@
 PACKAGE_NAME="glibc-2.16.0" #If vers changes, change in configure parms below.
 PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
 PACKAGE_DESC=""
-SBUS="6.1"  #5.4
+SBUS="5.8"  #5.4
 
 source D-LFS.functions
 
@@ -28,7 +28,7 @@ case `uname -m` in
 esac
 
 echo >> $BUILD_LOG
-echo "### configure for make... ###"   >>   $BUILD_LOG
+echo "### configure... ###"   &>>   $BUILD_LOG
 ../$PACKAGE_NAME/configure                               \
       --prefix=/tools                                    \
       --host=$LFS_TGT                                    \

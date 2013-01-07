@@ -4,7 +4,7 @@
 PACKAGE_NAME="glibc-2.16.0"
 PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
 PACKAGE_DESC=""
-SBUS="6.1"  #17.6 including test suites
+SBUS="5.9"  #17.6 including test suites
 
 source D-LFS.functions 
 
@@ -14,12 +14,12 @@ sed -i 's#<rpc/types.h>#"rpc/types.h"#' sunrpc/rpc_clntout.c
 sed -i '/test-installation.pl/d' Makefile
 sed -i 's|@BASH@|/bin/bash|' elf/ldd.bash.in
 
-patch -Np1 -i ../${PACKAGE_NAME}-res_query_fix-1.patch
+patch -Np1 -i ../${PACKAGE_NAME}-res_query_fix-1.patch  &>> $BUILD_LOG
 
 mkdir  -v $BUILD_DIR  &>> BUILD_LOG
 cd        $BUILD_DIR  &>> BUILD_LOG
 
-echo "### Create configparms file... ###"   &>>   $BUILD_LOG
+echo "### Create configparms file... ###"   &>> $BUILD_LOG
 case `uname -m` in
   i?86) echo "CFLAGS += -march=i486 -mtune=native -O3 -pipe"\
                                               | tee configparms >> $BUILD_LOG;;
@@ -78,10 +78,10 @@ localedef -i zh_CN -f GB18030 zh_CN.GB18030
 cp -v $LFS_SCRIPTS/misc/nsswitch.conf /etc     &>> $BUILD_LOG
 
 
-tar -xf ../tzdata2012e.tar.gz
+tar -xf ../tzdata2012e.tar.gz  &>> $BUILD_LOG
 
 ZONEINFO=/usr/share/zoneinfo
-mkdir -pv $ZONEINFO/{posix,right} 
+mkdir -pv $ZONEINFO/{posix,right}   &>> $BUILD_LOG
 
 for tz in etcetera southamerica northamerica europe africa antarctica  \
           asia australasia backward pacificnew solar87 solar88 solar89 \
@@ -104,10 +104,8 @@ cp -v --remove-destination /usr/share/zoneinfo/$TIMEZONE \
 
 
 cat > /etc/ld.so.conf << "EOF"
-
 /usr/local/lib
 /opt/lib
-
 EOF
 # End /etc/ld.so.conf
 
@@ -118,7 +116,6 @@ cat >> /etc/ld.so.conf << "EOF"
 include /etc/ld.so.conf.d/*.conf
 EOF
 
-mkdir /etc/ld.so.conf.d
-
+mkdir /etc/ld.so.conf.d  &>> $BUILD_LOG
 
 cleanup_log_footer

@@ -1,22 +1,24 @@
 
 ######################################################################
 #
-PACKAGE_NAME="udev-lfs-188"
+PACKAGE_NAME="systemd-188"  #udev & systemd are merged.  See book for details.
 PACKAGE_FILE="systemd-188.tar.xz"
-PACKAGE_FILE2="udev-lfs-188-3.tar.bz2"
+UDEV_NAME="udev-lfs-188"
+UDEV_FILE="udev-lfs-188-3.tar.bz2"
 PACKAGE_DESC=""
 SBUS="0.1"  #0.1
-
 source D-LFS.functions 
 
-header_log_prep
+header
+prepare_package 0  #The 0 supresses echo of "Building package..."
 
-tar -xvf ../${PACKAGE_FILE2}
+#Extract udev source files into systemd source folder (should be current).
+echo Extracting $UDEV_FILE...             | tee -a $BUILD_LOG
+tar -xf ../${UDEV_FILE}                        &>> $BUILD_LOG
 
-make -f     ${PACKAGE_NAME}/Makefile.lfs
-
-make -f     ${PACKAGE_NAME}/Makefile.lfs install
-
-bash        ${PACKAGE_NAME}/init-net-rules.sh
+echo "Building package..."
+make -f     ${UDEV_NAME}/Makefile.lfs         &>> $BUILD_LOG
+make -f     ${UDEV_NAME}/Makefile.lfs install &>> $BUILD_LOG
+bash        ${UDEV_NAME}/init-net-rules.sh    &>> $BUILD_LOG
 
 cleanup_log_footer

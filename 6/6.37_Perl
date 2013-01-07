@@ -4,7 +4,7 @@
 PACKAGE_NAME="perl-5.16.1"
 PACKAGE_FILE="${PACKAGE_NAME}.tar.bz2"
 PACKAGE_DESC=""
-SBUS="2.4"  #7.5
+SBUS="2.6"  #7.5
 
 source D-LFS.functions 
 
