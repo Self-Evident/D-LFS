@@ -37,7 +37,7 @@ echo -n "        9.01:  "
 echo $LFS_VERSION > /etc/lfs-release
 echo  "Created /etc/lfs-release"
 
-echo -n "(from BLFS) :  "
+echo -n " (from BLFS):  "
 cp -v  issue    /etc/issue         2>&1
 
 } | tee -a $BUILD_LOG    #close group, save output

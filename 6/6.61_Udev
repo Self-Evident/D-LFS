@@ -11,7 +11,7 @@ source D-LFS.functions
 
 header_log_prep
 
-tar -xvf ../${PACKAGE_FILE2}.tar.bz2
+tar -xvf ../${PACKAGE_FILE2}
 
 make -f     ${PACKAGE_NAME}/Makefile.lfs
 

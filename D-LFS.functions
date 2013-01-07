@@ -15,7 +15,7 @@
 # available during portions of build.
 #
 
-D_LFS_version=6.0.ALPHA
+D_LFS_version=5.5.ALPHA
 
 source ./D-LFS.config     #Get config values.
 

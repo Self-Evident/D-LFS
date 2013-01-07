@@ -15,7 +15,7 @@ for NIC in /sys/class/net/* ; do
 done
 
 echo "Completed udevadm test." | tee -a $BUILD_LOG
-echo -e '  If desired, review log for details. '
+echo -e '  If desired, review the build log for details. '
 
 
 

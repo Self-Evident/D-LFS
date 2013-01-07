@@ -11,4 +11,3 @@ source D-LFS.functions
 Build_Common_Package /usr                 \
                      --with-internal-glib \
                      --docdir=/usr/share/doc/${PACKAGE_NAME}  &>> $BUILD_LOG
-cleanup_log_footer
