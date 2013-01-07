@@ -7,7 +7,6 @@ set -e
 
 source D-LFS.functions  #needed here only to set $BUILD_LOG
 
-{ #braces group commands for easier save of output to log
 4/2.00_Confirm_config
 4/2.03_Creating_File_System
 4/2.04_Mounting
@@ -15,5 +14,3 @@ source D-LFS.functions  #needed here only to set $BUILD_LOG
 4/4.02_Creating_tools
 4/4.03_Adding_LFS_user
 4/4.04_Setting_Up_Environment
-} 2>> $BUILD_LOG  #close group, save errors only to build log
-

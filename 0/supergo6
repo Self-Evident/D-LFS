@@ -9,7 +9,6 @@ set -e
 
 source D-LFS.functions  #needed here only to set $BUILD_LOG
 
-{ #braces group commands for easier save of output to log
 6/6.05_Create_Directories
 6/6.06_Essential_Files
 6/6.07_Linux_API_Headers
@@ -70,4 +69,3 @@ echo past 6.19 >> BUILD_LOG #####
 6/6.61_Udev
 6/6.62_Vim
 6/6.64_Stripping_Again
-} 2>> $BUILD_LOG  #close group, save errors only to build log.

@@ -3,7 +3,6 @@ set -e
 
 source D-LFS.functions  #needed here only to set $BUILD_LOG
 
-{ #braces group commands for easier save of output to log
 5/5.00_Confirm
 5/5.04_Binutils-Pass1
 5/5.05_GCC-Pass1
@@ -36,4 +35,3 @@ source D-LFS.functions  #needed here only to set $BUILD_LOG
 5/5.32_Xz
 5/5.98_Less
 5/5.33_Stripping
-} 2>> $BUILD_LOG  #close group, save errors only to build log

@@ -167,7 +167,7 @@ function footer {
    grep -n "Error "  $BUILD_LOG
    grep -n "Stop."   $BUILD_LOG
 
-   { #braces group commands for easier save of output to log
+   { #braces group commands for easier save of output to the log
    echo $DIVIDER
    echo -n "$PACKAGE_NUMB : Done      :  `$TIMESTAMP_long`"
    ELAPSEDINFO=",  $ABUS ABUs   $ELAPSED_long"
@@ -274,17 +274,21 @@ function Calculate_SBU {
 
 function Calculate_SBUT {
    # Add up the SBUS from all packages= SBUs Total
-   # Called at end of Init_BUILD_LOGS
+   # Called at end of Init_BUILD_LOGS, on first run of D-LFS.functions only.
+   # While $BUILD_LOGS has been setup at this point, $BUILD_LOG has not.
+   # So, don't bother trying to save potenial error output of commands here.
+
 
    # Get SBUS="nn.n" lines from scripts (the lines may also have a #comment)
    # Remove quotes & decimal point (Makes an integer and multiplies by 10)
    # Remove any #comment
    # Remove SBUS=
    # Save to a new file, writing one value per line of form: nnn  (or just nn)
-   unalias grep  &>> $BUILD_LOG  # make sure color is off
+   unalias grep  #only want raw matched lines, so make sure color etc. is off. 
    grep -h -e "^SBUS=" {4,5,6,7,B}/*  | \
-   sed 's/"//g'  | sed 's/\.//'       | \
-   cut -d"#" -f1 | \
+   sed 's/"//g'                       | \
+   sed 's/\.//'                       | \
+   cut -d"#" -f1                      | \
    cut -d"=" -f2 > $BUILD_LOGS/SBUTx10.list
 
    # Now add them all up
