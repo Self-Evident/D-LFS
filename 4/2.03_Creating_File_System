@@ -22,7 +22,7 @@ log_start_time
 echo "Creating filesystem..."
 
 umount $DEV_LFS                   &>> $BUILD_LOG
-mke2fs -jv  $DEV_LFS -L LFS-NEW   &>> $BUILD_LOG
+mke2fs -jv  $DEV_LFS -L $DEV_LBL  &>> $BUILD_LOG
 echo                               >> $BUILD_LOG
 debugfs -R feature $DEV_LFS  | tee -a $BUILD_LOG
 

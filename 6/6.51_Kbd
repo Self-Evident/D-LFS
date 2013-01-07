@@ -1,0 +1,31 @@
+
+######################################################################
+#
+PACKAGE_NAME="kbd-1.15.3"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.1"
+
+source D-LFS.functions 
+
+header_log_prep
+
+patch -Np1 -i ../${PACKAGE_NAME}-upstream_fixes-1.patch  &>> $BUILD_LOG
+patch -Np1 -i ../${PACKAGE_NAME}-backspace-1.patch  &>> $BUILD_LOG
+
+sed -i '/guardado\ el/s/\(^.*en\ %\)\(.*\)/\14\$\2/' po/es.po
+
+sed -i 's/\(RESIZECONS_PROGS=\)yes/\1no/' configure &&
+sed -i 's/resizecons.8 //' man/man8/Makefile.in &&
+touch -d '2011-05-07 08:30' configure.ac
+
+./configure --prefix=/usr --datadir=/lib/kbd   &>> $BUILD_LOG
+make                        &>> $BUILD_LOG
+make install                &>> $BUILD_LOG
+
+mv -v /usr/bin/{kbd_mode,loadkeys,openvt,setfont} /bin &>> $BUILD_LOG
+mkdir -v /usr/share/doc/${PACKAGE_NAME} &>> $BUILD_LOG
+cp -R -v doc/* \
+         /usr/share/doc/${PACKAGE_NAME} &>> $BUILD_LOG
+
+cleanup_log_footer

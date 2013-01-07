@@ -29,5 +29,6 @@ echo -e "${YELLOW}use the following command to login as user $LFS_USER:"
 echo
 echo -e "su - $LFS_USER $NORMAL  (Done automatically in auto-builds) "
 echo
+echo "Also, as logging in will run ~/.bash_profile, there is no need to type it here."
 
 footer

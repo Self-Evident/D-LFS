@@ -1,10 +1,10 @@
 
 ######################################################################
 #
-PACKAGE_NAME="mpc-0.9"  #MPC USED TO BUILD GCC IN CH5, NEEDS UPDATED THERE ALSO
+PACKAGE_NAME="mpc-1.0"  #MPC USED TO BUILD GCC IN CH5, NEEDS UPDATED THERE ALSO
 PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
 PACKAGE_DESC=""
-SBUS="0.1"  #0.3
+SBUS="0.1"  #0.4
 
 source D-LFS.functions 
 

@@ -1,0 +1,24 @@
+
+######################################################################
+#
+PACKAGE_NAME="findutils-4.4.2"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.2"  #0.4
+
+source D-LFS.functions 
+
+header_log_prep
+
+./configure --prefix=/usr                   \
+            --libexecdir=/usr/lib/findutils \
+            --localstatedir=/var/lib/locate &>> $BUILD_LOG 
+
+make                            &>> $BUILD_LOG
+# make check                      &>> $BUILD_LOG
+make install                    &>> $BUILD_LOG
+
+mv -v /usr/bin/find /bin  &>> $BUILD_LOG
+sed -i 's/find:=${BINDIR}/find:=\/bin/' /usr/bin/updatedb 
+
+cleanup_log_footer

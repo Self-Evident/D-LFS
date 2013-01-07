@@ -1,8 +1,8 @@
 #!/bin/bash
 ######################################################################
 #
-PACKAGE_NAME="binutils-2.21.1"  #unzipped folder from pkg source is w/o the "a"
-PACKAGE_FILE="binutils-2.21.1a.tar.bz2"
+PACKAGE_NAME="binutils-2.22"
+PACKAGE_FILE="binutils-2.22.tar.bz2"
 PACKAGE_DESC=": Pass 1"
 SBUS="1.0"  #By definition
 
@@ -24,12 +24,19 @@ EOF
 
 prepare_package
 
+echo                                               >> $BUILD_LOG
+patch -Np1 -i ../binutils-2.22-build_fix-1.patch  &>> $BUILD_LOG
+
 mkdir  -v $BUILD_DIR  &>> $BUILD_LOG
 cd        $BUILD_DIR  &>> $BUILD_LOG
 
-../$PACKAGE_NAME/configure \
-   --target=$LFS_TGT --prefix=/tools \
-   --disable-nls --disable-werror  &>> $BUILD_LOG 
+../$PACKAGE_NAME/configure     \
+    --prefix=/tools            \
+    --with-sysroot=$LFS        \
+    --with-lib-path=/tools/lib \
+    --target=$LFS_TGT          \
+    --disable-nls              \
+    --disable-werror           &>> $BUILD_LOG 
 
 make &>> $BUILD_LOG 
 

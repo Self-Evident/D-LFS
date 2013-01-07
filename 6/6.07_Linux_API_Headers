@@ -1,8 +1,8 @@
 
 ######################################################################
 #
-PACKAGE_NAME="linux-3.1"
-PACKAGE_FILE="${PACKAGE_NAME}.tar.bz2"
+PACKAGE_NAME="linux-3.5.2"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
 PACKAGE_DESC="API Headers"
 SBUS="0.3"  #0.1
 

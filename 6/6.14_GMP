@@ -1,8 +1,8 @@
 
 ######################################################################
 #
-PACKAGE_NAME="gmp-5.0.2" #GMP USED TO BUILD GCC IN CH5, NEEDS UPDATED THERE ALSO
-PACKAGE_FILE="${PACKAGE_NAME}.tar.bz2"
+PACKAGE_NAME="gmp-5.0.5" #GMP USED TO BUILD GCC IN CH5, NEEDS UPDATED THERE ALSO
+PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
 PACKAGE_DESC=""
 SBUS="0.6"  #1.7 including test suites
 
@@ -10,7 +10,7 @@ source D-LFS.functions
 
 header_log_prep
 
-sed -i 's/np + dn, qn/& - dn/' mpn/generic/dcpi1_bdiv_q.c
+#ABI=32 ./configure ... #See book for purpose of this line.
 
 ./configure --prefix=/usr --enable-cxx --enable-mpbsd &>> $BUILD_LOG 
 make   &>> $BUILD_LOG

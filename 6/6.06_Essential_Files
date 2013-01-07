@@ -22,6 +22,7 @@ ln -sv /tools/bin/{bash,cat,echo,pwd,stty} /bin  &>> $BUILD_LOG
 ln -sv /tools/bin/perl /usr/bin                  &>> $BUILD_LOG
 ln -sv /tools/lib/libgcc_s.so{,.1} /usr/lib      &>> $BUILD_LOG
 ln -sv /tools/lib/libstdc++.so{,.6} /usr/lib     &>> $BUILD_LOG
+sed 's/tools/usr/' /tools/lib/libstdc++.la > /usr/lib/libstdc++.la
 ln -sv bash /bin/sh                              &>> $BUILD_LOG
 
 touch /etc/mtab    &>> $BUILD_LOG
@@ -34,9 +35,11 @@ cp -v $LFS_SCRIPTS/misc/group  /etc     &>> $BUILD_LOG
 # (The book starts a new shell, but the following works just as well)
 PS1='[\u@LFS-chroot] \w \$ '
 
-touch /var/run/utmp /var/log/{btmp,lastlog,wtmp}  &>> $BUILD_LOG
-chgrp -v utmp /var/run/utmp /var/log/lastlog      &>> $BUILD_LOG
-chmod -v 664 /var/run/utmp /var/log/lastlog       &>> $BUILD_LOG
+touch /var/log/{btmp,lastlog,wtmp}  &>> $BUILD_LOG
+chgrp -v utmp /var/log/lastlog      &>> $BUILD_LOG
+chmod -v 664  /var/log/lastlog      &>> $BUILD_LOG
+chmod -v 600  /var/log/btmp         &>> $BUILD_LOG
+
 
 echo
 echo 'Essential files created.'  | tee -a $BUILD_LOG

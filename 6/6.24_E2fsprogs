@@ -1,0 +1,40 @@
+
+######################################################################
+#
+PACKAGE_NAME="e2fsprogs-1.42.5"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.4"  #1.7
+
+source D-LFS.functions 
+
+header_log_prep
+
+#Docs recommends that the package be built in a subdirectory of the source tree:
+mkdir -v BUILD_DIR  &>> BUILD_LOG
+cd       BUILD_DIR  &>> BUILD_LOG
+
+../configure --prefix=/usr  \
+    --with-root-prefix=""   \
+    --enable-elf-shlibs     \
+    --disable-libblkid      \
+    --disable-libuuid       \
+    --disable-uuidd         \
+    --disable-fsck          &>> $BUILD_LOG
+
+make                        &>> $BUILD_LOG
+# make -k check              &>> $BUILD_LOG
+make install                &>> $BUILD_LOG
+make install-libs           &>> $BUILD_LOG
+
+chmod -v u+w /usr/lib/{libcom_err,libe2p,libext2fs,libss}.a   &>> $BUILD_LOG
+gunzip -v /usr/share/info/libext2fs.info.gz    &>> $BUILD_LOG
+install-info --dir-file=/usr/share/info/dir \
+              /usr/share/info/libext2fs.info   &>> $BUILD_LOG
+
+makeinfo -o      doc/com_err.info ../lib/et/com_err.texinfo &>> $BUILD_LOG
+install -v -m644 doc/com_err.info /usr/share/info           &>> $BUILD_LOG
+install-info --dir-file=/usr/share/info/dir \
+               /usr/share/info/com_err.info                 &>> $BUILD_LOG
+
+cleanup_log_footer

@@ -1,8 +1,8 @@
 
 ######################################################################
 #
-PACKAGE_NAME="binutils-2.21.1" #unzipped folder from package file is w/o the "a"
-PACKAGE_FILE="binutils-2.21.1a.tar.bz2"
+PACKAGE_NAME="binutils-2.22"
+PACKAGE_FILE="$PACKAGE_NAME.tar.bz2"
 PACKAGE_DESC=""
 SBUS="1.2"  #1.9
 
@@ -22,8 +22,7 @@ echo -e "========================================\n" &>> $BUILD_LOG
 rm -fv etc/standards.info &>> $BUILD_LOG 
 sed -i.bak '/^INFO/s/standards.info //' etc/Makefile.in 
 
-sed -i "/exception_defines.h/d" ld/testsuite/ld-elf/new.cc
-sed -i "s/-fvtable-gc //" ld/testsuite/ld-selective/selective.exp
+patch -Np1 -i ../${PACKAGE_NAME}-build_fix-1.patch
 
 mkdir -v $BUILD_DIR  &>> BUILD_LOG
 cd       $BUILD_DIR  &>> BUILD_LOG

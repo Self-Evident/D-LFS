@@ -15,7 +15,7 @@
 # available during portions of build.
 #
 
-D_LFS_version=5.4
+D_LFS_version=6.0.ALPHA
 
 source ./D-LFS.config     #Get config values.
 
@@ -195,9 +195,9 @@ function cleanup_log_footer {
 
 function Build_Common_Package {
    header_log_prep
-   ./configure --prefix=$1   &>> $BUILD_LOG 
-   make                      &>> $BUILD_LOG
-   make install              &>> $BUILD_LOG
+   ./configure --prefix=$1  $2  $3  &>> $BUILD_LOG 
+   make                             &>> $BUILD_LOG
+   make install                     &>> $BUILD_LOG
    cleanup_log_footer
    }
 
@@ -258,7 +258,7 @@ function Calculate_SBU {
    echo "SBU_=$SBU_"             >> $BUILD_DATA
    echo "SBU_long=$SBU_long"     >> $BUILD_DATA
 
-   #SBUS_0 used in header when a package's SBUS is < .1
+   #SBUS_0 is used in header when a package's SBUS is < .1
    SBUS_0=$[ (SBU_ ) / 19 ]  # ~= .05 SBU, slightly rounded up
    SBUS_0_long="`date -ud @$SBUS_0 +%T`" 
    echo SBUS_0=$SBUS_0           >> $BUILD_DATA

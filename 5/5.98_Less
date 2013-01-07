@@ -8,10 +8,4 @@ SBUS="0.1"
 
 source D-LFS.functions 
 
-header_log_prep
-
-./configure --prefix=/tools --sysconfdir=/tools &>> $BUILD_LOG
-make                                            &>> $BUILD_LOG
-make install                                    &>> $BUILD_LOG
-
-cleanup_log_footer
+Build_Common_Package /tools --sysconfdir=/tools

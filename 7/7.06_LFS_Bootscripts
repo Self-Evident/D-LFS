@@ -1,7 +1,7 @@
 #!/bin/bash
 ######################################################################
 #
-PACKAGE_NAME="lfs-bootscripts-20111017"
+PACKAGE_NAME="lfs-bootscripts-20120901"
 PACKAGE_FILE="${PACKAGE_NAME}.tar.bz2"
 PACKAGE_DESC=""
 SBUS="0.0"

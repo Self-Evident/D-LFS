@@ -1,29 +1,20 @@
 
 ######################################################################
 #
-PACKAGE_NAME="glibc-2.14.1"
-PACKAGE_FILE="${PACKAGE_NAME}.tar.bz2"
+PACKAGE_NAME="glibc-2.16.0"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
 PACKAGE_DESC=""
-SBUS="6.1"  #14.2 including test suites
+SBUS="6.1"  #17.6 including test suites
 
 source D-LFS.functions 
 
 header_log_prep
 
-DL=$(readelf -l /bin/sh | sed -n 's@.*interpret.*/tools\(.*\)]$@\1@p')
-sed -i "s|libs -o|libs -L/usr/lib -Wl,-dynamic-linker=$DL -o|" \
-        scripts/test-installation.pl
-unset DL
-
-sed -i -e 's/"db1"/& \&\& $name ne "nss_test1"/' scripts/test-installation.pl
-
+sed -i 's#<rpc/types.h>#"rpc/types.h"#' sunrpc/rpc_clntout.c
+sed -i '/test-installation.pl/d' Makefile
 sed -i 's|@BASH@|/bin/bash|' elf/ldd.bash.in
 
-patch -Np1 -i ../${PACKAGE_NAME}-fixes-1.patch     &>>   $BUILD_LOG
-patch -Np1 -i ../${PACKAGE_NAME}-gcc_fix-1.patch   &>>   $BUILD_LOG
-
-sed -i '195,213 s/PRIVATE_FUTEX/FUTEX_CLOCK_REALTIME/' \
-  nptl/sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timed{rd,wr}lock.S
+patch -Np1 -i ../${PACKAGE_NAME}-res_query_fix-1.patch
 
 mkdir  -v $BUILD_DIR  &>> BUILD_LOG
 cd        $BUILD_DIR  &>> BUILD_LOG
@@ -34,14 +25,16 @@ case `uname -m` in
 esac
 
 echo >> $BUILD_LOG
-echo "### configuring for make... ###"   &>>   $BUILD_LOG
-../$PACKAGE_NAME/configure --prefix=/usr \
-    --disable-profile --enable-add-ons \
-    --enable-kernel=2.6.25 --libexecdir=/usr/lib/glibc  &>>   $BUILD_LOG 
+
+../$PACKAGE_NAME/configure \
+	--prefix=/usr          \
+    --disable-profile      \
+	--enable-add-ons       \
+    --enable-kernel=2.6.25 \
+	--libexecdir=/usr/lib/glibc  &>>   $BUILD_LOG 
 
 make  &>> $BUILD_LOG
 
-#cp -v ../$PACKAGE_NAME/iconvdata/gconv-modules iconvdata  &>>   $BUILD_LOG
 #make -k check 2>&1 | tee glibc-check-log                 &>>   $BUILD_LOG
 #grep Error glibc-check-log                               &>>   $BUILD_LOG
 
@@ -49,11 +42,16 @@ touch /etc/ld.so.conf   &>>   $BUILD_LOG
 
 make install   &>>   $BUILD_LOG
 
+cp -v ../glibc-2.16.0/sunrpc/rpc/*.h /usr/include/rpc        &>> $BUILD_LOG
+cp -v ../glibc-2.16.0/sunrpc/rpcsvc/*.h /usr/include/rpcsvc  &>> $BUILD_LOG
+cp -v ../glibc-2.16.0/nis/rpcsvc/*.h /usr/include/rpcsvc     &>> $BUILD_LOG
+
 mkdir -pv /usr/lib/locale   &>>   $BUILD_LOG
 localedef -i cs_CZ -f UTF-8 cs_CZ.UTF-8
 localedef -i de_DE -f ISO-8859-1 de_DE
 localedef -i de_DE@euro -f ISO-8859-15 de_DE@euro
 localedef -i de_DE -f UTF-8 de_DE.UTF-8
+localedef -i en_GB -f UTF-8 en_GB.UTF-8
 localedef -i en_HK -f ISO-8859-1 en_HK
 localedef -i en_PH -f ISO-8859-1 en_PH
 localedef -i en_US -f ISO-8859-1 en_US
@@ -64,7 +62,10 @@ localedef -i fr_FR -f ISO-8859-1 fr_FR
 localedef -i fr_FR@euro -f ISO-8859-15 fr_FR@euro
 localedef -i fr_FR -f UTF-8 fr_FR.UTF-8
 localedef -i it_IT -f ISO-8859-1 it_IT
+localedef -i it_IT -f UTF-8 it_IT.UTF-8
 localedef -i ja_JP -f EUC-JP ja_JP
+localedef -i ru_RU -f KOI8-R ru_RU.KOI8-R
+localedef -i ru_RU -f UTF-8 ru_RU.UTF-8
 localedef -i tr_TR -f UTF-8 tr_TR.UTF-8
 localedef -i zh_CN -f GB18030 zh_CN.GB18030
 
@@ -75,6 +76,25 @@ localedef -i zh_CN -f GB18030 zh_CN.GB18030
 # Just copy a previously created file, instead of using cat, as in the book.
 cp -v $LFS_SCRIPTS/misc/nsswitch.conf /etc     &>> $BUILD_LOG
 
+
+tar -xf ../tzdata2012e.tar.gz
+
+ZONEINFO=/usr/share/zoneinfo
+mkdir -pv $ZONEINFO/{posix,right} 
+
+for tz in etcetera southamerica northamerica europe africa antarctica  \
+          asia australasia backward pacificnew solar87 solar88 solar89 \
+          systemv; do
+    zic -L /dev/null   -d $ZONEINFO       -y "sh yearistype.sh" ${tz} 
+    zic -L /dev/null   -d $ZONEINFO/posix -y "sh yearistype.sh" ${tz} 
+    zic -L leapseconds -d $ZONEINFO/right -y "sh yearistype.sh" ${tz}
+done
+
+cp -v zone.tab iso3166.tab $ZONEINFO   &>> $BUILD_LOG
+zic -d $ZONEINFO -p America/New_York   &>> $BUILD_LOG
+unset ZONEINFO
+
+
 #tzselect
 #Set default timezone
 echo >> $BUILD_LOG
@@ -83,13 +103,12 @@ cp -v --remove-destination /usr/share/zoneinfo/$TIMEZONE \
 
 
 cat > /etc/ld.so.conf << "EOF"
-# Begin /etc/ld.so.conf
 
 /usr/local/lib
 /opt/lib
 
-# End /etc/ld.so.conf
 EOF
+# End /etc/ld.so.conf
 
 
 #The following lines are optional. See book for details.
@@ -97,6 +116,7 @@ cat >> /etc/ld.so.conf << "EOF"
 # Add an include directory
 include /etc/ld.so.conf.d/*.conf
 EOF
+
 mkdir /etc/ld.so.conf.d
 
 

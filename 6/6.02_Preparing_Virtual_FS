@@ -37,9 +37,15 @@ mknod -m 666 $LFS/dev/null c 1 3      &>> $BUILD_LOG
 mount -v --bind /dev $LFS/dev         &>> $BUILD_LOG
 
 mount -vt devpts devpts $LFS/dev/pts  &>> $BUILD_LOG
-mount -vt tmpfs shm $LFS/dev/shm      &>> $BUILD_LOG
 mount -vt proc proc $LFS/proc         &>> $BUILD_LOG
 mount -vt sysfs sysfs $LFS/sys        &>> $BUILD_LOG
+
+if [ -h /dev/shm ]; then
+   rm -f $LFS/dev/shm  &>> $BUILD_LOG
+   mkdir $LFS/dev/shm  &>> $BUILD_LOG
+fi
+
+mount -vt tmpfs shm $LFS/dev/shm  &>> $BUILD_LOG
 
 
 cat << "EOF"

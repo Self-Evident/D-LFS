@@ -1,8 +1,8 @@
 #!/bin/bash
 ######################################################################
-VERSION=3.1  #Linux Kernel Version
+VERSION=3.5.2  #Linux Kernel Version
 PACKAGE_NAME="linux-${VERSION}"
-PACKAGE_FILE="${PACKAGE_NAME}.tar.bz2"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
 PACKAGE_DESC=""
 SBUS="6.3"  #5.0
 
@@ -42,7 +42,7 @@ make                                  &>> $BUILD_LOG
 make modules_install                  &>> $BUILD_LOG
 
 
-cp -v arch/x86/boot/bzImage  /boot/vmlinux-$VERSION  &>> $BUILD_LOG
+cp -v arch/x86/boot/bzImage  /boot/vmlinuz-$VERSION  &>> $BUILD_LOG
 cp -v System.map  /boot/System.map-$VERSION          &>> $BUILD_LOG
 cp -v .config  /boot/config-$VERSION                 &>> $BUILD_LOG
 
@@ -52,12 +52,10 @@ cp -r Documentation/* /usr/share/doc/linux-$VERSION  &>> $BUILD_LOG
 
 install -v -m755 -d /etc/modprobe.d                  &>> $BUILD_LOG
 
-
 cat > /etc/modprobe.d/usb.conf << "EOF"
 # Begin /etc/modprobe.d/usb.conf
 install ohci_hcd /sbin/modprobe ehci_hcd ; /sbin/modprobe -i ohci_hcd ; true
 install uhci_hcd /sbin/modprobe ehci_hcd ; /sbin/modprobe -i uhci_hcd ; true
-# End /etc/modprobe.d/usb.conf
 EOF
 
 

@@ -106,7 +106,7 @@ echo >> $BUILD_LOG
 rm -v dummy.c a.out dummy.log   &>> $BUILD_LOG
 
 
-echo "Results of several toolchain tests can be found in the build log."
+echo "The results of several toolchain tests can be found in the build log."
 echo "Be sure to review the log to ensure success of the tests."
 
 footer

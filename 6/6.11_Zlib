@@ -1,7 +1,7 @@
 
 ######################################################################
 #
-PACKAGE_NAME="zlib-1.2.5"
+PACKAGE_NAME="zlib-1.2.7"
 PACKAGE_FILE="${PACKAGE_NAME}.tar.bz2"
 PACKAGE_DESC=""
 SBUS="0.1"
@@ -10,10 +10,7 @@ source D-LFS.functions
 
 header_log_prep
 
-sed -i 's/ifdef _LARGEFILE64_SOURCE/ifndef _LARGEFILE64_SOURCE/' zlib.h
-
-CFLAGS='-mstackrealign -fPIC -O3' ./configure --prefix=/usr  &>> $BUILD_LOG
-
+./configure --prefix=/usr
 make                                             &>> $BUILD_LOG
 # make check                                     &>> $BUILD_LOG
 make install                                     &>> $BUILD_LOG

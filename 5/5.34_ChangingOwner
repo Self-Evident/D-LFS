@@ -1,0 +1,28 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME=""
+PACKAGE_FILE=""
+PACKAGE_DESC="Changing Owner"
+SBUS="0.0"
+
+source D-LFS.functions
+
+header
+
+if [[ ${UID} = "0" ]] ; then
+   echo  "Running: \"chown -R 0:0  $LFS\" ...  "
+   chown -vR  0:0  $LFS                          &>> $BUILD_LOG
+else
+   echo "chown aborted. Not logged in as root."  &>> $BUILD_LOG
+   echo
+   echo "NOTE - This step must be performed as root:"
+   echo
+   echo "   chown -R 0:0 $LFS"
+   echo
+   echo "Logout of user lfs, and log back in as root."
+   echo "Then run the chown command above (or rerun this script)."
+   echo
+fi
+
+footer

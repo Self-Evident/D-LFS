@@ -10,8 +10,8 @@ source D-LFS.functions
 
 header
 
-echo -n "Creating directory ${BOLD}${LFS}${NORMAL} on the host, "
-echo    "and mounting ${BOLD}${DEV_LFS} there."
+echo -en "Creating directory ${BOLD}${LFS}${NORMAL} on the host, "
+echo     "and mounting ${BOLD}${DEV_LFS} there."
 mkdir -vp $LFS                          | tee -a $BUILD_LOG
 mount -v -t ext3  $DEV_LFS $LFS         | tee -a $BUILD_LOG
 

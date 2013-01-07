@@ -1,8 +1,8 @@
 
 ######################################################################
 #
-PACKAGE_NAME="man-pages-3.35"
-PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_NAME="man-pages-3.42"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
 PACKAGE_DESC=""
 SBUS="0.0"
 

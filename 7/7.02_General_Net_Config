@@ -32,12 +32,9 @@ echo "BROADCAST=$BROADCAST"    >>  /etc/sysconfig/ifconfig.eth0
 echo 'Created  /etc/sysconfig/ifconfig.eth0 '  | tee -a $BUILD_LOG
 
 
-
-
-echo "# Begin /etc/resolv.conf"    >  /etc/resolv.conf
+echo                               >> /etc/resolv.conf
 echo "#domain <Your Domain Name>"  >> /etc/resolv.conf
 echo "nameserver $NAMESERVER"      >> /etc/resolv.conf
-echo "# End /etc/resolv.conf"      >> /etc/resolv.conf
 
 echo 'Created  /etc/resolv.conf '  | tee -a $BUILD_LOG
 

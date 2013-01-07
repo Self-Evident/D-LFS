@@ -1,0 +1,12 @@
+
+######################################################################
+#
+PACKAGE_NAME="grep-2.14"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.2"  #0.4
+
+source D-LFS.functions
+
+
+Build_Common_Package /user --bindir=/bin

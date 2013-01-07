@@ -10,7 +10,9 @@ source D-LFS.functions
 
 header_log_prep
 
-./configure --prefix=/usr --bindir=/bin --htmldir=/usr/share/doc/sed-4.2.1 &>> $BUILD_LOG
+patch -Np1 -i ../${PACKAGE_NAME}-testsuite_fixes-1.patch
+
+./configure --prefix=/usr --bindir=/bin --htmldir=/usr/share/doc/${PACKAGE_NAME} &>> $BUILD_LOG
 
 make                     &>> $BUILD_LOG
 make html                &>> $BUILD_LOG

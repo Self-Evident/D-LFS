@@ -17,7 +17,9 @@ Change_HOST_to  LFS-chroot
 echo "Entering the 6.04 chroot environment... HOST=$HOST "  | tee -a $BUILD_LOG
 
 chroot $LFS /tools/bin/env -i \
-   HOME=/root TERM=$TERM PS1='[\u@$HOST] \w \$ ' \
+   HOME=/root                 \
+   TERM=$TERM                 \
+   PS1='[\u@$HOST] \w \$ '    \
    PATH=/bin:/usr/bin:/sbin:/usr/sbin:/tools/bin \
    /tools/bin/bash --login +h 
 

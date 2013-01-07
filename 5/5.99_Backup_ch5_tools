@@ -14,7 +14,8 @@ echo "This state of the tools (end of chapter 5)"
 echo "may be used for future builds (beginning with chapter 6)."
 echo
 
-if [[ "$AUTO_BUILD" == "3" ]]; then REPLY="";
+if [[ "$AUTO_BUILD" == "3" ]]; then
+   REPLY="";
 else
    read -p "Press Enter to backup the chapter 5 tools, or, Enter s to skip: "
 fi
