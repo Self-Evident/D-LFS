@@ -54,7 +54,7 @@ cd        $BUILD_DIR  &>> BUILD_LOG
     --disable-libgomp          \
     --disable-libquadmath      \
     --enable-languages=c       \
-    --with-mpfr-include=$(pwd)/../${PACKAGE_NAME}/mpfr/src \  
+    --with-mpfr-include=$(pwd)/../${PACKAGE_NAME}/mpfr/src \
     --with-mpfr-lib=$(pwd)/mpfr/src/.libs   &>> $BUILD_LOG
 
 make         &>> $BUILD_LOG

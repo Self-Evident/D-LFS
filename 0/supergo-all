@@ -18,7 +18,7 @@ echo "exit    #supergo5"                >> /home/$LFS_USER/.bashrc
 
 su - $LFS_USER
 
-5/5.35_ChangingOwner
+5/5.34_ChangingOwner
 
 5/5.99_Backup_ch5_tools
 

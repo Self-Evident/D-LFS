@@ -44,7 +44,7 @@ cd        $BUILD_DIR  &>> BUILD_LOG
 CC=$LFS_TGT-gcc \
 AR=$LFS_TGT-ar                  \
 RANLIB=$LFS_TGT-ranlib          \
-../$PACKAGE_NAME/configure          \
+../$PACKAGE_NAME/configure      \
     --prefix=/tools             \
     --with-local-prefix=/tools  \
     --with-native-system-header-dir=/tools/include \
