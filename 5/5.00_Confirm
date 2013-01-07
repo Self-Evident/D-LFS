@@ -8,7 +8,7 @@ SBUS="0.0"
 
 source D-LFS.functions
 
-header
+header <0/ENTER #Skip "Press Enter to continue:"
 
 echo -e "${YELLOW}For this part of the build process, make sure (above)" 
 echo -e "that you are logged in as user 'lfs' of the host system${NORMAL}"

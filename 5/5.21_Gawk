@@ -2,7 +2,7 @@
 ######################################################################
 #
 PACKAGE_NAME="gawk-4.0.1"
-PACKAGE_FILE="${PACKAGE_NAME}.tar.zx"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
 PACKAGE_DESC=""
 SBUS="0.2"
 

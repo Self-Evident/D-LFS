@@ -1,7 +1,8 @@
 
 ######################################################################
 #
-PACKAGE_NAME="zlib-1.2.7"
+VERS="1.2.7"
+PACKAGE_NAME="zlib-${VERS}"
 PACKAGE_FILE="${PACKAGE_NAME}.tar.bz2"
 PACKAGE_DESC=""
 SBUS="0.1"
@@ -15,7 +16,7 @@ make                                             &>> $BUILD_LOG
 # make check                                     &>> $BUILD_LOG
 make install                                     &>> $BUILD_LOG
 
-mv -v /usr/lib/libz.so.* /lib                      &>> $BUILD_LOG
-ln -sfv ../../lib/libz.so.1.2.5 /usr/lib/libz.so   &>> $BUILD_LOG
+mv -v /usr/lib/libz.so.* /lib                        &>> $BUILD_LOG
+ln -sfv ../../lib/libz.so.${VERS}  /usr/lib/libz.so  &>> $BUILD_LOG
 
 cleanup_log_footer

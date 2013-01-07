@@ -21,17 +21,18 @@ cd        $BUILD_DIR  &>> BUILD_LOG
 
 echo "### Create configparms file... ###"   &>>   $BUILD_LOG
 case `uname -m` in
-  i?86) echo "CFLAGS += -march=i486 -mtune=native -O3 -pipe" | tee configparms >> $BUILD_LOG;;
+  i?86) echo "CFLAGS += -march=i486 -mtune=native -O3 -pipe"\
+                                              | tee configparms >> $BUILD_LOG;;
 esac
 
 echo >> $BUILD_LOG
 
 ../$PACKAGE_NAME/configure \
-	--prefix=/usr          \
+    --prefix=/usr          \
     --disable-profile      \
-	--enable-add-ons       \
+    --enable-add-ons       \
     --enable-kernel=2.6.25 \
-	--libexecdir=/usr/lib/glibc  &>>   $BUILD_LOG 
+    --libexecdir=/usr/lib/glibc  &>>   $BUILD_LOG 
 
 make  &>> $BUILD_LOG
 
@@ -42,9 +43,9 @@ touch /etc/ld.so.conf   &>>   $BUILD_LOG
 
 make install   &>>   $BUILD_LOG
 
-cp -v ../glibc-2.16.0/sunrpc/rpc/*.h /usr/include/rpc        &>> $BUILD_LOG
-cp -v ../glibc-2.16.0/sunrpc/rpcsvc/*.h /usr/include/rpcsvc  &>> $BUILD_LOG
-cp -v ../glibc-2.16.0/nis/rpcsvc/*.h /usr/include/rpcsvc     &>> $BUILD_LOG
+cp -v ../${PACKAGE_NAME}/sunrpc/rpc/*.h /usr/include/rpc        &>> $BUILD_LOG
+cp -v ../${PACKAGE_NAME}/sunrpc/rpcsvc/*.h /usr/include/rpcsvc  &>> $BUILD_LOG
+cp -v ../${PACKAGE_NAME}/nis/rpcsvc/*.h /usr/include/rpcsvc     &>> $BUILD_LOG
 
 mkdir -pv /usr/lib/locale   &>>   $BUILD_LOG
 localedef -i cs_CZ -f UTF-8 cs_CZ.UTF-8

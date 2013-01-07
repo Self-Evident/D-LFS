@@ -22,7 +22,9 @@ set -e
 6/6.17_GCC
 6/6.18_Sed
 6/6.19_Bzip2
+echo past 6.19 >> BUILD_LOG #####
 6/6.20_Pkg_config
+echo past 6.20 >> BUILD_LOG #####
 6/6.21_Ncurses
 6/6.22_Util-linux
 6/6.23_Psmisc
@@ -66,3 +68,5 @@ set -e
 6/6.61_Udev
 6/6.62_Vim
 6/6.64_Stripping_Again
+
+echo past 6.64 >> BUILD_LOG #####

@@ -16,4 +16,3 @@ make                         &>> $BUILD_LOG
 make install                 &>> $BUILD_LOG
 
 cleanup_log_footer
-

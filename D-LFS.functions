@@ -119,9 +119,11 @@ function header {
    echo "$PACKAGE_NUMB : $PACKAGE_NAME $PACKAGE_DESC"      | tee -a $BUILD_LOG
    echo "                                 started        (1 SBU =   $SBU_long)"\
         "est. finish" | tee -a $BUILD_LOG
-   Press_Enter_to_continue
 
    Display_Estimated_Times_Total                           | tee -a $BUILD_LOG
+
+   Press_Enter_to_continue #pause here, before log_start_time
+
    #A few pkg's don't log time, such as the 6.04 & 6.64 chroots.
    #A few others log_start_time sometime after the header (may have a prompt)
    #So, in general, log_start_time unless $1=0

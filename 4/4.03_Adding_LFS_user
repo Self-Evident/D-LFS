@@ -18,7 +18,7 @@ useradd -s /bin/bash -g $LFS_USER -m -k /dev/null $LFS_USER  | tee -a $BUILD_LOG
 
 passwd --delete $LFS_USER                        | tee -a $BUILD_LOG
 
-echo "The chown and \"su - lfs\" commands indicated in the book will be performed"
+echo "The chown and su commands indicated in the book will be performed"
 echo "in the next section."
 
 footer

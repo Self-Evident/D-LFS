@@ -9,7 +9,7 @@ SBUS="0.0"
 source D-LFS.functions
 
 
-header
+header <0/ENTER #Skip "Press Enter to continue:"
 
 echo
 echo "Like ch6, do not run ch7 scripts directly from your host environment."
