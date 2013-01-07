@@ -33,7 +33,7 @@ make mrproper  &>> $BUILD_LOG
 if [ "$OPTION" == "2" ]; then
    make LANG=en_US.UTF-8 LC_ALL= menuconfig
 else
-   cp -v $LFS_SCRIPTS/misc/linux.config .config      &>> $BUILD_LOG
+   cp -v $LFS_SCRIPTS/misc/linux.config.$VERSION .config &>> $BUILD_LOG
 fi
 
 echo 'Building Linux kernel...'  | tee -a $BUILD_LOG

@@ -14,30 +14,30 @@ cd $LFS_SCRIPTS/misc
 
 { #braces group commands for easier save of output to the log
 
-echo -n "Section 7.07:  "
+echo -n "Section 7.07:  cp "
 cp -v  inittab  /etc/              2>&1
 
 echo -n "        7.08:  "
 echo  "HOSTNAME=$HOSTNAME" > /etc/sysconfig/network
 echo  "Created /etc/sysconfig/network."
 
-echo -n "        7.09:  "
+echo -n "        7.09:  cp "
 cp -v  clock    /etc/sysconfig/    2>&1
 
-echo -n "        7.10:  "
+echo -n "        7.10:  cp "
 cp -v  console  /etc/sysconfig/    2>&1
 
-echo -n "        7.13:  "
+echo -n "        7.13:  cp "
 cp -v  profile  /etc/              2>&1
 
-echo -n "        7.14:  "
+echo -n "        7.14:  cp "
 cp -v  inputrc  /etc/              2>&1
 
 echo -n "        9.01:  "
 echo $LFS_VERSION > /etc/lfs-release
 echo  "Created /etc/lfs-release"
 
-echo -n " (from BLFS):  "
+echo -n " (from BLFS):  cp  "
 cp -v  issue    /etc/issue         2>&1
 
 } | tee -a $BUILD_LOG    #close group, save output
