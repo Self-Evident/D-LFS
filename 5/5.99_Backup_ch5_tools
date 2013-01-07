@@ -36,6 +36,7 @@ EOF
 
 
 log_start_time
+echo
 
 cd $LFS
 VERS=$LFS_VERSION

@@ -8,8 +8,7 @@ SBUS="0.0"
 
 source D-LFS.functions 
 
-header 0 < 0/ENTER  #0 suppresses log_start_time in header
-                    #"< 0/ENTER" skips "Press Enter to continue:"
+header < 0/ENTER   #"< 0/ENTER" skips "Press Enter to continue:"
 
 echo "Run this script as root of the host system, and only if:"
 echo
@@ -19,6 +18,8 @@ echo "     either manually or thru a reboot."
 echo
 Enter_YES_to_continue  # Will exit if YES is not entered.
 
+log_start_time
+echo
 
 echo "First, let's make sure they're not already mounted..."  &>> $BUILD_LOG
 #(This prevents mtab from getting cluttered if 6.02 is re-ran more than once.)
@@ -58,4 +59,4 @@ EOF
 
 install -dv -m 0755 $LFS/root    | tee -a $BUILD_LOG
 
-footer 0  #0 suppresses log_end_time
+footer

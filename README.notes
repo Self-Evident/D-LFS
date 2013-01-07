@@ -87,53 +87,50 @@ In a nutshell:  D-LFS Scripts contains the commands needed to compile each
 package needed to build an entire, if basic, Linux system. 
 The scripts are numbered/named to coorespond to sections in the LFS book.
 
-Now, out of the nushell, D-LFS Scripts does just a little more than described
-above.  For instance, they also contain code to help automate and document the
-build process.  Additionally, during runtime, they provide estimates on the
+Now, out of the nushell, they also contain code to help automate and document
+the build process.  Additionally, during runtime, they provide estimates on the
 time each package is going to take to complete.
 
 ===
-Always start scripts from the ./scripts directory, and NOT from the directory
-they are in. (The single exception is 0/version_check.sh - it may be started
+Always start scripts from the ./scripts directory, and NOT from their 
+sub-directories. (The single exception is 0/version_check.sh - it may be started
 from anywhere). For example, if running the scripts one at a time, after
-1.00_START is done, the next script is 2.00_Confirm, which is in directory "1".
-Do not cd into directory "1".  Just run it from the scripts directory:
-/D-LFS_Scripts/scripts$ 1/2.00_Confirm
+1.00_START is done, the next script is 2.00_Confirm, which is in directory "4".
+Do not cd into directory "4".  Just run it from the scripts directory:
+/D-LFS_Scripts/scripts$ 4/2.00_Confirm
 
 ================================================================================
-=======================================
 Outline of build envinronments/contexts
 =======================================
 
-   |    root on host    |  lfs on host  |    chroot    |
- --+--------------------+---------------+--------------+
- 1 |<= ch4              |               |              |
- --+--------------------+---------------+--------------+
- 2 |                    |ch5 thru 5.33  |              |
- --+--------------------+---------------+--------------+
-   |5.34 chown          |               |              |
- 3 |6.02 Prep Virtual FS|               |              |
-   |6.04 chroot         |               |              |
- --+--------------------+---------------+--------------+
-   |                    |               |ch6 thru 6.61 |
-   +--------------------+---------------+--------------+
- 4 |6.64 new chroot (optional - not used by D-LFS)     |
-   +--------------------+---------------+--------------+
-   |                    |               |6.64 Stripping|
- --+--------------------+---------------+--------------+
- 5 |6.65 Cleaning Up/   |               |              |
-   |     New chroot     |               |              |
- --+--------------------+---------------+--------------+
- 6 |                    |               |  ch7,8,...   |
- --+--------------------+---------------+--------------+
- 7 |  final cleanup     |               |              |
- --+--------------------+---------------+--------------+
+ Stage|    root on host    |  lfs on host  |    chroot    |
+ -----+--------------------+---------------+--------------+
+   1  |<= ch4              |               |              |
+ -----+--------------------+---------------+--------------+
+   2  |                    |ch5 thru 5.33  |              |
+ -----+--------------------+---------------+--------------+
+      |5.34 chown          |               |              |
+   3  |6.02 Prep Virtual FS|               |              |
+      |6.04 chroot         |               |              |
+ -----+--------------------+---------------+--------------+
+      |                    |               |ch6 thru 6.62 |
+ -----+--------------------+---------------+--------------+
+   4  |6.64 new chroot (optional - not used by D-LFS)     |
+ -----+--------------------+---------------+--------------+
+      |                    |               |6.64 Stripping|
+ -----+--------------------+---------------+--------------+
+   5  |6.65 Cleaning Up/   |               |              |
+      |     New chroot     |               |              |
+ -----+--------------------+---------------+--------------+
+   6  |                    |               |  ch7,8,...   |
+ -----+--------------------+---------------+--------------+
+   7  |  final cleanup     |               |              |
+ -----+--------------------+---------------+--------------+
 
 
 
 
 ================================================================================
-==========
 MISC NOTES
 (ie: a few things I've learned along the way)
 ==========
@@ -147,8 +144,8 @@ available during portions of build.
 ========================================
 #! / hash-bang / sh-bang 
 
-Ok, I just learned (mostly) about this line. I have left it out of ch6 scripts
-that are installed while in the chroot for two reasons:
+This has been left out of ch6 scripts that are installed while in the chroot
+for two reasons:
 1) While in the chroot, bash is the only shell available, so it is unnecessary.
 2) For packages installed prior to the installation of bash (6.30), the line
    would have to be:   #!/tools/bin/bash
@@ -215,7 +212,7 @@ For example, passwd and group are created this way in 6.06_Essential_Files.
 ========================================
 SBUT (Standard Build Units, Total)
 
-The SBUT is figured by  grep|sed|cut'ing every file in 1/,/5,/6,/7 and /B for 
+The SBUT is figured by  grep|sed|cut'ing every file in 4/,/5,/6,/7 and /B for 
 the "SBUS=" line. So, any file in any of those directories that is not used 
 for a given build, but that has such a line, will skew the results. This is of
 no consequence to the actual build, of course, but I thought some might like 
@@ -239,7 +236,7 @@ which displays the output to the screen, and appends it to log_file.
 
 However, in the example, if 'some/directory' DOES exist, cd is silent on 
 sterr & stout, but DOES NOT actually 'cd' into 'some/directory'.  So, any 
-subsequent commands relying on being in the new directory, will fail.
+subsequent commands relying on being in the new directory will fail.
 
 It seems that cd doesn't like to pipe; but std i/o redirects are ok.
 
@@ -260,7 +257,7 @@ again...
 
 *Footnote:
 
-KISS, of course, stands for "Keep It Simple Stupid".  However, as is often 
+KISS, of course, stands for "Keep It Simple, Stupid".  However, as is often 
 the case, particularly with programming projects, the opposite is achieved. 
 That is, one looses site of the original goal (what ever it may have been),
 and ends up with a potential Rube-Goldberg entry.

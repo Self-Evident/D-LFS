@@ -15,7 +15,7 @@
 # available during portions of build.
 #
 
-D_LFS_version=5.5.ALPHA
+D_LFS_version=5.5.BETA
 
 source ./D-LFS.config     #Get config values.
 
@@ -43,7 +43,7 @@ function Init_BUILD_LOGS {
    echo "HOST=$(hostname)" >> $BUILD_INFO # or = "LFS-chroot"
 
    Calculate_SBUT  #Add up all the estimated SBUS from each pkg.
-   }
+} #End Init_BUILD_LOGS
 
 
 
@@ -51,7 +51,7 @@ function log_start_time {
    TIME_START=`$TIMESTAMP`
    echo -n $PACKAGE_NUMB $SBUS $TIME_START" " >> $BUILD_TIMES
    Display_Estimated_Times_Package      | tee -a $BUILD_LOG
-   }
+}
 
 
 
@@ -59,7 +59,7 @@ function log_end_time {
    TIME_END=`$TIMESTAMP`
    Calculate_ABUS_and_DIFF
    echo $TIME_END $ABUS $DIFF >> $BUILD_TIMES
-   }
+}
 
 
 
@@ -74,7 +74,7 @@ function Enter_YES_to_continue {
      echo
      exit 1
    fi
-   }
+}
 
 
 
@@ -83,7 +83,7 @@ function Press_Enter_to_continue {
 
    read -sp "Press Enter to continue: "
    echo -en "\r$BLANKLINE\r"
-   }
+}
 
 
 
@@ -103,7 +103,7 @@ function Press_R_to_Review_build_log {
       less -R $BUILD_LOG
    fi
    echo
-   }
+}
 
 
 
@@ -131,7 +131,7 @@ function header {
    if [ "$1" != "0"  ]; then log_start_time; fi 
 
    echo $DIVIDER                                           | tee -a $BUILD_LOG
-   } #End header
+} #End header
 
 
 
@@ -144,7 +144,7 @@ function prepare_package {
 
    #Will sometimes echo "Building package..." later.
    if [ "$1" != "0"  ]; then echo "Building package..." | tee -a $BUILD_LOG; fi 
-   }
+}
 
 
 
@@ -155,7 +155,7 @@ function cleanup {
    cd $LFS_SOURCES            2>> $BUILD_LOG  
    rm -rf $PACKAGE_NAME
    rm -rf $BUILD_DIR
-   }
+}
 
 
 
@@ -163,34 +163,35 @@ function footer {
    #A few pkg's don't log time (chroots), or log it before the footer.
    if [ "$1" != "0" ]; then log_end_time; fi  #if $1=0, don't log end time
 
-   grep -n "Error "  $BUILD_LOG
+   #Show errors, except ignored errors.
+   grep -n "Error "  $BUILD_LOG | sed '/ignored/d' 
    grep -n "Stop."   $BUILD_LOG
 
    { #braces group commands for easier save of output to the log
-   echo $DIVIDER
-   echo -n "$PACKAGE_NUMB : Done      :  `$TIMESTAMP_long`"
-   ELAPSEDINFO=",  $ABUS ABUs   $ELAPSED_long"
-   if [[ "$ABUS" != "" ]]; then  echo "$ELAPSEDINFO";  else echo;  fi
-   echo $DIVIDER
+     echo $DIVIDER
+     echo -n "$PACKAGE_NUMB : Done      :  `$TIMESTAMP_long`"
+     ELAPSEDINFO=",  $ABUS ABUs   $ELAPSED_long"
+     if [[ "$ABUS" != "" ]]; then  echo "$ELAPSEDINFO";  else echo;  fi
+     echo $DIVIDER
    } | tee -a $BUILD_LOG  #close group, save output
 
    Press_R_to_Review_build_log
    echo                                                   >> $BUILD_LOG
-   }
+} #End footer
 
 
 
 function header_log_prep {
    header
    prepare_package
-   }
+}
 
 
 
 function cleanup_log_footer {
    cleanup
    footer
-   }
+}
 
 
 
@@ -200,7 +201,7 @@ function Build_Common_Package {
    make                             &>> $BUILD_LOG
    make install                     &>> $BUILD_LOG
    cleanup_log_footer
-   }
+}
 
 
 
@@ -213,7 +214,7 @@ function Prep_chroot_for_supergo {
    echo "cd $LFS_SCRIPTS"     >> $LFS/root/.profile
    echo "0/supergo$1"         >> $LFS/root/.profile
    echo "logout"              >> $LFS/root/.profile
-   }
+}
 
 
 
@@ -225,7 +226,7 @@ function Prepare_chroot_profile {
    echo "cd $LFS_SCRIPTS           #REMOVE#"              >> $LFS/root/.profile
    echo "source $BUILD_INFO        #REMOVE#"              >> $LFS/root/.profile
    echo "source misc/profile       #REMOVE#"              >> $LFS/root/.profile
-   }
+}
 
 
 
@@ -233,7 +234,7 @@ function Change_HOST_to {  #Changes HOST to reflect if in chroot
    sed -i '/^HOST=/d' $BUILD_INFO   #Remove current value
    HOST=$1                          #Set new value
    echo HOST=$HOST >> $BUILD_INFO   #Save new value
-   }
+}
 
 
 
@@ -267,23 +268,23 @@ function Calculate_SBU {
 
    Calculate_Estimated_Build_Time_Total
 
-   } #END Calculate_SBU
+} #End Calculate_SBU
 
 
 
 function Calculate_SBUT {
-   # Add up the SBUS from all packages= SBUs Total
+   # Sum of SBUS from all packages = SBUT (SBU's Total)
    # Called at end of Init_BUILD_LOGS, on first run of D-LFS.functions only.
-   # While $BUILD_LOGS has been setup at this point, $BUILD_LOG has not.
-   # So, don't bother trying to save potenial error output of commands here.
+   # Note: while $BUILD_LOGS has been setup at this point, $BUILD_LOG has not.
 
+   #only want raw matched lines, so make sure color etc. is off. 
+   unalias grep     2>/dev/null #discard error if grep not aliased
 
    # Get SBUS="nn.n" lines from scripts (the lines may also have a #comment)
    # Remove quotes & decimal point (Makes an integer and multiplies by 10)
    # Remove any #comment
    # Remove SBUS=
    # Save to a new file, writing one value per line of form: nnn  (or just nn)
-   unalias grep  #only want raw matched lines, so make sure color etc. is off. 
    grep -h -e "^SBUS=" {4,5,6,7,B}/*  | \
    sed 's/"//g'                       | \
    sed 's/\.//'                       | \
@@ -302,7 +303,7 @@ function Calculate_SBUT {
    echo "SBUT=$SBUT"       >> $BUILD_INFO
    echo "SBUTx10=$SBUTx10" >> $BUILD_INFO
 
-   } #END Calculate_SBUT 
+} #End Calculate_SBUT 
 
 
 
@@ -324,7 +325,7 @@ function Calculate_Estimated_Build_Time_Package {
    EFTP=$[ $EBTP + `$TIMESTAMP` ]         #Est Build Time + current time 
    EFTP_long=`date -d @$EFTP "+%T %Z"` 
 
-   } #END Calculate_Estimated_Build_Time_Package
+} #End Calculate_Estimated_Build_Time_Package
 
 
 
@@ -346,7 +347,7 @@ function Calculate_Estimated_Build_Time_Total {
    echo EFTT_long=\"$EFTT_long\" >> $BUILD_INFO
 
    cd $LFS_SCRIPTS
-   } #END Calculate_Estimated_Build_Time_Total
+} #End Calculate_Estimated_Build_Time_Total
 
 
 
@@ -362,7 +363,7 @@ function Display_Estimated_Times_Total {
       echo " = $EBTT_long, $EFTT_long"
    fi
 
-   } #END Display_Estimated_Times_Total
+} #End Display_Estimated_Times_Total
 
 
 
@@ -386,7 +387,7 @@ function Display_Estimated_Times_Package {
    if [ "$SBUS" == "0.0" ]; then EQ="<"; else EQ="="; fi
    echo    " $EQ $EBTP_long, $EFTP_long"
 
-   } #END Display_Estimated_Times_Package
+} #End Display_Estimated_Times_Package
 
 
 
@@ -414,7 +415,7 @@ function Calculate_ABUS_and_DIFF {
    else NEG="-"; DIFFx10=$(( -1*DIFFx10 )); fi    #if DIFF<0, make DIFF pos &
    DIFF=$NEG$[ $DIFFx10 / 10 ].$[ $DIFFx10 % 10 ] #use $NEG for sign
 
-   } # END Calculate_ABUS_and_DIFF
+} #End Calculate_ABUS_and_DIFF
 
 
 
@@ -440,7 +441,7 @@ function Calculate_ABUT_and_ABTT {   #Called from summary screen.
    ABUTx10=$[ (($TOTAL_TIME * 100) / $SBU_ + 5) / 10]
    ABUT="$[ $ABUTx10 / 10 ].$[ $ABUTx10 % 10 ]"  #Used on summary screen
 
-   } #END Calculate_ABUT_and_ABTT
+} #End Calculate_ABUT_and_ABTT
 
 
 
@@ -462,14 +463,12 @@ AUTO_BUILD_desc[3]="Full-Auto build."
 
 
 PACKAGE_SCRIPT=`basename $0`  #Remove path, leave 1.23_Pkgname
-  #in Bash, $0 (or ${0}), is the "path/script" being run, as called.
-  # basename removes "path/", leaving just the filename of the script
+  #in Bash, $0 (or ${0}), is the "path/filename" being run, as called.
+  #basename removes "path/", leaving just the filename.
   #(in these scripts, path should only be ./, 0/, 4/, 5/, 6/, 7/, or B/)
-
 
 PACKAGE_NUMB=${PACKAGE_SCRIPT:0:4} # 1.23 (ie, chapter.section)
   #${VAR:0:4}  Starting at offset 0, returns a 4 character substring of $VAR
-
 
 #These are set in each N.nn_package_script:
 # PACKAGE_NAME="package_file_name-1.2.3"
@@ -499,7 +498,9 @@ BUILD_INFO="${BUILD_LOGS}/BUILD_INFO"
 #   Format ex: 1.23 12.3 1234567890 1234567890 12.2 0.1
 BUILD_TIMES="${BUILD_LOGS}/BUILD_TIMES"
 
-source $BUILD_INFO  2>/dev/null   #get various build time values
+
+#get various build time values
+source $BUILD_INFO  2>/dev/null #discard error of $BUILD_INFO not yet ready
 
 #
 # END D-LFS.functions 

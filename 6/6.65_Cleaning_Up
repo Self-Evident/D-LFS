@@ -19,10 +19,11 @@ Press_Enter_to_continue
 
 echo
 log_start_time
+echo | tee -a $BUILD_LOG
 
-echo -n "Removing $LFS/tools and the /tools symlink... "
+echo "Removing $LFS/tools and the /tools symlink... " | tee -a $BUILD_LOG
+echo >>  $BUILD_LOG
 rm -vrf $LFS/tools   &>> $BUILD_LOG
 rm -v    /tools      &>> $BUILD_LOG   #symlink on host
-echo "Done."
 
 footer

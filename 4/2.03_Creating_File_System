@@ -19,6 +19,7 @@ Enter_YES_to_continue  # Will exit if YES is not entered
 echo
 
 log_start_time
+echo &>> $BUILD_LOG
 echo "Creating filesystem..."
 
 umount $DEV_LFS                   &>> $BUILD_LOG
