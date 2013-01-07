@@ -1,0 +1,49 @@
+
+######################################################################
+#
+PACKAGE_NAME=""
+PACKAGE_FILE=""
+PACKAGE_DESC="Creating Directories"
+SBUS="0.0"
+
+source D-LFS.functions 
+
+header 0 < 0/ENTER  #0 suppresses log_start_time in header
+                    #"< 0/ENTER" skips "Press Enter to continue:"
+
+echo
+echo "IMPORTANT: ONLY run this script AFTER ENTERING the 6.04 chroot!"
+echo
+Enter_YES_to_continue  # Will exit if YES is not entered.
+
+
+log_start_time
+
+mkdir -pv /{bin,boot,etc/{opt,sysconfig},home,lib,mnt,opt,run} &>> $BUILD_LOG
+mkdir -pv /{media/{floppy,cdrom},sbin,srv,var}                 &>> $BUILD_LOG
+
+#install -dv -m 0750 /root          &>> $BUILD_LOG  #In D-LFS, done in 6.02
+install -dv -m 1777 /tmp /var/tmp  &>> $BUILD_LOG
+
+mkdir -pv /usr/{,local/}{bin,include,lib,sbin,src}     &>> $BUILD_LOG
+mkdir -pv /usr/{,local/}share/{doc,info,locale,man}    &>> $BUILD_LOG
+mkdir -v  /usr/{,local/}share/{misc,terminfo,zoneinfo} &>> $BUILD_LOG
+mkdir -pv /usr/{,local/}share/man/man{1..8}            &>> $BUILD_LOG
+
+for dir in /usr /usr/local; do
+    ln -sv share/{man,doc,info} $dir   &>> $BUILD_LOG
+done
+
+case $(uname -m) in
+    x86_64) ln -sv lib /lib64 && ln -sv lib /usr/lib64 &>> $BUILD_LOG ;;
+esac
+
+mkdir -v  /var/{log,mail,spool}                     &>> $BUILD_LOG
+ln -sv /run /var/run                                &>> $BUILD_LOG
+ln -sv /run/lock /var/lock                          &>> $BUILD_LOG
+mkdir -pv /var/{opt,cache,lib/{misc,locate},local}  &>> $BUILD_LOG
+
+echo                       | tee -a $BUILD_LOG
+echo Directories created.  | tee -a $BUILD_LOG
+
+footer

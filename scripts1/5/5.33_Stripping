@@ -1,0 +1,26 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME=""
+PACKAGE_FILE=""
+PACKAGE_DESC="Stripping"
+SBUS="0.0"
+
+source D-LFS.functions
+
+header
+
+cat <<"EOF"  >> $BUILD_LOG 
+NOTE: According to the LFS book, strip will skip a bunch of files, reporting,
+      "File format not recognized".  These are mostly scripts, instead of
+      binaries, and the messages may be ignored.
+EOF
+echo         >> $BUILD_LOG
+
+echo "Working... "
+
+strip --strip-debug /tools/lib/*  &>> $BUILD_LOG
+strip --strip-unneeded /tools/{,s}bin/*  &>> $BUILD_LOG
+rm -rf /tools/{,share}/{info,man,doc}  &>> $BUILD_LOG
+
+footer

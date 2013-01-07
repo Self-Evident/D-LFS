@@ -1,0 +1,34 @@
+
+######################################################################
+#
+PACKAGE_NAME="inetutils-1.9.1"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.4"
+
+source D-LFS.functions 
+
+header_log_prep
+
+sed -i -e '/gets is a/d' lib/stdio.in.h
+
+./configure --prefix=/usr  \
+    --libexecdir=/usr/sbin \
+    --localstatedir=/var   \
+    --disable-ifconfig     \
+    --disable-logger       \
+    --disable-syslogd      \
+    --disable-whois        \
+    --disable-servers &>> $BUILD_LOG 
+
+make                        &>> $BUILD_LOG
+#make check                  &>> $BUILD_LOG
+make install                &>> $BUILD_LOG
+
+make -C doc html           &>> $BUILD_LOG
+make -C doc install-html docdir=/usr/share/doc/${PACKAGE_NAME}  &>> $BUILD_LOG
+
+mv -v /usr/bin/{hostname,ping,ping6} /bin &>> $BUILD_LOG
+mv -v /usr/bin/traceroute /sbin           &>> $BUILD_LOG
+
+cleanup_log_footer

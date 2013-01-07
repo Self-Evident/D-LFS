@@ -1,0 +1,39 @@
+#!/bin/bash
+######################################################################
+#
+# supergo-all: run thru the entire LFS build
+#
+set -e
+
+source D-LFS.functions
+
+source 0/supergo4
+
+cd $LFS_SCRIPTS
+
+# Add lines that will run supergo5 with next login only to the lfs account
+echo "sed -i '/supergo5/d'  ~/.bashrc"  >> /home/$LFS_USER/.bashrc
+echo "0/supergo5"                       >> /home/$LFS_USER/.bashrc
+echo "exit    #supergo5"                >> /home/$LFS_USER/.bashrc
+
+su - $LFS_USER
+
+5/5.35_ChangingOwner
+
+5/5.99_Backup_ch5_tools
+
+6/6.02_Preparing_Virtual_FS
+
+Prep_chroot_for_supergo  6
+
+6/6.04_Chroot
+
+6/6.65_Cleaning_Up
+
+Prep_chroot_for_supergo  7
+
+6/6.65_New_Chroot
+
+0/summary_screen
+
+# ALL DONE!

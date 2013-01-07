@@ -152,7 +152,7 @@ function cleanup {
    echo 'Cleaning up...' | tee -a $BUILD_LOG
    #When this function is called, the pwd may still be a sub-directory of 
    #sources/$PACKAGE_NAME. (not all pkg's return to the same dir they started)
-   #Return to the $SOURCES_DIR directory from prepare_package.
+   #Return to the $SOURCES_DIR as set from prepare_package.
    cd $SOURCES_DIR            2>> $BUILD_LOG  
    rm -rf $PACKAGE_NAME
    rm -rf $BUILD_DIR

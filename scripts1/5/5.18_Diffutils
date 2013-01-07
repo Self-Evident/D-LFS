@@ -1,0 +1,18 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME="diffutils-3.2"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.2"  #0.2
+
+source D-LFS.functions
+
+header_log_prep
+
+sed -i -e '/gets is a/d' lib/stdio.in.h
+./configure --prefix=/tools  &>> $BUILD_LOG 
+make                         &>> $BUILD_LOG
+make install                 &>> $BUILD_LOG
+
+cleanup_log_footer

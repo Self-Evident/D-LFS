@@ -1,0 +1,11 @@
+
+######################################################################
+#
+PACKAGE_NAME="make-3.82"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.bz2"
+PACKAGE_DESC=""
+SBUS="0.1"  #0.3
+
+source D-LFS.functions 
+
+Build_Common_Package /usr

@@ -1,0 +1,44 @@
+
+######################################################################
+#
+PACKAGE_NAME="coreutils-8.19"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
+PACKAGE_DESC=""
+SBUS="0.8"  #4.0
+
+source D-LFS.functions 
+
+header_log_prep
+
+sed -i -e 's/! isatty/isatty/' \
+       -e '45i\              || errno == ENOENT' gnulib-tests/test-getlogin.c
+
+patch -Np1 -i ../${PACKAGE_NAME}-i18n-1.patch  &>> $BUILD_LOG
+
+FORCE_UNSAFE_CONFIGURE=1 ./configure \
+    --prefix=/usr                    \
+    --libexecdir=/usr/lib            \
+    --enable-no-install-program=kill,uptime &>> $BUILD_LOG 
+
+make    &>> $BUILD_LOG
+
+##Test suites
+# make NON_ROOT_USERNAME=nobody check-root  &>> $BUILD_LOG
+# echo "dummy:x:1000:nobody" >> /etc/group
+# chown -Rv nobody .  &>> $BUILD_LOG
+# su-tools /bin/bash \
+#	-c "PATH=$PATH make RUN_EXPENSIVE_TESTS=yes -k check || true"  &>> $BUILD_LOG
+# sed -i '/dummy/d' /etc/group
+
+make install   &>> $BUILD_LOG
+
+mv -v /usr/bin/{cat,chgrp,chmod,chown,cp,date,dd,df,echo} /bin  &>> $BUILD_LOG
+mv -v /usr/bin/{false,ln,ls,mkdir,mknod,mv,pwd,rm} /bin         &>> $BUILD_LOG
+mv -v /usr/bin/{rmdir,stty,sync,true,uname} /bin                &>> $BUILD_LOG
+mv -v /usr/bin/chroot /usr/sbin                                 &>> $BUILD_LOG
+mv -v /usr/share/man/man1/chroot.1 /usr/share/man/man8/chroot.8 &>> $BUILD_LOG 
+sed -i s/\"1\"/\"8\"/1 /usr/share/man/man8/chroot.8             &>> $BUILD_LOG
+
+mv -v /usr/bin/{head,sleep,nice} /bin    &>> $BUILD_LOG
+
+cleanup_log_footer

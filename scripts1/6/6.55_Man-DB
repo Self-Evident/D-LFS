@@ -1,0 +1,28 @@
+
+######################################################################
+#
+PACKAGE_NAME="man-db-2.6.2"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
+PACKAGE_DESC=""
+SBUS="0.3"  #0.5
+
+source D-LFS.functions 
+
+header_log_prep
+
+sed -i -e '/gets is a/d' gnulib/lib/stdio.in.h
+
+./configure --prefix=/usr                           \
+            --libexecdir=/usr/lib                   \
+            --docdir=/usr/share/doc/${PACKAGE_NAME} \
+            --sysconfdir=/etc                       \
+            --disable-setuid                        \
+            --with-browser=/usr/bin/lynx            \
+            --with-vgrind=/usr/bin/vgrind           \
+            --with-grap=/usr/bin/grap   &>> $BUILD_LOG
+
+make                        &>> $BUILD_LOG
+# make check                  &>> $BUILD_LOG
+make install                &>> $BUILD_LOG
+
+cleanup_log_footer

@@ -1,0 +1,28 @@
+
+######################################################################
+#
+PACKAGE_NAME="bash-4.2"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.4"  #1.4
+
+source D-LFS.functions 
+
+header_log_prep
+
+patch -Np1 -i ../${PACKAGE_NAME}-fixes-3.patch  &>> $BUILD_LOG 
+
+./configure --prefix=/usr --bindir=/bin \
+    --htmldir=/usr/share/doc/bash-4.2 --without-bash-malloc \
+    --with-installed-readline  &>> $BUILD_LOG 
+
+make      &>> $BUILD_LOG
+
+#chown -Rv nobody . &>> $BUILD_LOG
+#su-tools nobody -s /bin/bash -c "make tests" &>> $BUILD_LOG
+
+make install                &>> $BUILD_LOG
+
+#exec /bin/bash --login +h
+
+cleanup_log_footer

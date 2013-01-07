@@ -1,0 +1,24 @@
+
+######################################################################
+#
+PACKAGE_NAME="grub-2.00"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
+PACKAGE_DESC=""
+#SBUS="0.7"
+
+source D-LFS.functions
+
+header_log_prep
+
+sed -i -e '/gets is a/d' grub-core/gnulib/stdio.in.h
+
+./configure --prefix=/usr          \
+            --sysconfdir=/etc      \
+            --disable-grub-emu-usb \
+            --disable-efiemu       \
+            --disable-werror   &>> $BUILD_LOG
+
+make          &>> $BUILD_LOG
+make install  &>> $BUILD_LOG
+
+cleanup_log_footer

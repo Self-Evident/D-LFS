@@ -1,0 +1,27 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME="hosts"
+PACKAGE_FILE=""
+PACKAGE_DESC=": Customizing the /etc/hosts file"
+SBUS="0.0"
+
+source D-LFS.functions
+
+header
+
+
+echo '# Begin /etc/hosts (network card version)' > /etc/hosts
+echo '#<192.168.1.1> <HOSTNAME.example.org> [alias1] [alias2 ...]' >> /etc/hosts
+echo                                            >> /etc/hosts
+echo "127.0.0.1  localhost"                     >> /etc/hosts
+echo $IP  $HOSTNAME                             >> /etc/hosts
+echo                                            >> /etc/hosts
+echo '# End /etc/hosts (network card version)'  >> /etc/hosts
+
+echo
+echo Created file  /etc/hosts             | tee -a $BUILD_LOG
+echo
+
+
+footer

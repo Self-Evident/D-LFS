@@ -1,0 +1,112 @@
+
+######################################################################
+#
+PACKAGE_NAME=""
+PACKAGE_FILE=""
+PACKAGE_DESC="Re-adjusting the Toolchain"
+SBUS="0.0"
+
+source D-LFS.functions 
+
+header
+
+
+mv -v /tools/bin/{ld,ld-old}                            &>> $BUILD_LOG
+mv -v /tools/$(gcc -dumpmachine)/bin/{ld,ld-old}        &>> $BUILD_LOG
+mv -v /tools/bin/{ld-new,ld}                            &>> $BUILD_LOG
+ln -sv /tools/bin/ld /tools/$(gcc -dumpmachine)/bin/ld  &>> $BUILD_LOG
+
+echo >> $BUILD_LOG
+
+gcc -dumpspecs | sed -e 's@/tools@@g' \
+    -e '/\*startfile_prefix_spec:/{n;s@.*@/usr/lib/ @}' \
+    -e '/\*cpp:/{n;s@$@ -isystem /usr/include@}' > \
+    `dirname $(gcc --print-libgcc-file-name)`/specs  
+
+
+echo >> $BUILD_LOG
+
+
+echo ========================================  &>> $BUILD_LOG
+echo 'main(){}' > dummy.c 
+cc dummy.c -v -Wl,--verbose &> dummy.log
+readelf -l a.out | grep ': /lib'               &>> $BUILD_LOG
+echo The above should resemble:                &>> $BUILD_LOG
+echo '      [Requesting program interpreter: /lib/ld-linux.so.2]' &>> $BUILD_LOG
+
+
+echo >> $BUILD_LOG
+
+
+echo ========================================        &>> $BUILD_LOG
+grep -o '/usr/lib.*/crt[1in].*succeeded' dummy.log   &>> $BUILD_LOG
+echo                                                 &>> $BUILD_LOG
+echo The above should resemble the following:        &>> $BUILD_LOG
+echo                                                 &>> $BUILD_LOG
+echo '/usr/lib/crt1.o succeeded'                     &>> $BUILD_LOG
+echo '/usr/lib/crti.o succeeded'                     &>> $BUILD_LOG
+echo '/usr/lib/crtn.o succeeded'                     &>> $BUILD_LOG
+echo                                                 &>> $BUILD_LOG
+
+
+echo >> $BUILD_LOG
+
+
+echo ========================================  &>> $BUILD_LOG
+grep -B1 '^ /usr/include' dummy.log            &>> $BUILD_LOG
+echo                                           &>> $BUILD_LOG
+echo The above should resemble the following:  &>> $BUILD_LOG
+echo                                           &>> $BUILD_LOG
+echo '#include <...> search starts here:'      &>> $BUILD_LOG
+echo ' /usr/include'                           &>> $BUILD_LOG
+echo                                           &>> $BUILD_LOG
+
+
+echo >> $BUILD_LOG
+
+
+echo ========================================       &>> $BUILD_LOG
+grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g'  &>> $BUILD_LOG
+echo                                                &>> $BUILD_LOG
+echo The above should resemble the following:       &>> $BUILD_LOG
+echo                                                &>> $BUILD_LOG
+echo 'SEARCH_DIR("/tools/i686-pc-linux-gnu/lib")'   &>> $BUILD_LOG
+echo 'SEARCH_DIR("/usr/lib")'                       &>> $BUILD_LOG
+echo 'SEARCH_DIR("/lib");'                          &>> $BUILD_LOG
+echo                                                &>> $BUILD_LOG
+
+
+echo >> $BUILD_LOG
+
+
+echo ========================================    &>> $BUILD_LOG
+grep "/lib.*/libc.so.6 " dummy.log               &>> $BUILD_LOG
+echo                                             &>> $BUILD_LOG
+echo The above should resemble the following:    &>> $BUILD_LOG
+echo                                             &>> $BUILD_LOG
+echo 'attempt to open /lib/libc.so.6 succeeded'  &>> $BUILD_LOG
+echo                                             &>> $BUILD_LOG
+
+
+echo >> $BUILD_LOG
+
+
+echo ========================================     &>> $BUILD_LOG
+grep found dummy.log                              &>> $BUILD_LOG
+echo                                              &>> $BUILD_LOG
+echo The above should resemble the following:     &>> $BUILD_LOG
+echo                                              &>> $BUILD_LOG
+echo 'found ld-linux.so.2 at /lib/ld-linux.so.2'  &>> $BUILD_LOG
+echo                                              &>> $BUILD_LOG
+
+
+echo >> $BUILD_LOG
+
+
+rm -v dummy.c a.out dummy.log   &>> $BUILD_LOG
+
+
+echo "The results of several toolchain tests can be found in the build log."
+echo "Be sure to review the log to ensure success of the tests."
+
+footer

@@ -1,0 +1,34 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME=""
+PACKAGE_FILE=""
+PACKAGE_DESC="Creating a File System"
+SBUS="0.0"
+
+source D-LFS.functions
+
+header 0 < 0/ENTER  #0 suppresses log_start_time in header
+                    #"< 0/ENTER" skips "Press Enter to continue:"
+
+echo -e "About to run:  ${YELLOW}mke2fs -jv $DEV_LFS -L LFS-NEW${NORMAL}"
+echo "This will destroy any existing data on the specified partition."
+echo
+
+Enter_YES_to_continue  # Will exit if YES is not entered
+echo
+
+log_start_time
+echo "Creating filesystem..."
+
+umount $DEV_LFS                   &>> $BUILD_LOG
+mke2fs -jv  $DEV_LFS -L $DEV_LBL  &>> $BUILD_LOG
+echo                               >> $BUILD_LOG
+debugfs -R feature $DEV_LFS  | tee -a $BUILD_LOG
+
+
+echo 
+echo "Refer to the LFS book, section 2.3, to verify the suitability of the"
+echo "filesystem features indicated above."
+
+footer

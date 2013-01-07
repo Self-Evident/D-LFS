@@ -1,0 +1,50 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME=""
+PACKAGE_FILE=""
+PACKAGE_DESC="Backup Chapter 5 Tools"
+SBUS="0.3"
+
+source D-LFS.functions
+
+header 0  #0 suppresses log_start_time in header
+
+echo "This state of the tools (end of chapter 5)"
+echo "may be used for future builds (beginning with chapter 6)."
+echo
+
+if [[ "$AUTO_BUILD" == "3" ]]; then
+   REPLY="";
+else
+   read -p "Press Enter to backup the chapter 5 tools, or, Enter s to skip: "
+fi
+
+if [ "$REPLY" == "s" -o "$REPLY" == "S" ]; then
+   echo "Chapter 5 tools not backed up." | tee -a $BUILD_LOG
+   footer
+   exit 0
+fi
+
+
+cat << "EOF" 
+
+Note: The tools directory will be temporarily renamed to tools.ch5, so that, if
+untarred later, it won't automaticaly overwrite an existing tools directory.
+
+EOF
+
+
+log_start_time
+
+cd $LFS
+VERS=$LFS_VERSION
+
+{ #group for easier save of output to log
+echo -n  "Renaming: ";  mv -v  tools  tools.ch5;
+echo -en "Creating:  ${BOLD}${LFS}/LFS_${VERS}_tools.ch5.tar.gz${NORMAL} ..."
+tar -czf LFS_${LFS_VERSION}_tools.ch5.tar.gz  tools.ch5;  echo    " Done."
+echo -n  "Renaming: ";  mv -v  tools.ch5  tools;
+}  2>&1 | tee -a $BUILD_LOG #close group, save output
+
+footer

@@ -1,0 +1,21 @@
+
+######################################################################
+#
+PACKAGE_NAME="libpipeline-1.2.1"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.2"
+
+source D-LFS.functions 
+
+header_log_prep
+
+sed -i -e '/gets is a/d' gnulib/lib/stdio.in.h
+
+PKG_CONFIG_PATH=/tools/lib/pkgconfig ./configure --prefix=/usr &>> $BUILD_LOG
+
+make         &>> $BUILD_LOG
+#make check   &>> $BUILD_LOG
+make install &>> $BUILD_LOG
+
+cleanup_log_footer

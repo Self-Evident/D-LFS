@@ -1,0 +1,11 @@
+
+######################################################################
+#
+PACKAGE_NAME="less-444"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.1"  #<.1
+
+source D-LFS.functions 
+
+Build_Common_Package /usr --sysconfdir=/etc

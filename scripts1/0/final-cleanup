@@ -1,0 +1,78 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME="Final Cleanup"
+PACKAGE_FILE=""
+PACKAGE_DESC=""
+SBUS="0.1"
+
+source D-LFS.functions
+
+BUILD_LOG="$LFS/LFS_final_cleanup.log"
+
+header
+
+echo -e "This script should be run as ${YELLOW}root${NORMAL} of the ${YELLOW}HOST${NORMAL} environment."
+echo
+echo "Enter Y to perform each of the following steps, or just enter to skip."
+echo
+
+echo -en "Delete user  ${BOLD}$LFS_USER${NORMAL}  ?:"
+read -p  ""
+if [ "$REPLY" == "Y" ]; then
+   userdel -rf $LFS_USER                    &>> $BUILD_LOG
+   echo "User $LFS_USER removed."
+fi
+
+echo &>> $BUILD_LOG
+
+echo -en "Remove  $LFS/$WORKING_BASE/${BOLD}sources${NORMAL}     ?:"
+read -p  ""
+if [ "$REPLY" == "Y" ]; then
+   rm  -rfv  $LFS/$WORKING_BASE/sources     &>> $BUILD_LOG
+   echo "removed: $LFS/$WORKING_BASE/sources"
+fi
+
+echo -en "Remove  $LFS/$WORKING_BASE/${BOLD}build_logs${NORMAL}  ?:"
+read -p  ""
+if [ "$REPLY" == "Y" ]; then
+   rm  -rfv  $LFS/$WORKING_BASE/build_logs  &>> $BUILD_LOG
+   echo "removed: $LFS/$WORKING_BASE/build_logs"
+fi
+
+echo -en "Remove  $LFS/$WORKING_BASE/${BOLD}scripts${NORMAL}     ?:"
+read -p  ""
+if [ "$REPLY" == "Y" ]; then
+   rm  -rfv  $LFS/$WORKING_BASE/scripts     &>> $BUILD_LOG
+   echo "removed: $LFS/$WORKING_BASE/scripts"
+fi
+
+echo "If sources/, build_logs/, & scripts/ have been removed, would you like to also "
+echo -en "Remove  $LFS/${BOLD}$WORKING_BASE${NORMAL}             ?:"
+read -p  ""
+if [ "$REPLY" == "Y" ]; then
+   rm  -rfv  $LFS/$WORKING_BASE             &>> $BUILD_LOG
+   echo "removed: $LFS/$WORKING_BASE"
+   rm  -fv  /$WORKING_BASE                  &>> $BUILD_LOG
+   echo "removed: $LFS/$WORKING_BASE/scripts"
+fi
+
+echo &>> $BUILD_LOG
+
+echo -en "unmount the virtual fs from 6.02   ?:"
+read -p ""
+if [ "$REPLY" == "Y" ]; then
+   umount -v $LFS/dev/pts   &>> $BUILD_LOG
+   umount -v $LFS/dev/shm   &>> $BUILD_LOG
+   umount -v $LFS/dev       &>> $BUILD_LOG
+   umount -v $LFS/proc      &>> $BUILD_LOG
+   umount -v $LFS/sys       &>> $BUILD_LOG
+fi
+
+
+echo
+echo "Done. See  $BUILD_LOG  for details."
+echo
+
+footer
+

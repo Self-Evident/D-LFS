@@ -1,0 +1,17 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME="ntfs-3g_ntfsprogs-2011.4.12"
+PACKAGE_FILE="${PACKAGE_NAME}.tgz"
+PACKAGE_DESC=""
+#SBUS="0.4"
+
+source D-LFS.functions
+
+Build_Common_Package /usr
+
+# Useage example:
+#   mount -t ntfs-3g /dev/sda1 /mnt/windows
+# Or, add to fstab:
+#   /dev/sda1 /mnt/windows ntfs-3g defaults 0 0
+

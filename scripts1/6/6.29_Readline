@@ -1,0 +1,32 @@
+
+######################################################################
+#
+PACKAGE_NAME="readline-6.2"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+PACKAGE_DESC=""
+SBUS="0.1"  #0.2
+
+source D-LFS.functions 
+
+header_log_prep
+
+sed -i '/MV.*old/d' Makefile.in 
+sed -i '/{OLDSUFF}/c:' support/shlib-install
+
+patch -Np1 -i ../${PACKAGE_NAME}-fixes-1.patch &>> $BUILD_LOG 
+
+./configure --prefix=/usr --libdir=/lib     &>> $BUILD_LOG 
+make SHLIB_LIBS=-lncurses                   &>> $BUILD_LOG
+make install                                &>> $BUILD_LOG
+
+mv -v /lib/lib{readline,history}.a /usr/lib &>> $BUILD_LOG
+
+rm -v /lib/lib{readline,history}.so         &>> $BUILD_LOG
+ln -sfv ../../lib/libreadline.so.6 /usr/lib/libreadline.so  &>> $BUILD_LOG
+ln -sfv ../../lib/libhistory.so.6 /usr/lib/libhistory.so    &>> $BUILD_LOG
+
+mkdir   -v       /usr/share/doc/${PACKAGE_NAME}  &>> $BUILD_LOG
+install -v -m644 doc/*.{ps,pdf,html,dvi} \
+                 /usr/share/doc/${PACKAGE_NAME}  &>> $BUILD_LOG
+
+cleanup_log_footer
