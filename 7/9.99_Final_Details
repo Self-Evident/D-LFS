@@ -46,5 +46,5 @@ cp -v  issue    /etc/issue         2>&1
 footer
 
 #Record finish time for entire build. Used in summary screen.
-echo FINISH_TIME=$($TIMESTAMP)                >> $BUILD_DATA
-echo FINISH_TIME_long=\"$($TIMESTAMP_long)\"  >> $BUILD_DATA
+echo FINISH_TIME=$($TIMESTAMP)                >> $BUILD_INFO
+echo FINISH_TIME_long=\"$($TIMESTAMP_long)\"  >> $BUILD_INFO

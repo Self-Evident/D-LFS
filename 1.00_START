@@ -26,7 +26,7 @@ else
    if [[ "$AUTO_BUILD" != "2" && "$AUTO_BUILD" != "3" ]]; then AUTO_BUILD="1";fi
    echo -en $NORMAL
 fi
-echo "AUTO_BUILD=$AUTO_BUILD" >> $BUILD_DATA #Used to skip prompts when = 3.
+echo "AUTO_BUILD=$AUTO_BUILD" >> $BUILD_INFO #Used to skip prompts when = 3.
 
 BOS="$AUTO_BUILD : ${AUTO_BUILD_desc[$AUTO_BUILD]}"
 echo "Build Option Selected: $BOS" | tee -a $BUILD_LOG
@@ -40,8 +40,8 @@ footer 0  #0 suppresses log_end_time
 #The difference between those two times, in addition to the actual build time, 
 #will also include the time spent by any prompt waiting for a response, the
 #time between packages, etc.
-echo "START_TIME=$($TIMESTAMP)"                 >> $BUILD_DATA
-echo "START_TIME_long=\"$($TIMESTAMP_long)\" "  >> $BUILD_DATA
+echo "START_TIME=$($TIMESTAMP)"                 >> $BUILD_INFO
+echo "START_TIME_long=\"$($TIMESTAMP_long)\" "  >> $BUILD_INFO
 
 if [[ "$AUTO_BUILD" = "2" || "$AUTO_BUILD" = "3" ]]; then exec 0/supergo-all; fi
 

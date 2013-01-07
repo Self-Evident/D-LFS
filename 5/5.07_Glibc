@@ -47,8 +47,8 @@ make install &>> $BUILD_LOG
 
 echo 'main(){}' > dummy.c
 $LFS_TGT-gcc dummy.c
-readelf -l a.out | grep ': /tools'                         &>> $BUILD_LOG
-echo '=== The above should resemble the following: ==='    &>> $BUILD_LOG
+readelf -l a.out | grep ': /tools'                       &>> $BUILD_LOG
+echo '=== The above should resemble the following: ==='  &>> $BUILD_LOG
 echo '     ' [Requesting program interpreter: /tools/lib/ld-linux.so.2]  &>> $BUILD_LOG
 
 echo                 &>> $BUILD_LOG

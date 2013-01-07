@@ -32,15 +32,15 @@ function Init_BUILD_LOGS {
    BUILD_LOGS_standard=$BUILD_LOGS #Used to move BUILD_LOGS after $LFS is ready
    BUILD_LOGS=$TMP_BUILD_LOGS      #Used until $LFS is ready.
 
-   BUILD_DATA="${BUILD_LOGS}/BUILD_DATA"
+   BUILD_INFO="${BUILD_LOGS}/BUILD_INFO"
 
-   #if $BUILD_DATA exists, Init_BUILD_LOGS has already ran once
-   if [ -f $BUILD_DATA ]; then  return 0;  fi;
+   #if $BUILD_INFO exists, Init_BUILD_LOGS has already ran once
+   if [ -f $BUILD_INFO ]; then  return 0;  fi;
 
    mkdir -pv  $TMP_BUILD_LOGS
  
-   echo "INITIAL_START=\"$($TIMESTAMP_long)\"" >> $BUILD_DATA 
-   echo "HOST=$(hostname)" >> $BUILD_DATA # or = "LFS-chroot"
+   echo "INITIAL_START=\"$($TIMESTAMP_long)\"" >> $BUILD_INFO 
+   echo "HOST=$(hostname)" >> $BUILD_INFO # or = "LFS-chroot"
 
    Calculate_SBUT  #Add up all the estimated SBUS from each pkg.
    }
@@ -70,7 +70,7 @@ function Enter_YES_to_continue {
 
    if [ "$CONFIRM" != "YES" ]; then
      echo
-     echo '   EXITING...  YES NOT ENTERED.   NOTHING DONE.' | tee -a $BUILD_LOG
+     echo '   EXITING...  YES NOT ENTERED.' | tee -a $BUILD_LOG
      echo
      exit 1
    fi
@@ -223,16 +223,16 @@ function Prepare_chroot_profile {
    #
    echo "sed -i '/#REMOVE#/d' /root/.profile 2>/dev/null" >> $LFS/root/.profile
    echo "cd $LFS_SCRIPTS           #REMOVE#"              >> $LFS/root/.profile
-   echo "source $BUILD_DATA        #REMOVE#"              >> $LFS/root/.profile
+   echo "source $BUILD_INFO        #REMOVE#"              >> $LFS/root/.profile
    echo "source misc/profile       #REMOVE#"              >> $LFS/root/.profile
    }
 
 
 
 function Change_HOST_to {  #Changes HOST to reflect if in chroot
-   sed -i '/^HOST=/d' $BUILD_DATA   #Remove current value
+   sed -i '/^HOST=/d' $BUILD_INFO   #Remove current value
    HOST=$1                          #Set new value
-   echo HOST=$HOST >> $BUILD_DATA   #Save new value
+   echo HOST=$HOST >> $BUILD_INFO   #Save new value
    }
 
 
@@ -256,14 +256,14 @@ function Calculate_SBU {
    TIME_END=`$TIMESTAMP` 
    SBU_=$[ $TIME_END - $TIME_START ]   #TIME_START from log_start_time
    SBU_long="`date -ud @$SBU_ +:%M:%S`"    # :00:00
-   echo "SBU_=$SBU_"             >> $BUILD_DATA
-   echo "SBU_long=$SBU_long"     >> $BUILD_DATA
+   echo "SBU_=$SBU_"             >> $BUILD_INFO
+   echo "SBU_long=$SBU_long"     >> $BUILD_INFO
 
    #SBUS_0 is used in header when a package's SBUS is < .1
    SBUS_0=$[ (SBU_ ) / 19 ]  # ~= .05 SBU, slightly rounded up
    SBUS_0_long="`date -ud @$SBUS_0 +%T`" 
-   echo SBUS_0=$SBUS_0           >> $BUILD_DATA
-   echo SBUS_0_long=$SBUS_0_long >> $BUILD_DATA
+   echo SBUS_0=$SBUS_0           >> $BUILD_INFO
+   echo SBUS_0_long=$SBUS_0_long >> $BUILD_INFO
 
    Calculate_Estimated_Build_Time_Total
 
@@ -299,8 +299,8 @@ function Calculate_SBUT {
 
    SBUT=$[ $SBUTx10 / 10 ].$[ $SBUTx10 % 10 ]
 
-   echo "SBUT=$SBUT"       >> $BUILD_DATA
-   echo "SBUTx10=$SBUTx10" >> $BUILD_DATA
+   echo "SBUT=$SBUT"       >> $BUILD_INFO
+   echo "SBUTx10=$SBUTx10" >> $BUILD_INFO
 
    } #END Calculate_SBUT 
 
@@ -338,12 +338,12 @@ function Calculate_Estimated_Build_Time_Total {
    #EBTT = Est Build Time, Total
    EBTT=$[ ($SBU_ * $SBUTx10 + 5) / 10 ]
    EBTT_long=`date -ud @$EBTT +%T`
-   echo "EBTT_long=$EBTT_long" >> $BUILD_DATA
+   echo "EBTT_long=$EBTT_long" >> $BUILD_INFO
 
    #EFTT = Est Finish Time, Total
    EFTT=$[ $EBTT + $START_TIME ]
    EFTT_long=`date -d @$EFTT "+%T %Z"`
-   echo EFTT_long=\"$EFTT_long\" >> $BUILD_DATA
+   echo EFTT_long=\"$EFTT_long\" >> $BUILD_INFO
 
    cd $LFS_SCRIPTS
    } #END Calculate_Estimated_Build_Time_Total
@@ -493,13 +493,13 @@ if [ ! -d $BUILD_LOGS ]; then  Init_BUILD_LOGS;  fi
 
 BUILD_LOG="${BUILD_LOGS}/${PACKAGE_SCRIPT}.log"
 
-BUILD_DATA="${BUILD_LOGS}/BUILD_DATA"
+BUILD_INFO="${BUILD_LOGS}/BUILD_INFO"
 
 #$BUILD_TIMES: Package, Est SBUS, Start time, End time, Actual SBUS, Est-Act
 #   Format ex: 1.23 12.3 1234567890 1234567890 12.2 0.1
 BUILD_TIMES="${BUILD_LOGS}/BUILD_TIMES"
 
-source $BUILD_DATA  2>/dev/null   #get various build time values
+source $BUILD_INFO  2>/dev/null   #get various build time values
 
 #
 # END D-LFS.functions 
