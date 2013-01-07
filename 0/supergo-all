@@ -7,6 +7,8 @@ set -e
 
 source D-LFS.functions
 
+{ #braces group commands for easier save of output to log
+
 source 0/supergo4
 
 cd $LFS_SCRIPTS
@@ -35,5 +37,7 @@ Prep_chroot_for_supergo  7
 6/6.65_New_Chroot
 
 0/summary_screen
+
+} 2>> $BUILD_LOG  #close group, save errors only to build log
 
 # ALL DONE!

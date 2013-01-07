@@ -111,7 +111,7 @@ function header {
 
    header_TITLE="D-LFS Scripts ${D_LFS_version}, LFS Book ${LFS_VERSION}"
    WHOatHOST="(user: ${YELLOW}`whoami 2>/dev/null`@${HOST}${NORMAL})"
-   PAD_LEN=$[ 80 - ${#header_TITLE} - ${#WHOatHOST} + 10 ] #+10 adj for colors
+   PAD_LEN=$[ 80 - ${#header_TITLE} - ${#WHOatHOST} + 11 ] #+11 adj for colors
    PAD=${BLANKLINE:0:$PAD_LEN}  #Right justifies (user: who@host)
 
    echo $DIVIDER                                           | tee -a $BUILD_LOG
@@ -281,7 +281,7 @@ function Calculate_SBUT {
    # Remove any #comment
    # Remove SBUS=
    # Save to a new file, writing one value per line of form: nnn  (or just nn)
-   unalias grep # make sure color is off
+   unalias grep  &>> $BUILD_LOG  # make sure color is off
    grep -h -e "^SBUS=" {4,5,6,7,B}/*  | \
    sed 's/"//g'  | sed 's/\.//'       | \
    cut -d"#" -f1 | \

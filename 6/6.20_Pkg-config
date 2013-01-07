@@ -8,14 +8,7 @@ SBUS="0.4"  #.04
 
 source D-LFS.functions 
 
-header_log_prep
-
-
-./configure --prefix=/usr         \
-            --with-internal-glib  \
-            --docdir=/usr/share/doc/${PACKAGE_NAME}  &>> $BUILD_LOG
-
-make          &>> $BUILD_LOG
-make install  &>> $BUILD_LOG
-
+Build_Common_Package /usr                 \
+                     --with-internal-glib \
+                     --docdir=/usr/share/doc/${PACKAGE_NAME}  &>> $BUILD_LOG
 cleanup_log_footer
