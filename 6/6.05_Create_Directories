@@ -13,7 +13,7 @@ header 0 < 0/ENTER  #0 suppresses log_start_time in header
 
 echo
 echo "IMPORTANT: ONLY run this script AFTER ENTERING the 6.04 chroot!"
-echo
+echo | tee -a $BUILD_LOG
 Enter_YES_to_continue  # Will exit if YES is not entered.
 
 log_start_time
@@ -46,8 +46,7 @@ mkdir -pv /var/{opt,cache,lib/{misc,locate},local}
 
 } &>> $BUILD_LOG  #close group, save output
 
-echo                       | tee -a $BUILD_LOG
-echo Directories created.  | tee -a $BUILD_LOG
-echo                       | tee -a $BUILD_LOG
+echo 'Directories created.'  | tee -a $BUILD_LOG
+echo
 
 footer

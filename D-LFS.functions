@@ -71,7 +71,7 @@ function Enter_YES_to_continue {
 
    read -p "Enter YES to continue, anything else to exit: " CONFIRM
 
-   if [ "$CONFIRM" != "YES" ]; then
+   if [[ "$CONFIRM" != "YES" ]]; then
      echo
      echo '   EXITING...  YES NOT ENTERED.' | tee -a $BUILD_LOG
      echo
@@ -131,7 +131,7 @@ function header {
    #A few pkg's don't log time, such as the 6.04 & 6.65 chroots.
    #Some have another prompt and log_start_time after the header.
    #So, if header's $1==0, don't log start time here.
-   if [ "$1" != "0"  ]; then log_start_time ;  fi 
+   if [[ "$1" != "0"  ]]; then log_start_time ;  fi 
 } #End header
 
 
@@ -163,7 +163,7 @@ function prepare_package {
    fi #End if errors
 
    #Sometimes, the this message is not yet needed.
-   if [ "$1" != "0"  ]; then echo "Building package..." | tee -a $BUILD_LOG; fi 
+   if [[ "$1" != "0" ]]; then echo "Building package..." | tee -a $BUILD_LOG; fi
 } #End prepare_package
 
 
@@ -181,7 +181,7 @@ function cleanup {
 
 function footer {
    #A few pkg's don't log time (chroots), or log it before the footer.
-   if [ "$1" != "0" ]; then log_end_time; fi  #if $1=0, don't log end time
+   if [[ "$1" != "0" ]]; then log_end_time; fi  #if $1=0, don't log end time
 
    #Show errors, except ignored errors.
    echo -en $BOLD
@@ -197,10 +197,12 @@ function footer {
      echo $DIVIDER
    } | tee -a $BUILD_LOG  #close group, save output
 
-   #SBUCx10 is used in Progress_Bar
-   SBUCx10=$[ $SBUCx10 + $SBUSx10 ] #store x10 for easier bash math later
-   sed -i '/^SBUCx10=/d' $BUILD_INFO      #Remove current value
-   echo "SBUCx10=$SBUCx10" >> $BUILD_INFO #Save new value
+   if [ -f $BUILD_INFO ]; then
+      #SBUCx10 is used in Progress_Bar
+      SBUCx10=$[ $SBUCx10 + $SBUSx10 ] #store x10 for easier bash math later
+      sed -i '/^SBUCx10=/d' $BUILD_INFO      #Remove current value
+      echo "SBUCx10=$SBUCx10" >> $BUILD_INFO #Save new value
+   fi
 
    Press_R_to_Review_build_log
    echo                                                   >> $BUILD_LOG
@@ -266,14 +268,24 @@ function Change_HOST_to {  #Changes HOST to reflect if in chroot
 
 
 # Bash math notes:
-# Bash only does integer math (NO decimal points), and does not round.
+# Bash only does integer math (NO decimal points), and rounds DOWN.
 #  (ex: 2 + .1 = an error, 9 / 10 = 0, etc...) 
-# Removing the decimal point makes an integer, and effectively multiplies by 10.
-#  (or more, depending on number of digits after the decimal)
-# Base 8 (octal) vs Base 10: Bash may assume octal if a value has a leading 0.
-#  For ex: $[ 08 ] will generate errors as 08 is not a valid octal number.
-#  So, prepend 10# to ensure base 10. ex: 10#$VAR
+#
+# The SBUS should always be of the form 0.0.  ex: 0.1, or 1.0, or , 1.1, etc...
+# Since the SBUS value should only have one digit after the decimal, removing
+# the decimal point makes it an integer, and effectively multiplies by 10.
+# However, if SBUS is < 1, removing the decimal also makes it an octal number.
+#
+# Base 8 (octal) vs Base 10: Bash assumes octal if a value has a leading 0.
+# Regarding SBUS, and removal of the decimal point, 0.8 becomes 08.
+# This will generate errors with bash math, as 08 is not a valid octal number.
+# So, prepend 10# to ensure base 10. ex: $[10#$VAR]
+# Or, if SBUS=0.8, and if SBUSx10=$[10#`echo $SBUS | sed 's/\.//'`],
+# then SBUSx10 will = 8. Without the 10#, SBUSx10 would = 08.
+#
 # ${#VAR} = length of the value of VAR
+
+
 
 function Calculate_SBU {
    #Should only be called at end of 5.04
@@ -338,15 +350,12 @@ function Calculate_SBUT {
 function Calculate_Estimated_Build_Time_Package {
    # Figures EBTP & EFTP (Estimated Build & Finish Times) for current package
 
-   if [ "$SBUS" == "0.0" ]; then
+   if [[ "$SBUS" == "0.0" ]]; then
       EBTP=SBUS_0
       EBTP_long=$SBUS_0_long
    else
-      #SBUS set in each calling script. Format is "n.n" or "nn.n"
-      #Remove decimal point. (Makes an integer and effectively multiplies by 10)
-      SBUSx10=`echo $SBUS | sed 's/\.//'` 
-
-      EBTP=$[ ($SBU_ * 10#$SBUSx10 + 5) / 10 ] #Rounds last digit. 
+      #SBUSx10 is set at the end of the global variables section.
+      EBTP=$[ ($SBU_ * $SBUSx10 + 5) / 10 ] #Rounds last digit. 
       EBTP_long=`date -ud @$EBTP "+%T"`
    fi
 
@@ -387,7 +396,7 @@ function Display_Estimated_Times_Total {
    DETT="$DETT_LEAD  $START_TIME_long,  $SBUT SBUs"
 
    #Check if SBU has been determined (by 5.04).
-   if [[ $SBU_ -le "0" ]] ; then  #can't display estimated times...
+   if [[ $SBU_ -le 0 ]] ; then  #can't display estimated times...
       DETT="$DETT  (est. times unavailable)"
    else
       DETT="$DETT = $EBTT_long,  $EFTT_long"
@@ -404,7 +413,7 @@ function Display_Estimated_Times_Package {
    #Called in function log_start_time 
 
    local PAD=" "  #Spacing for displaying SBUS: 1 if n.nn, 0 for nn.nn
-   if [ ${#SBUS} -eq 4 ]; then PAD=""; fi
+   if [[ ${#SBUS} -eq 4 ]]; then PAD=""; fi
 
    local ST=`$TIMESTAMP_long` #Start Time for Current Package (now)
 
@@ -412,11 +421,11 @@ function Display_Estimated_Times_Package {
    DETP="Current Package:  $ST, $PAD $SBUS SBUs"
 
    #Check if SBU has been determined (by 5.04).
-   if [[ $SBU_ -le "0" ]] ; then
+   if [[ $SBU_ -le 0 ]] ; then
       DETP="$DETP  (est. times unavailable)"
    else
       Calculate_Estimated_Build_Time_Package  #Determines EBTP & EFTP
-      if [ "$SBUS" == "0.0" ]; then EQ="<"; else EQ="="; fi
+      if [[ "$SBUS" == "0.0" ]]; then EQ="<"; else EQ="="; fi
       DETP="$DETP $EQ $EBTP_long,  $EFTP_long"
    fi
 
@@ -445,7 +454,7 @@ function Calculate_ABUS_and_DIFF {
    ELAPSED=$[ 10#$TIME_END - 10#$TIME_START ]
    ELAPSED_long=`date -ud @$ELAPSED +%H:%M:%S`
 
-   if [[ $SBU_ -le "0" ]] ; then   #check if SBU has been determined
+   if [[ $SBU_ -le 0 ]] ; then   #check if SBU has been determined
       ABUS=000                     #If not, use "000" (instead of "0.0")
       DIFF=$SBUS
       return
@@ -454,8 +463,7 @@ function Calculate_ABUS_and_DIFF {
    ABUSx10=$[ (($ELAPSED * 100) / $SBU_ + 5) / 10]
    ABUS=$[ $ABUSx10 / 10 ].$[ $ABUSx10 % 10 ]
 
-   SBUSx10=`echo $SBUS | sed 's/\.//'`
-   DIFFx10=$[ 10#$ABUSx10 - 10#$SBUSx10 ]
+   DIFFx10=$[ $ABUSx10 - $SBUSx10 ] #SBUSx10 set at end of global vars section.
    if [[ $DIFFx10 -ge 0 ]]; then   NEG="";        #To avoid "DIFF=-0.-1",
    else NEG="-"; DIFFx10=$(( -1*DIFFx10 )); fi    #if DIFF<0, make DIFF pos &
    DIFF=$NEG$[ $DIFFx10 / 10 ].$[ $DIFFx10 % 10 ] #use $NEG for sign
@@ -491,29 +499,38 @@ function Calculate_ABUT_and_ABTT {   #Called from summary screen.
 
 
 function Progress_Bar {
+   #Uses the divider line under the header as a progress bar for the build.
+
    #SBUCx10 & SBUTx10 are obtained from BUILD_INFO
-   #SBUCx10 + SBUSx10 is saved as new SBUCx10 at end of footer
+   #SBUCx10 is updated at end of footer
+   #SBUSx10 is set at the end of the global variables section.
 
-   SBUSx10=`echo $SBUS | sed "s/\.//"` #Pkg SBUs (x 10)
-   SBURx10=$[$SBUTx10 - $SBUCx10]      #SBUs Remaning (x10)
-   BARW=$SCREEN_WIDTH #Bar Width = SCREEN_WIDTH(set in D-LFS global variables)
+   if [[ "$SBUTx10" == "" ]]; then SBUTx10=0 ; fi
+   if [[ "$SBUCx10" == "" ]]; then SBUCx10=0 ; fi
 
-   # Set SCALE so SBUS Total = Bar Width
+   SBURx10=$[$SBUTx10 - $SBUCx10]      #SBUs Remaning x10
+   BARW=$SCREEN_WIDTH #Progress Bar Width. SCREEN_WIDTH set in global variables.
+
+   #Determine SCALE of SBUS Total / Progress Bar Width.
+   #ex: (67.5x10 x 10) / 80 = 84.375    In Bash, will round down to 84.
    SCALE=$[($SBUTx10 * 10) / $BARW];
 
+   #Scale SBUs Completed & SBUS (current pkg) accordingly.
    SBUCx=$[ ($SBUCx10      *10) / $SCALE] #SBU's Completed, rounded down.
    SBUSx=$[(($SBUSx10 + 10)*10) / $SCALE] #SBUS for current pkg, rounded up.
 
-   #If SBUS for current pkg > Total, something is wrong
-   if [[ $SBUSx -gt $BARW ]]; then SBUSx=1; fi
+   if (( $SBUSx < 1 )); then SBUSx=1; fi
 
-   if [[ $[$SBUCx + $SBUSx] -ge $BARW ]]; then SBUCx=$[ $BARW - $SBUSx ]; fi
+   #If SBUS for current pkg > Total, something is wrong
+   if (( $SBUSx > $BARW )); then SBUSx=1; fi
+
+   if (( $[$SBUCx + $SBUSx] >= $BARW )); then SBUCx=$[ $BARW - $SBUSx ]; fi
 
    SBUR=$[ $BARW - $SBUCx - $SBUSx ] #SBU's Remaining
-   if [[ $SBUR -lt 1 ]]; then SBUR=0; fi
+   if (( $SBUR < 1 )); then SBUR=0; fi
 
    PROGRESS_BAR=$green${DIVIDER:0:$SBUCx}$YELLOW${DIVIDER1:0:$SBUSx}$DGRAY
-   PROGRESS_BAR=$PROGRESS_BAR${DIVIDER0:0:$SBUR}$NORMAL
+   PROGRESS_BAR=$PROGRESS_BAR${DIVIDER:0:$SBUR}$NORMAL
 
    echo -e $PROGRESS_BAR  | tee -a $BUILD_LOG
 } #End Progress_Bar
@@ -578,6 +595,9 @@ BUILD_INFO="${BUILD_LOGS}/BUILD_INFO"
 #   Format ex: 1.23 12.3 1234567890 1234567890 12.4 0.1
 BUILD_TIMES="${BUILD_LOGS}/BUILD_TIMES"
 
+#A few functions need to do some math on the SBUS of each package, so,
+#per the Bash math notes earlier in this file:
+SBUSx10=$[10#`echo $SBUS | sed 's/\.//'`] #Pkg SBUs x 10 = (0.1 -> 01 - > 1)
 
 #get various build time values
 source $BUILD_INFO  2>/dev/null #discard error if $BUILD_INFO not yet ready
