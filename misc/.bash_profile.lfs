@@ -18,5 +18,5 @@ exec env -i HOME=$HOME TERM=$TERM /bin/bash
 # command above (as PS1='\u:\w\$ '). However, in the D-LFS scripts, PS1 is 
 # set in ~/.bashrc, or /etc/profile.
 #
-# END   ~/.bash_profile   #####################################################
+# END  ~/.bash_profile  #######################################################
 

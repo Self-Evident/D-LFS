@@ -22,6 +22,8 @@ su - $LFS_USER
 
 5/5.99_Backup_ch5_tools
 
+6/6.00_Confirm
+
 6/6.02_Preparing_Virtual_FS
 
 Prep_chroot_for_supergo  6

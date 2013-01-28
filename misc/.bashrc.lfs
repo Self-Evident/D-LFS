@@ -19,7 +19,7 @@ PS1="${PS_GREEN}[\u@\h]${PS_NORMAL}\w ${PS_GREEN}\$ ${PS_NORMAL}"
 
 export LANG=en_US  # With LANG=en_US, ls sorts without regard to case
 
-alias  ls="ls -FAC --si --color --group-directories-first"
+alias  ls="ls -FAC --si --color=auto --group-directories-first"
 alias lsd="ls | less -e"
 alias   d="ls -l"
 alias dir="ls -l | less -e"
@@ -29,5 +29,5 @@ alias cp="cp -i "
 alias mv="mv -i "
 
 alias less="less -RX"
-alias grep="grep --color=always"
+alias grep="grep --color=auto"
 

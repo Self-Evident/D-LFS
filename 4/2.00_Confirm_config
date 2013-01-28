@@ -10,18 +10,21 @@ source D-LFS.functions
 
 header <0/ENTER #Skip "Press Enter to continue:"
 
-echo -e \
-"Per values provided in ${YELLOW}D-LFS.config${NORMAL}: \n\n"\
-"> ${YELLOW}${DEV_LFS}${NORMAL} will be formatted, so be sure any data on it is backed up!\n"\
-"> LFS will be built on: ${YELLOW} ${DEV_LFS} ${NORMAL} "\
-           " mounted at: ${YELLOW} ${LFS}     ${NORMAL}\n"\
-"> ${BOLD}../scripts & ../sources${NORMAL} will be copied to "\
-"    : $YELLOW ${LFS}/${WORKING_BASE} $NORMAL \n"\
-"> Username and group created and used for chapter 5:"\
-$YELLOW $LFS_USER $NORMAL                                  | tee -a $BUILD_LOG
+{ #braces group command output
+Y="$YELLOW"; N="$NORMAL"; B="$BOLD"
+echo -e "Per values provided in ${B}D-LFS.config${N}:"
+echo 
+echo -en "> ${Y}${DEV_LFS}${N} will be formatted, "
+echo     "so be sure any data on it is backed up!"
+echo -en "> LFS will be built on: ${Y} ${DEV_LFS} ${N}"
+echo -e  " mounted at: ${Y}${LFS}${N}"
+echo -en "> ${B}../scripts & ../sources${N} will be copied to "
+echo -e  "  :${Y} ${LFS}/${WORKING_BASE} ${N}"
+echo -en "> Username and group created and used for chapter 5:"
+echo -e  $Y $LFS_USER $N
 echo
-echo -e "${YELLOW}If anything needs correcting- DO IT NOW.${NORMAL}"
+echo -e "${Y}If anything needs correcting- DO IT NOW.${N}"
 echo
-
+} | tee -a $BUILD_LOG  #close group, save output
 footer
 

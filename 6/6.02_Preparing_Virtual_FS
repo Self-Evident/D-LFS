@@ -25,7 +25,7 @@ echo
 { #braces group command output
 
 echo "First, let's make sure they're not already mounted..."
-#(This prevents mtab from getting cluttered if 6.02 is re-ran more than once.)
+#(This prevents mtab from getting cluttered if 6.02 is ran more than once.)
 umount -v $LFS/dev/pts
 umount -v $LFS/dev/shm
 umount -v $LFS/dev

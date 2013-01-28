@@ -10,16 +10,18 @@ source D-LFS.functions
 
 header <0/ENTER #Skip "Press Enter to continue:"
 
+{ #braces group command output
 echo
-echo -e "Make sure, for 6.02 and 6.04, that you are logged in as root of the ${YELLOW}host${NORMAL} system." | tee -a $BUILD_LOG
+echo -en "${BOLD}For 6.02 and 6.04, make sure that you are logged "
+echo -e  "in as root of the ${YELLOW}host${NORMAL} system."
 echo 
-echo '$LFS = '$LFS                              | tee -a $BUILD_LOG
-echo 'Check for $LFS and $LFS/tools directory:' | tee -a $BUILD_LOG
-ls -dl $LFS                                2>&1 | tee -a $BUILD_LOG
-ls -dl $LFS/tools                          2>&1 | tee -a $BUILD_LOG
-ls -dl /tools                              2>&1 | tee -a $BUILD_LOG
+echo '$LFS = '$LFS
+echo 'Check for $LFS and $LFS/tools directory:'
+ls -dl $LFS                                2>&1
+ls -dl $LFS/tools                          2>&1
+ls -dl /tools                              2>&1
 echo
 echo "Do not continue with build unless the above is correct."
-
+} | tee -a $BUILD_LOG  #close group, save output
 
 footer
