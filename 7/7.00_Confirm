@@ -14,7 +14,7 @@ header <0/ENTER #Skip "Press Enter to continue:"
 echo
 echo "Like ch6, do not run ch7 scripts directly from your host environment."
 echo "Make sure the 6.02 virtual file system is mounted, and that you have"
-echo -e "entered the ${BOLD}6.65 New chroot${NORMAL}."
+echo -e "entered the ${BOLD}New chroot${NORMAL}."
 echo
 echo "Note: Several sections from ch7 are accomplished in 7/9.99_Final_Details"
 

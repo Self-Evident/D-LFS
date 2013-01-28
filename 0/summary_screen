@@ -21,8 +21,7 @@ Congratulations - your LFS build is complete!
                Finish Time:   $FINISH_TIME_long
                Start  Time:   $START_TIME_long
 $DIVIDER
-                Total Time to build LFS = $TBT
- (includes non-building time)
+               Total Time to build LFS = $TBT (includes non-building time)
 
 Estimated SBUs = $SBUT x (1 SBU=$SBU_long) = $EBTT_long
 Actual SBUs   ~= $ABUT                  = $ABTT_long
@@ -35,7 +34,7 @@ A good start is to run the following commands from the build logs directory:
   grep "Error " *
 However, results from those commands may not be all inclusive, nor necessarily
 indicative, of any actual issues.  For some additional information, read the
-section "Errors (ignored)" in the README.notes file.
+section "Errors (ignored)" in the README.notes file.  And Google.
 
 In any case, when ready, configure your boot manager, and reboot!
 $DIVIDER
