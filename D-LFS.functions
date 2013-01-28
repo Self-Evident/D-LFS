@@ -533,6 +533,8 @@ function Progress_Bar {
    echo -e $PROGRESS_BAR  | tee -a $BUILD_LOG
 
    #Update BUILD_INFO
+   #While the current pkg has not actually Completed at this point, BUILD_INFO 
+   #must be updated now to avoid loss of all values while in the 6.04_Chroot.
    if [ -f $BUILD_INFO ]; then
       SBUCx10=$[ $SBUCx10 + $SBUSx10 ]       #Set new value
       sed -i '/^SBUCx10=/d' $BUILD_INFO      #Remove current value
