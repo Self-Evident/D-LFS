@@ -6,17 +6,17 @@ alias cls="clear"
 alias less="less -RX"
 alias cd..="cd .."
 
-alias  ls="ls -FACh --si --color --group-directories-first"
+alias  ls="ls -FAC --si --color --group-directories-first"
 alias   d="ls -l"
 
 
 
-unalias  lsd  2> /dev/null         # make sure a desired function name is not 
-function lsd { ls $1 | less; }     # already an alias for something else, or
-                                   # the function may not get used. 
-unalias  dir  2>  /dev/null        #
-function dir { ls -l $1 | less; }  #
 
+unalias  lsd  2> /dev/null        # Before defining a function, make sure
+function lsd { ls $1 | less; }    # the desired function name is not 
+                                  # already aliased as something else,
+unalias  dir  2>  /dev/null       # or the function may not get used. 
+function dir { ls -l $1 | less; } #
 
 
 alias rm="rm -I "
@@ -26,7 +26,7 @@ alias mv="mv -i "
 alias grep="grep --color=always"
 alias g="grep"
 
-#A few color codes for use in prompt strings (PS1)
+#A few color codes for use in prompt strings (PS1).
 #Uses \[ and \], unlike the codes used with echo -e.
 PS_NORMAL='\[\e[0m\]'
    PS_Red='\[\e[0;31m\]'

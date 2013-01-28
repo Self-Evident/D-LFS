@@ -37,13 +37,15 @@ footer 0  #0 suppresses log_end_time
 
 #Record now as the START_TIME for the entire build.
 #FINISH_TIME will be saved at end of 7/9.99_Final_Details
-#The difference between those two times, in addition to the actual build time, 
+#In addition to the actual build time, the difference between those two times 
 #will also include the time spent by any prompt waiting for a response, the
 #time between packages, etc.
 echo "START_TIME=$($TIMESTAMP)"                 >> $BUILD_INFO
 echo "START_TIME_long=\"$($TIMESTAMP_long)\" "  >> $BUILD_INFO
 
-if [[ "$AUTO_BUILD" = "2" || "$AUTO_BUILD" = "3" ]]; then exec 0/supergo-all; fi
+if [[ "$AUTO_BUILD" == "2" || "$AUTO_BUILD" == "3" ]]; then
+   exec 0/supergo-all
+fi
 
 cat << "EOF"
 

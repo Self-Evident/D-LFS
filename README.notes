@@ -130,11 +130,11 @@ Outline of build envinronments/contexts
 
 
 ================================================================================
-Errors (ignored)  (D-LFS 5.5 following LFS 7.2) 
+Errors (ignored)  (as of D-LFS 5.5 & LFS 7.2) 
 
 Below is a list of errors grep'ed from the logs my builds produce.  These
 "ignored" errors do not seem to represent any actual, functional, issues for the
-completed builds.  However, don't take my word for it - the trouble-shooting 
+completed builds.  However, don't take my word for it - trouble-shooting 
 consisted of little more than a successful boot into the new system.
 So, review your logs around all errors to ascertain cause & importance.
 

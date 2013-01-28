@@ -94,8 +94,8 @@ function Press_R_to_Review_build_log {
    read -n1 KEYPRESS
    if [ "$KEYPRESS" == "r" -o "$KEYPRESS" == "R" ]; then
       clear
-      echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-      echo "less will be used to view the log. When finished, press Q, or q."
+      echo;echo;echo;echo;echo;
+      echo "less will be used to view the log. When finished, press Q or q."
       echo
       echo -n "Press any key to continue... "
       read -n1 
@@ -121,9 +121,9 @@ function header {
    echo "                                 started        (1 SBU =   $SBU_long)"\
         "est. finish" | tee -a $BUILD_LOG
 
-   Display_Estimated_Times_Total                           | tee -a $BUILD_LOG
-
    Press_Enter_to_continue #pause here, before log_start_time
+
+   Display_Estimated_Times_Total                           | tee -a $BUILD_LOG
 
    #A few pkg's don't log time, such as the 6.04 & 6.64 chroots.
    #A few others log_start_time sometime after the header (may have a prompt)
@@ -142,7 +142,7 @@ function prepare_package {
    grep -n "Cannot open" $BUILD_LOG #show error if PACKAGE_FILE not found by tar
    cd      $PACKAGE_NAME                   &>> $BUILD_LOG
 
-   #Will sometimes echo "Building package..." later.
+   #Will sometimes echo "Building package..." later in package script.
    if [ "$1" != "0"  ]; then echo "Building package..." | tee -a $BUILD_LOG; fi 
 }
 
@@ -467,6 +467,7 @@ PACKAGE_SCRIPT=`basename $0`  #Remove path, leave 1.23_Pkgname
   #basename removes "path/", leaving just the filename.
   #(in these scripts, path should only be ./, 0/, 4/, 5/, 6/, 7/, or B/)
 
+
 PACKAGE_NUMB=${PACKAGE_SCRIPT:0:4} # 1.23 (ie, chapter.section)
   #${VAR:0:4}  Starting at offset 0, returns a 4 character substring of $VAR
 
@@ -495,13 +496,13 @@ BUILD_LOG="${BUILD_LOGS}/${PACKAGE_SCRIPT}.log"
 
 BUILD_INFO="${BUILD_LOGS}/BUILD_INFO"
 
-#$BUILD_TIMES: Package, Est SBUS, Start time, End time, Actual SBUS, Est-Act
-#   Format ex: 1.23 12.3 1234567890 1234567890 12.2 0.1
+#$BUILD_TIMES: Package, Est SBUS, Start time, End time, Actual SBUS, Act-Est
+#   Format ex: 1.23 12.3 1234567890 1234567890 12.4 0.1
 BUILD_TIMES="${BUILD_LOGS}/BUILD_TIMES"
 
 
 #get various build time values
-source $BUILD_INFO  2>/dev/null #discard error of $BUILD_INFO not yet ready
+source $BUILD_INFO  2>/dev/null #discard error that $BUILD_INFO not yet ready
 
 #
 # END D-LFS.functions 

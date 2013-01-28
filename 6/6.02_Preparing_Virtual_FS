@@ -53,7 +53,7 @@ mount -vt tmpfs shm $LFS/dev/shm  &>> $BUILD_LOG
 cat << "EOF"
 Virtual file system created.
 
-We will now also create the directory '/root'. In the LFS book, it is not
+We will now also create the directory '/root'. In the LFS book, /root is not
 created until 6.05. However, we create it here to prepare for a .profile that 
 will be used when entering the 6.04 chroot.
 EOF

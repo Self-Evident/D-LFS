@@ -1,7 +1,7 @@
 
 ######################################################################
 #
-PACKAGE_NAME="mpfr-3.1.1"   #MPFR USED TO BUILD GCC IN CH5, UPDATED THERE ALSO
+PACKAGE_NAME="mpfr-3.1.1"     #MPFR USED TO BUILD GCC IN CH5, UPDATE THERE ALSO
 PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
 PACKAGE_DESC=""
 SBUS="0.4"  #0.8
