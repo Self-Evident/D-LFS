@@ -25,8 +25,9 @@ echo "Copying ../sources & ../scripts (this directory) to $LFS/$WORKING_BASE"  |
 cp -rv ../scripts/  $D_LFS_WORKING_DIR     &>> $BUILD_LOG
 cp -rv ../sources/  $D_LFS_WORKING_DIR     &>> $BUILD_LOG
 
-cat > $D_LFS_WORKING_DIR/README << "EOF"
-Unless subsequently deleted, this folder contains the sources, scripts,
+echo "#/D-LFS/README" > $D_LFS_WORKING_DIR/README
+cat >> $D_LFS_WORKING_DIR/README << "EOF"
+Unless subsequently deleted, this folder contains the scripts, sources,
 and resultant build logs, that were used to build (compile from source)
 this Linux system.
 EOF
