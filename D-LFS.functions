@@ -514,9 +514,8 @@ function Progress_Bar {
    SCALE=$[($SBUTx10 * 10) / $BARW];
 
    #Scale SBUs Completed & SBUS (current pkg) accordingly.
-   SBUCx=$[ ($SBUCx10      *10) / $SCALE] #SBU's Completed, rounded down.
-   SBUSx=$[(($SBUSx10 + 10)*10) / $SCALE] #SBUS for current pkg, rounded up.
-
+   SBUCx=$[(($SBUCx10 + 5) * 10) / $SCALE] #SBU's Completed, rounded.
+   SBUSx=$[(($SBUSx10 + 5) * 10) / $SCALE] #SBUS for current pkg, rounded.
    if (( $SBUSx < 1 )); then SBUSx=1; fi
 
    #Should never happen, but just in case...
@@ -534,10 +533,10 @@ function Progress_Bar {
 
    #Update BUILD_INFO
    #While the current pkg has not actually Completed at this point, BUILD_INFO 
-   #must be updated now to avoid loss of all values while in the 6.04_Chroot.
+   #must be updated now to avoid loss of SBUCx10 values while in the chroots.
    if [ -f $BUILD_INFO ]; then
-      SBUCx10=$[ $SBUCx10 + $SBUSx10 ]       #Set new value
       sed -i '/^SBUCx10=/d' $BUILD_INFO      #Remove current value
+      SBUCx10=$[ $SBUCx10 + $SBUSx10 ]       #Set new value
       echo "SBUCx10=$SBUCx10" >> $BUILD_INFO #Save new value
    fi
 } #End Progress_Bar
