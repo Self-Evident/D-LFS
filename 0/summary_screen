@@ -15,22 +15,19 @@ TBT=`date -ud @$BUILD_TIME +%H:%M:%S`      #packages, waiting for prompts, etc
 
 cd $BUILD_LOGS
 
-{ #braces group command output
-echo $DIVIDER
-echo "Congratulations - your LFS build is complete!"
-echo "               Finish Time:   $FINISH_TIME_long"
-echo "               Start  Time:   $START_TIME_long"
-echo $DIVIDER
-echo -n "               Total Time to build LFS = $TBT"
-echo " (includes non-building time)"
-echo
-echo "Estimated SBUs = $SBUT x (1 SBU=$SBU_long) = $EBTT_long"
-echo "Actual SBUs   ~= $ABUT                  = $ABTT_long"
-echo 
-echo -en "Build logs can be found in:  ${BOLD}$BUILD_LOGS${NORMAL}"
-echo
+cat >> $BUILD_LOG << EOF
+$DIVIDER
+Congratulations - your LFS build is complete!
+               Finish Time:   $FINISH_TIME_long
+               Start  Time:   $START_TIME_long
+$DIVIDER
+                Total Time to build LFS = $TBT
+ (includes non-building time)
 
-cat << "EOF"
+Estimated SBUs = $SBUT x (1 SBU=$SBU_long) = $EBTT_long
+Actual SBUs   ~= $ABUT                  = $ABTT_long
+
+Build logs can be found in:  $BOLD_cat$BUILD_LOGS$NORMAL_cat
 It may be a good idea to take a look and check for build errors, particularly
 if the actual build time is significantly less than the estimated build time.
 A good start is to run the following commands from the build logs directory:
@@ -41,10 +38,9 @@ indicative, of any actual issues.  For some additional information, read the
 section "Errors (ignored)" in the README.notes file.
 
 In any case, when ready, configure your boot manager, and reboot!
+$DIVIDER
 EOF
 
-echo $DIVIDER
-} &>> $BUILD_LOG  #close group, save output
 
 clear
 cat $BUILD_LOG

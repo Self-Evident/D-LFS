@@ -43,3 +43,16 @@ PS_NORMAL='\[\e[0m\]'
 PS_yellow='\[\e[0;32m\]'
 PS_YELLOW='\[\e[1;33m\]'
 
+#Color codes that may be used in cat.  IE:
+#cat >> /some/file << EOF  
+#${BOLD_c} Some bolded text. ${NORMAL_c}
+#EOF
+#Note: The deliminator string (EOF in this example) must NOT be quoted
+#for $variable expansion to work.
+#
+#These codes contain the actual esc char (displayed below as ^[),
+#instead of \e used in "echo -e" color codes, as above.
+#"echo -e" expands \e to the esc char, but cat doesn't.
+BOLD_cat="[1m"
+NORMAL_cat="[0m"
+
