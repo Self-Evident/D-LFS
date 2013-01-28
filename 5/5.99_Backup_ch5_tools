@@ -26,22 +26,18 @@ if [ "$REPLY" == "s" -o "$REPLY" == "S" ]; then
    exit 0
 fi
 
-
 cat << "EOF" 
-
 Note: The tools directory will be temporarily renamed to tools.ch5, so that, if
 untarred later, it won't automaticaly overwrite an existing tools directory.
-
 EOF
 
-
 log_start_time
-echo
 
 cd $LFS  &>> $BUILD_LOG
 VERS=$LFS_VERSION
 
 { #braces group command output
+echo
 echo -n  "Renaming: ";  mv -v  tools  tools.ch5
 echo -en "Creating:  ${BOLD}${LFS}/LFS_${VERS}_tools.ch5.tar.gz${NORMAL} ..."
 tar -czf LFS_${LFS_VERSION}_tools.ch5.tar.gz  tools.ch5

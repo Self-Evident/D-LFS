@@ -8,8 +8,6 @@ SBUS="0.0"
 
 source D-LFS.functions
 
-rm $BUILD_LOG ####################
-
 header 0  #Remove the 0 if you wish to log_start_time in the header
 
 #log_start_time  #Only log here if it's not logged in the header.

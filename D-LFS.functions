@@ -15,7 +15,7 @@
 # available during portions of build.
 #
 
-D_LFS_version=5.5.BETA
+D_LFS_version=5.5.RC1
 
 source ./D-LFS.config     #Get config values.
 
@@ -26,7 +26,8 @@ source misc/shell_colors  #Used to color text on screen
 function Init_BUILD_LOGS {
    #Called right after BUILD_LOGS is declared, near the end of this file.
    #This function should only be called one time.
-   #Used until the $LFS (/mnt/LFS) partition has been setup in 2.04
+   #Sets up tmp folder for build logs until the $LFS (/mnt/LFS) partition
+   #has been setup in 2.04
    #$TMP_BUILD_LOGS is set in D-LFS.config
 
    BUILD_LOGS_standard=$BUILD_LOGS #Used to move BUILD_LOGS after $LFS is ready
@@ -111,32 +112,26 @@ function Press_R_to_Review_build_log {
 
 function header {
    clear
-
    header_TITLE="D-LFS Scripts ${D_LFS_version}, LFS Book ${LFS_VERSION}"
    WHOatHOST="(user: ${YELLOW}`whoami 2>/dev/null`@${HOST}${NORMAL})"
    PAD_LEN=$[ 80 - ${#header_TITLE} - ${#WHOatHOST} + 11 ] #+11 adj for colors
    PAD=${BLANKLINE:0:$PAD_LEN}  #Right justifies (user: who@host)
+   PADx=${BLANKLINE:0:28} 
 
    echo $DIVIDER                                           | tee -a $BUILD_LOG
    echo -e "$header_TITLE $PAD $WHOatHOST"                 | tee -a $BUILD_LOG
    echo "$PACKAGE_NUMB : $PACKAGE_NAME $PACKAGE_DESC"      | tee -a $BUILD_LOG
-   echo "                                started        (1 SBU =   $SBU_long)"\
-        " est. finish" | tee -a $BUILD_LOG
+   echo "$PADx   started         (1 SBU =   $SBU_long)  est. finish" \
+                                                           | tee -a $BUILD_LOG
+   Display_Estimated_Times_Total #outputs to both screen & log
+   echo "Current Package:$PADx $SBUS SBUs "
+   echo $DIVIDER                                           | tee -a $BUILD_LOG
 
    Press_Enter_to_continue #pause here, before log_start_time
-
-   Display_Estimated_Times_Total                           | tee -a $BUILD_LOG
-
    #A few pkg's don't log time, such as the 6.04 & 6.65 chroots.
    #Some have another prompt and log_start_time after the header.
    #So, if header's $1==0, don't log start time here.
    if [ "$1" != "0"  ]; then log_start_time ;  fi 
-
-   #If $1!=0, moves cursor down since tput sc/tput rc is this line. See $DETP
-   #If $1==0, leaves a blank line for log_start_time later.
-   echo 
-
-   echo $DIVIDER                                           | tee -a $BUILD_LOG
 } #End header
 
 
@@ -381,18 +376,21 @@ function Calculate_Estimated_Build_Time_Total {
 
 function Display_Estimated_Times_Total {
    # Display Estimated Times for Entire Build
- 
+
    #$DETT_LEAD is also used in Display_Estimated_Times_Package
    DETT_LEAD="Entire Build   :"
-   echo -n "$DETT_LEAD  $START_TIME_long,  $SBUT SBUs"
+   DETT="$DETT_LEAD  $START_TIME_long,  $SBUT SBUs"
 
    #Check if SBU has been determined (by 5.04).
    if [[ $SBU_ -le "0" ]] ; then  #can't display estimated times...
-      echo "  (est. times unavailable)"
+      DETT="$DETT  (est. times unavailable)"
    else
-      echo " = $EBTT_long,  $EFTT_long"
+      DETT="$DETT = $EBTT_long,  $EFTT_long"
    fi
 
+   #Can't tee the output of this function when called: looses value of 
+   #DETT_LEAD which is needed later. But we can tee it here.
+   echo "$DETT"  | tee -a $BUILD_LOG
 } #End Display_Estimated_Times_Total
 
 
@@ -406,10 +404,10 @@ function Display_Estimated_Times_Package {
    local ST=`$TIMESTAMP_long` #Start Time for Current Package (now)
 
    #Start of string to be displayed
-   DETP="Current package:  $ST, $PAD $SBUS SBUs"
+   DETP="Current Package:  $ST, $PAD $SBUS SBUs"
 
    #Check if SBU has been determined (by 5.04).
-   if [[ $SBU_ -le "0" ]] ; then  #can't display estimated times...
+   if [[ $SBU_ -le "0" ]] ; then
       DETP="$DETP  (est. times unavailable)"
    else
       Calculate_Estimated_Build_Time_Package  #Determines EBTP & EFTP
@@ -419,11 +417,12 @@ function Display_Estimated_Times_Package {
 
    #Add start time to last header in the log.  Appends as line 6 normally.
    #$DETT_LEAD set in Display_Estimated_Times_Total
-   LINE_num="`grep -n "$DETT_LEAD" $BUILD_LOG | tail -n1 | cut -d: -f1`"
+   alias grep="grep --color=never"  #Make sure gives clean output.
+   LINE_num=`grep -n "$DETT_LEAD" $BUILD_LOG | tail -n1 | cut -d: -f1`
    sed -i ${LINE_num}a\ "$DETP"  $BUILD_LOG
 
    #Add start time to header on screen.
-   tput sc       #Save cursor postion
+   tput sc       #Save cursor postion.
    tput cup 5 0  #Move cursor to line 6 on screen.
    echo "$DETP"
    tput rc       #Return cursor to saved position.

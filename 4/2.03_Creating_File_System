@@ -16,15 +16,14 @@ echo "This will destroy any existing data on the specified partition."
 echo
 
 Enter_YES_to_continue  # Will exit if YES is not entered
-echo
 
 log_start_time
-echo &>> $BUILD_LOG
+
 echo "Creating filesystem..."
 
 umount $DEV_LFS                   &>> $BUILD_LOG
 mke2fs -jv  $DEV_LFS -L $DEV_LBL  &>> $BUILD_LOG
-echo                               >> $BUILD_LOG
+echo                              &>> $BUILD_LOG
 debugfs -R feature $DEV_LFS  | tee -a $BUILD_LOG
 
 

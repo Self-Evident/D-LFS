@@ -22,6 +22,7 @@ passwd --delete $LFS_USER
 
 } | tee -a $BUILD_LOG  #close group, save output
 
+echo
 echo "The chown and su commands indicated in the book"
 echo "will be performed in the next section."
 

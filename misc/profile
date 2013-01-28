@@ -6,7 +6,7 @@ alias cls="clear"
 alias cd..="cd .."
 alias less="less -RX"
 
-alias  ls="ls -FAC --si --color=auto --group-directories-first"
+alias  ls="ls -FAC --si --color=always --group-directories-first"
 alias   d="ls -l"
 
 unalias  lsd  2> /dev/null        # Before defining a function, make sure
@@ -19,7 +19,7 @@ alias rm="rm -I "
 alias cp="cp -i "
 alias mv="mv -i "
 
-alias grep="grep --color=auto"
+alias grep="grep --color=always"
 alias g="grep"
 
 #A few color codes for use in prompt strings (PS1).

@@ -19,7 +19,8 @@ echo
 Press_Enter_to_continue
 
 log_start_time 
-echo |tee -a $BUILD_LOG
+echo >> $BUILD_LOG
+
 echo "Copying ../sources & ../scripts (this directory) to $LFS/$WORKING_BASE"  |tee -a $BUILD_LOG
 
 cp -rv ../scripts/  $D_LFS_WORKING_DIR     &>> $BUILD_LOG
