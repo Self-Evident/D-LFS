@@ -15,7 +15,7 @@
 # available during portions of build.
 #
 
-D_LFS_version=5.5.RC1
+D_LFS_version=5.5.RC2
 
 source ./D-LFS.config     #Get config values.
 
@@ -162,7 +162,7 @@ function prepare_package {
       exit #This will also end auto-builds.
    fi #End if errors
 
-   #Sometimes, the this message is not yet needed.
+   #Sometimes, this message is not yet needed.
    if [[ "$1" != "0" ]]; then echo "Building package..." | tee -a $BUILD_LOG; fi
 } #End prepare_package
 
@@ -189,6 +189,7 @@ function footer {
    grep -n "Stop."   $BUILD_LOG
    echo -en $NORMAL
 
+   #Main footer info
    { #braces group command output
      echo $DIVIDER
      echo -n "$PACKAGE_NUMB : Done    :  `$TIMESTAMP_long`"
@@ -196,13 +197,6 @@ function footer {
      if [[ "$ABUS" != "" ]]; then  echo "$ELAPSEDINFO";  else echo;  fi
      echo $DIVIDER
    } | tee -a $BUILD_LOG  #close group, save output
-
-   if [ -f $BUILD_INFO ]; then
-      #SBUCx10 is used in Progress_Bar
-      SBUCx10=$[ $SBUCx10 + $SBUSx10 ] #store x10 for easier bash math later
-      sed -i '/^SBUCx10=/d' $BUILD_INFO      #Remove current value
-      echo "SBUCx10=$SBUCx10" >> $BUILD_INFO #Save new value
-   fi
 
    Press_R_to_Review_build_log
    echo                                                   >> $BUILD_LOG
@@ -212,6 +206,7 @@ function footer {
 
 function header_log_prep {
    header
+   #log_start_time is now in header.
    prepare_package
 }
 
@@ -219,6 +214,7 @@ function header_log_prep {
 
 function cleanup_log_footer {
    cleanup
+   #log_end_time is now in footer.
    footer
 }
 
@@ -278,8 +274,8 @@ function Change_HOST_to {  #Changes HOST to reflect if in chroot
 #
 # Base 8 (octal) vs Base 10: Bash assumes octal if a value has a leading 0.
 # Regarding SBUS, and removal of the decimal point, 0.8 becomes 08.
-# This will generate errors with bash math, as 08 is not a valid octal number.
-# So, prepend 10# to ensure base 10. ex: $[10#$VAR]
+# 08 and 09 will generate errors with bash math, as they are not valid octal
+# numbers. So, prepend 10# to the $var to ensure base 10. ex: $[10#$VAR]
 # Or, if SBUS=0.8, and if SBUSx10=$[10#`echo $SBUS | sed 's/\.//'`],
 # then SBUSx10 will = 8. Without the 10#, SBUSx10 would = 08.
 #
@@ -501,9 +497,11 @@ function Calculate_ABUT_and_ABTT {   #Called from summary screen.
 function Progress_Bar {
    #Uses the divider line under the header as a progress bar for the build.
 
-   #SBUCx10 & SBUTx10 are obtained from BUILD_INFO
-   #SBUCx10 is updated at end of footer
-   #SBUSx10 is set at the end of the global variables section.
+   #The x10 suffix implies the var is 10 times the base-name's value
+   #SBUCx10 SBUs Completed. Obtained from BUILD_INFO at end of D-LFS.functions.
+   #SBUTx10 SBUs Total to build. Obtained from BUILD_INFO.
+   #SBUSx10 SBUs for current pkg. Set at the end of end of D-LFS.functions.
+   #SBUCx10 will be updated at end of footer().
 
    if [[ "$SBUTx10" == "" ]]; then SBUTx10=0 ; fi
    if [[ "$SBUCx10" == "" ]]; then SBUCx10=0 ; fi
@@ -512,7 +510,7 @@ function Progress_Bar {
    BARW=$SCREEN_WIDTH #Progress Bar Width. SCREEN_WIDTH set in global variables.
 
    #Determine SCALE of SBUS Total / Progress Bar Width.
-   #ex: (67.5x10 x 10) / 80 = 84.375    In Bash, will round down to 84.
+   #ex: (67.8x10 x 10) / 80 = 84.75    Bash will round down to 84.
    SCALE=$[($SBUTx10 * 10) / $BARW];
 
    #Scale SBUs Completed & SBUS (current pkg) accordingly.
@@ -521,25 +519,32 @@ function Progress_Bar {
 
    if (( $SBUSx < 1 )); then SBUSx=1; fi
 
-   #If SBUS for current pkg > Total, something is wrong
+   #Should never happen, but just in case...
    if (( $SBUSx > $BARW )); then SBUSx=1; fi
 
    if (( $[$SBUCx + $SBUSx] >= $BARW )); then SBUCx=$[ $BARW - $SBUSx ]; fi
 
-   SBUR=$[ $BARW - $SBUCx - $SBUSx ] #SBU's Remaining
+   SBUR=$[ $BARW - $SBUCx - $SBUSx ] #SBU's Remaining after current package.
    if (( $SBUR < 1 )); then SBUR=0; fi
 
    PROGRESS_BAR=$green${DIVIDER:0:$SBUCx}$YELLOW${DIVIDER1:0:$SBUSx}$DGRAY
    PROGRESS_BAR=$PROGRESS_BAR${DIVIDER:0:$SBUR}$NORMAL
 
    echo -e $PROGRESS_BAR  | tee -a $BUILD_LOG
+
+   #Update BUILD_INFO
+   if [ -f $BUILD_INFO ]; then
+      SBUCx10=$[ $SBUCx10 + $SBUSx10 ]       #Set new value
+      sed -i '/^SBUCx10=/d' $BUILD_INFO      #Remove current value
+      echo "SBUCx10=$SBUCx10" >> $BUILD_INFO #Save new value
+   fi
 } #End Progress_Bar
 
 
 ########################################
 # D-LFS global variables
 
-SCREEN_WIDTH=80  #(Set to tput col, then set DIVIDER{0,1, } lengths.)
+SCREEN_WIDTH=80  #(Set to tput col, then set DIVIDER{0,1, } lengths?)
 
 DIVIDER0='................................................................................'
 DIVIDER1='--------------------------------------------------------------------------------'
