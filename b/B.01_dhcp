@@ -1,0 +1,30 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME="dhcpcd-4.0.11"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+#SBUS="0.0"
+
+source D-LFS.functions
+
+
+header_log_prep
+
+make PREFIX= \
+      LIBEXECDIR=/lib/dhcpcd \
+      DBDIR=/var/lib/dhcpcd \
+      SYSCONFDIR=/etc/dhcpcd
+
+make PREFIX= \
+      LIBEXECDIR=/lib/dhcpcd \
+      DBDIR=/var/lib/dhcpcd \
+      SYSCONFDIR=/etc/dhcpcd install
+
+sed -i "s;/var/lib/dhcpcd-;/var/lib/dhcpcd/dhcpcd-;g" \
+       dhcpcd-hooks/50-dhcpcd-compat &&
+install -v -m 644 dhcpcd-hooks/50-dhcpcd-compat /lib/dhcpcd/dhcpcd-hooks/
+
+#make install-service-dhcpcd  #from blfs bootscripts
+
+cleanup_log_footer
+

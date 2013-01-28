@@ -1,0 +1,38 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME="iptables-1.4.12"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.bz2"
+#SBUS="0.2"
+
+source D-LFS.functions
+
+header
+
+log_start_time
+
+prepare_package
+
+./configure --prefix=/usr     \
+            --bindir=/sbin    \
+            --sbindir=/sbin   \
+            --libdir=/lib     \
+            --libexecdir=/lib \
+            --with-pkgconfigdir=/usr/lib/pkgconfig  &>> $BUILD_LOG
+
+make                                                &>> $BUILD_LOG
+make install                                        &>> $BUILD_LOG
+ln -sfv xtables-multi /sbin/iptables-xml            &>> $BUILD_LOG
+
+cleanup
+
+PACKAGE_NAME="blfs-bootscripts-20111206"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.bz2"
+prepare_package
+   make install-iptables
+cleanup
+
+
+log_end_time
+PACKAGE_NAME="iptables-1.4.12"  #Restore for footer
+footer

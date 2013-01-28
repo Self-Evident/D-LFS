@@ -8,7 +8,8 @@ SBUS="0.0"
 
 source D-LFS.functions 
 
-header < 0/ENTER   #"< 0/ENTER" skips "Press Enter to continue:"
+header 0 < 0/ENTER  #0 suppresses log_start_time in header
+                    #"< 0/ENTER" skips "Press Enter to continue:"
 
 echo "Run this script as root of the host system, and only if:"
 echo

@@ -1,0 +1,18 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME="unzip60"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
+SBUS="0.1" #
+
+source D-LFS.functions
+
+header_log_prep
+
+make -f unix/Makefile generic &>> $BUILD_LOG
+
+cp -v unzip funzip unzipsfx   /usr/bin            &>> $BUILD_LOG
+rm -v man/Contents                                &>> $BUILD_LOG
+cp -v man/*                   /usr/share/man/man1 &>> $BUILD_LOG
+
+cleanup_log_footer

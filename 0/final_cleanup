@@ -10,7 +10,7 @@ source D-LFS.functions
 
 BUILD_LOG="$LFS/LFS_final_cleanup.log"
 
-header
+header 0
 
 echo -e "This script should be run as ${YELLOW}root${NORMAL} of the ${YELLOW}HOST${NORMAL} environment."
 echo
@@ -20,8 +20,8 @@ echo
 echo -en "Delete user  ${BOLD}$LFS_USER${NORMAL}  ?:"
 read -p  ""
 if [ "$REPLY" == "Y" ]; then
-   userdel -rf $LFS_USER                    &>> $BUILD_LOG
-   echo "User $LFS_USER removed."
+   userdel -rf $LFS_USER                     >> $BUILD_LOG
+   echo "Done."
 fi
 
 echo &>> $BUILD_LOG
@@ -29,8 +29,8 @@ echo &>> $BUILD_LOG
 echo -en "Remove  $LFS/$WORKING_BASE/${BOLD}sources${NORMAL}     ?:"
 read -p  ""
 if [ "$REPLY" == "Y" ]; then
-   rm  -rfv  $LFS/$WORKING_BASE/sources     &>> $BUILD_LOG
-   echo "removed: $LFS/$WORKING_BASE/sources"
+   rm  -rfv  $LFS/$WORKING_BASE/sources      >> $BUILD_LOG
+   echo "Done."
 fi
 
 echo -en "Remove  $LFS/$WORKING_BASE/${BOLD}build_logs${NORMAL}  ?:"
@@ -74,5 +74,4 @@ echo
 echo "Done. See  $BUILD_LOG  for details."
 echo
 
-footer
-
+footer 0

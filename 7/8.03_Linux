@@ -23,6 +23,7 @@ echo "Option $OPTION selected. "  | tee -a $BUILD_LOG
 
 
 log_start_time
+echo | tee -a $BUILD_LOG
 
 prepare_package  0  #The 0 supresses echo of "Building package..."
 

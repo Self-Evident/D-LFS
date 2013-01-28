@@ -1,0 +1,29 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME="p7zip_9.20.1"
+PACKAGE_FILE="${PACKAGE_NAME}_src_all.tar.bz2"
+SBUS="0.4" #.4 just for 7za
+
+source D-LFS.functions
+
+header_log_prep
+
+{ #braces group command output
+make #makes 7za only.
+#make test #Test 7za only.
+
+cp -v bin/* /usr/bin
+
+find DOCS -type d -exec chmod 755 {} \;
+find DOCS -type f -exec chmod 644 {} \;
+DOCS="/usr/share/doc/$PACKAGE_NAME"
+mkdir -v $DOCS
+cp -vR DOCS/*  $DOCS
+
+chmod 644 man1/*
+cp -v     man1/*  /usr/share/man/man1
+
+} &>> $BUILD_LOG  #close group, save output
+
+cleanup_log_footer

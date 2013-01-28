@@ -1,0 +1,35 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME="git-master"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.xz" #may need to convert from .zip
+PACKAGE_DESC=""
+SBUS="0.6" 
+
+source D-LFS.functions
+
+header_log_prep
+
+#For info on the following (and many other) settings,
+#see INSTALL & Makefile in the git source.
+
+#INSTALL_DOC="install-doc"   #Requires asciidoc/xmlto. Installs man format only.
+#INSTALL_MAN="install-man"   #Requires asciidoc/xmlto.
+#INSTALL_HTML="install-html" #Requires asciidoc.
+#INSTALL_INFO="install-info" #Requires makeinfo & docbooks2X.
+
+NO_OPENSSL="NO_OPENSSL=YesPlease" #Used by git-imap-send
+NO_CURL="NO_CURL=YesPlease"       #For http:// or https:// repo's.
+NO_EXPAT="NO_EXPAT=YesPlease" #For git-http-push for remote lock mgnt over DAV.
+NO_TCLTK="NO_TCLTK=YesPlease"     #For git-gui or to show graphical history.
+NO_PYTHON="NO_PYTHON=YesPlease"   #For git-p4 interface to Perforce.
+NO_CROSS_DIRECTORY_HARDLINKS="NO_CROSS_DIRECTORY_HARDLINKS=YesPlease"
+NO_INSTALL_HARDLINKS="NO_INSTALL_HARDLINKS=YesPlease"
+NO_SVN_TESTS="NO_SVN_TESTS=YesPlease"
+
+make prefix=/usr install $INSTALL_DOC $INSTALL_HTML $INSTALL_INFO \
+     $NO_OPENSSL $NO_CURL $NO_EXPAT $NO_PYTHON $NO_TCLTK \
+     $NO_CROSS_DIRECTORY_HARDLINKS $NO_INSTALL_HARDLINKS \
+     $NO_SVN_TESTS &>> $BUILD_LOG
+
+cleanup_log_footer

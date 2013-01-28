@@ -1,0 +1,41 @@
+#!/bin/bash
+######################################################################
+#
+PACKAGE_NAME="gpm-1.20.6"
+PACKAGE_FILE="${PACKAGE_NAME}.tar.bz2"
+#SBUS="0.0"
+
+source D-LFS.functions
+
+
+header_log_prep
+
+./configure --prefix=/usr --sysconfdir=/etc    &>> $BUILD_LOG
+make  &>> $BUILD_LOG
+make install  &>> $BUILD_LOG
+
+install-info --dir-file=/usr/share/info/dir \
+             /usr/share/info/gpm.info          &>> $BUILD_LOG
+
+ln -v -s libgpm.so.2.1.0 /usr/lib/libgpm.so    &>> $BUILD_LOG
+install -v -m644 conf/gpm-root.conf /etc       &>> $BUILD_LOG
+
+install -v -m755 -d /usr/share/doc/gpm-1.20.6  &>> $BUILD_LOG
+chmod   -v   755    doc/{changes,support}      &>> $BUILD_LOG
+chmod   -v   644    doc/{changes/*,support/*,FAQ,HACK_GPM,README*}  &>> $BUILD_LOG
+cp      -v -R       doc/{FAQ,HACK_GPM,README*,changes,support} \
+                    /usr/share/doc/gpm-1.20.6  &>> $BUILD_LOG
+
+cat > /etc/sysconfig/mouse << "EOF"
+# Begin /etc/sysconfig/mouse
+
+MDEVICE="<yourdevice>"
+PROTOCOL="<yourprotocol>"
+GPMOPTS="<additional options>"
+
+# End /etc/sysconfig/mouse
+EOF
+
+
+cleanup_log_footer
+

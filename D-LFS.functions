@@ -470,6 +470,7 @@ PACKAGE_SCRIPT=`basename $0`  #Remove path, leave 1.23_Pkgname
 PACKAGE_NUMB=${PACKAGE_SCRIPT:0:4} # 1.23 (ie, chapter.section)
   #${VAR:0:4}  Starting at offset 0, returns a 4 character substring of $VAR
 
+
 #These are set in each N.nn_package_script:
 # PACKAGE_NAME="package_file_name-1.2.3"
 # PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"  # could also end in .bz2, .xz, etc
@@ -505,4 +506,3 @@ source $BUILD_INFO  2>/dev/null #discard error of $BUILD_INFO not yet ready
 #
 # END D-LFS.functions 
 ################################################################################
-

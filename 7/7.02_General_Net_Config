@@ -10,16 +10,15 @@ source D-LFS.functions
 
 header
 
+echo -n "Running udevadm test... "
 for NIC in /sys/class/net/* ; do
     INTERFACE=${NIC##*/} udevadm test --action=add $NIC &>> $BUILD_LOG
 done
+echo "Done.  Review the build log for details."
 
-echo "Completed udevadm test. " | tee -a $BUILD_LOG
-echo "  Review the build log for details."
-echo                            | tee -a $BUILD_LOG
 
 #Some of the following values set in D-LFS.config
-#
+
 echo "ONBOOT=$ONBOOT"        >   /etc/sysconfig/ifconfig.eth0
 echo "IFACE=$IFACE"          >>  /etc/sysconfig/ifconfig.eth0
 echo "SERVICE=$SERVICE"      >>  /etc/sysconfig/ifconfig.eth0
@@ -27,14 +26,11 @@ echo "IP=$IP"                >>  /etc/sysconfig/ifconfig.eth0
 echo "GATEWAY=$GATEWAY"      >>  /etc/sysconfig/ifconfig.eth0
 echo "PREFIX=$PREFIX"        >>  /etc/sysconfig/ifconfig.eth0
 echo "BROADCAST=$BROADCAST"  >>  /etc/sysconfig/ifconfig.eth0
-
 echo 'Created  /etc/sysconfig/ifconfig.eth0 '  | tee -a $BUILD_LOG
-
 
 echo                               >> /etc/resolv.conf
 echo "#domain <Your Domain Name>"  >> /etc/resolv.conf
 echo "nameserver $NAMESERVER"      >> /etc/resolv.conf
-
 echo 'Created  /etc/resolv.conf '  | tee -a $BUILD_LOG
 
 
