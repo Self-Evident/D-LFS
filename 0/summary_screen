@@ -41,7 +41,6 @@ indicative, of any actual issues.  For some additional information, read the
 section "Errors (ignored)" in the README.notes file.
 
 In any case, when ready, configure your boot manager, and reboot!
-
 EOF
 
 echo $DIVIDER

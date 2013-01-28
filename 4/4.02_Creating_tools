@@ -10,9 +10,9 @@ source D-LFS.functions
 
 header
 
-mkdir -v  $LFS/tools      | tee -a $BUILD_LOG
+mkdir -v  $LFS/tools         | tee -a $BUILD_LOG
 
-echo -n "Creating symlink on host: " | tee -a $BUILD_LOG
-ln -sv   $LFS/tools  /               | tee -a $BUILD_LOG
+echo -n "Creating symlink: " | tee -a $BUILD_LOG
+ln -sv   $LFS/tools  /       | tee -a $BUILD_LOG
 
 footer

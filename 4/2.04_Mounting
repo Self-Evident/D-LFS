@@ -10,22 +10,25 @@ source D-LFS.functions
 
 header
 
-echo -en "Creating directory ${BOLD}${LFS}${NORMAL} on the host, "
-echo -e  "and mounting ${BOLD}${DEV_LFS}${NORMAL} there."
-mkdir -vp $LFS                          | tee -a $BUILD_LOG
-mount -v -t ext3  $DEV_LFS $LFS         | tee -a $BUILD_LOG
+{ #braces group command output
 
-echo                                    | tee -a $BUILD_LOG
-echo "Creating directory (& symlink)"\
-     "to contain the scripts, sources, and build logs:" | tee -a $BUILD_LOG
+mkdir -vp $LFS
+echo -n "Mounting: "
+mount -v -t ext3  $DEV_LFS $LFS
 
-#D_LFS_WORKING_BASE = /$WORKING_BASE (defined in D-LFS.functions)
+echo
+echo "Directory (& symlink) to contain the scripts, sources, and build logs:"
+
+#D_LFS_WORKING_BASE = /$WORKING_BASE
 #This lets the workding folder be available in or out of the chroot.
-mkdir -v $LFS/$WORKING_BASE             | tee -a $BUILD_LOG
-ln -sv   $LFS/$WORKING_BASE  /          | tee -a $BUILD_LOG
+mkdir -v $LFS/$WORKING_BASE
+ln -sv   $LFS/$WORKING_BASE  /
 
-echo                                    | tee -a $BUILD_LOG
-mkdir -v  $BUILD_LOGS_standard          | tee -a $BUILD_LOG
+echo
+mkdir -v  $BUILD_LOGS_standard
+
+} | tee -a $BUILD_LOG #close group, save output
+
 source D-LFS.functions  #Resets $BUILD_LOGS, $BUILD_LOG, $BUILD_TIMES, etc...
 
 echo "Moving the logs from $TMP_BUILD_LOGS to $BUILD_LOGS" | tee -a $BUILD_LOG
