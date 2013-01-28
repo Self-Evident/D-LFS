@@ -17,20 +17,28 @@ done
 echo "Done.  Review the build log for details."
 
 
-#Some of the following values set in D-LFS.config
+#Some of the following values are set in D-LFS.config
 
-echo "ONBOOT=$ONBOOT"        >   /etc/sysconfig/ifconfig.eth0
-echo "IFACE=$IFACE"          >>  /etc/sysconfig/ifconfig.eth0
-echo "SERVICE=$SERVICE"      >>  /etc/sysconfig/ifconfig.eth0
-echo "IP=$IP"                >>  /etc/sysconfig/ifconfig.eth0
-echo "GATEWAY=$GATEWAY"      >>  /etc/sysconfig/ifconfig.eth0
-echo "PREFIX=$PREFIX"        >>  /etc/sysconfig/ifconfig.eth0
-echo "BROADCAST=$BROADCAST"  >>  /etc/sysconfig/ifconfig.eth0
+cat > /etc/sysconfig/ifconfig.eth0 << EOF
+#/etc/sysconfig/ifconfig.eth0
+
+ONBOOT="$ONBOOT"
+IFACE="$IFACE"
+SERVICE="$SERVICE"
+IP="$IP"
+GATEWAY="$GATEWAY"
+PREFIX="$PREFIX"
+BROADCAST="$BROADCAST"
+EOF
 echo 'Created  /etc/sysconfig/ifconfig.eth0 '  | tee -a $BUILD_LOG
 
-echo                               >> /etc/resolv.conf
-echo "#domain <Your Domain Name>"  >> /etc/resolv.conf
-echo "nameserver $NAMESERVER"      >> /etc/resolv.conf
+
+cat > /etc/resolv.conf << EOF
+#/etc/resolv.conf
+
+#domain <Your Domain Name>
+nameserver $NAMESERVER
+EOF
 echo 'Created  /etc/resolv.conf '  | tee -a $BUILD_LOG
 
 

@@ -104,10 +104,10 @@ cp -v --remove-destination /usr/share/zoneinfo/$TIMEZONE \
 
 
 cat > /etc/ld.so.conf << "EOF"
+#/etc/ld.so.conf
 /usr/local/lib
 /opt/lib
 EOF
-# End /etc/ld.so.conf
 
 
 #The following lines are optional. See book for details.
@@ -115,7 +115,6 @@ cat >> /etc/ld.so.conf << "EOF"
 # Add an include directory
 include /etc/ld.so.conf.d/*.conf
 EOF
-
 mkdir /etc/ld.so.conf.d  &>> $BUILD_LOG
 
 cleanup_log_footer

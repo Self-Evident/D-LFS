@@ -10,14 +10,14 @@ source D-LFS.functions
 
 header
 
+cat > /etc/hosts << EOF
+#/etc/hosts (network card version)
 
-echo '# Begin /etc/hosts (network card version)' > /etc/hosts
-echo '#<192.168.1.1> <HOSTNAME.example.org> [alias1] [alias2 ...]' >> /etc/hosts
-echo                                            >> /etc/hosts
-echo "127.0.0.1  localhost"                     >> /etc/hosts
-echo $IP  $HOSTNAME                             >> /etc/hosts
-echo                                            >> /etc/hosts
-echo '# End /etc/hosts (network card version)'  >> /etc/hosts
+#<192.168.1.1> <HOSTNAME.example.org> [alias1] [alias2 ...]
+
+127.0.0.1  localhost
+$IP $HOSTNAME
+EOF
 
 echo
 echo Created file  /etc/hosts             | tee -a $BUILD_LOG

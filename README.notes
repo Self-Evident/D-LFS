@@ -189,7 +189,7 @@ another line in file
 EOF
 
 However, this method does not work if we wish to use the value of a bash 
-variable, such as those found in D-LFS.config, in "/some/file".  For example, 
+variable, such as those found in D-LFS.config, in "/some/file".*  For example, 
 this won't work as might be expected:
 
 cat > /some/file << "EOF"
@@ -216,6 +216,12 @@ will continue to read from stdin, and subsequent commands in a script will fail.
 Also, it is ok to use something other than the string "EOF" to end a cat.
 For example, "EndOftheLine" would work just the same.
 
+*Note: 3 years after writting the above, I learned about the difference between
+quoting & not quoting the "EOF" deliminator at the start of a "here doc":
+cat << "EOF"
+  -vs- 
+cat << EOF
+It seems that the latter allows for $variable expansion, etc. Oh well...
 ========================================
 
 

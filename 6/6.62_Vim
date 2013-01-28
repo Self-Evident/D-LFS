@@ -9,7 +9,8 @@ SBUS="0.6"  #1.0
 source D-LFS.functions 
 
 header_log_prep
-
+echo Exiting test run...
+exit  #####
 echo '#define SYS_VIMRC_FILE "/etc/vimrc"' >> src/feature.h
 
 ./configure --prefix=/usr --enable-multibyte   &>> $BUILD_LOG

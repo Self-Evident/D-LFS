@@ -136,15 +136,36 @@ function header {
 
 
 function prepare_package {
+   local  TAR_ERR  CD_ERR  CD_ERR2  last_logged_pkg  log_time=""
+
    echo "Extracting $PACKAGE_FILE..." | tee -a $BUILD_LOG
    cd   $LFS_SOURCES                       &>> $BUILD_LOG  
+   CD_ERR=$?
    tar -xf $PACKAGE_FILE                   &>> $BUILD_LOG 
-   grep -n "Cannot open" $BUILD_LOG #show error if PACKAGE_FILE not found by tar
+   TAR_ERR=$?
    cd      $PACKAGE_NAME                   &>> $BUILD_LOG
+   CD_ERR2=$?
 
-   #Sometimes want "Building package..." message later in package script.
+   #Check for and abort on any error.
+   if [[ ($TAR_ERR != 0) || ($CD_ERR != 0) || ($CD_ERR2 != 0) ]]; then
+      echo "Error during tar or cd of prepare_package."  >> $BUILD_LOG
+      echo -en $BOLD
+      grep  " cd: "   $BUILD_LOG
+      grep  "^tar: "  $BUILD_LOG
+      echo -en $NORMAL
+
+      #If start time not logged, set $log_time=0 to not log_end_time in footer.
+      last_logged_pkg=`tail -n1 $BUILD_TIMES`
+      last_logged_pkg=${last_logged_pkg:0:4} #get X.xx of last logged time.
+      if [[ $last_logged_pkg != $PACKAGE_NUMB ]]; then log_time=0; fi
+
+      footer $log_time
+      exit #This will also end auto-builds.
+   fi #End if errors
+
+   #Sometimes, the this message is not needed yet.
    if [ "$1" != "0"  ]; then echo "Building package..." | tee -a $BUILD_LOG; fi 
-}
+} #End prepare_package
 
 
 
@@ -164,8 +185,10 @@ function footer {
    if [ "$1" != "0" ]; then log_end_time; fi  #if $1=0, don't log end time
 
    #Show errors, except ignored errors.
+   echo -en $BOLD
    grep -n "Error "  $BUILD_LOG | sed '/ignored/d' 
    grep -n "Stop."   $BUILD_LOG
+   echo -en $NORMAL
 
    { #braces group command output
      echo $DIVIDER
