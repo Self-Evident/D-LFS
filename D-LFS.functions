@@ -124,8 +124,8 @@ function header {
    echo "$PADx   started         (1 SBU =   $SBU_long)  est. finish" \
                                                            | tee -a $BUILD_LOG
    Display_Estimated_Times_Total #outputs to both screen & log
-   echo "Current Package:$PADx $SBUS SBUs "
-   echo $DIVIDER                                           | tee -a $BUILD_LOG
+   echo "Current Package:$PADx $SBUS SBUs "   #only for screen
+   Progress_Bar                  #outputs to both screen & log
 
    Press_Enter_to_continue #pause here, before log_start_time
    #A few pkg's don't log time, such as the 6.04 & 6.65 chroots.
@@ -191,11 +191,16 @@ function footer {
 
    { #braces group command output
      echo $DIVIDER
-     echo -n "$PACKAGE_NUMB : Done      :  `$TIMESTAMP_long`"
-     ELAPSEDINFO=",  $ABUS ABUs   $ELAPSED_long"
+     echo -n "$PACKAGE_NUMB : Done    :  `$TIMESTAMP_long`"
+     ELAPSEDINFO=",   $ABUS ABUs   $ELAPSED_long"
      if [[ "$ABUS" != "" ]]; then  echo "$ELAPSEDINFO";  else echo;  fi
      echo $DIVIDER
    } | tee -a $BUILD_LOG  #close group, save output
+
+   #SBUCx10 is used in Progress_Bar
+   SBUCx10=$[ $SBUCx10 + $SBUSx10 ] #store x10 for easier bash math later
+   sed -i '/^SBUCx10=/d' $BUILD_INFO      #Remove current value
+   echo "SBUCx10=$SBUCx10" >> $BUILD_INFO #Save new value
 
    Press_R_to_Review_build_log
    echo                                                   >> $BUILD_LOG
@@ -485,9 +490,42 @@ function Calculate_ABUT_and_ABTT {   #Called from summary screen.
 
 
 
+function Progress_Bar {
+   #SBUCx10 & SBUTx10 are obtained from BUILD_INFO
+   #SBUCx10 + SBUSx10 is saved as new SBUCx10 at end of footer
+
+   SBUSx10=`echo $SBUS | sed "s/\.//"` #Pkg SBUs (x 10)
+   SBURx10=$[$SBUTx10 - $SBUCx10]      #SBUs Remaning (x10)
+   BARW=$SCREEN_WIDTH #Bar Width = SCREEN_WIDTH(set in D-LFS global variables)
+
+   # Set SCALE so SBUS Total = Bar Width
+   SCALE=$[($SBUTx10 * 10) / $BARW];
+
+   SBUCx=$[ ($SBUCx10      *10) / $SCALE] #SBU's Completed, rounded down.
+   SBUSx=$[(($SBUSx10 + 10)*10) / $SCALE] #SBUS for current pkg, rounded up.
+
+   #If SBUS for current pkg > Total, something is wrong
+   if [[ $SBUSx -gt $BARW ]]; then SBUSx=1; fi
+
+   if [[ $[$SBUCx + $SBUSx] -ge $BARW ]]; then SBUCx=$[ $BARW - $SBUSx ]; fi
+
+   SBUR=$[ $BARW - $SBUCx - $SBUSx ] #SBU's Remaining
+   if [[ $SBUR -lt 1 ]]; then SBUR=0; fi
+
+   PROGRESS_BAR=$green${DIVIDER:0:$SBUCx}$YELLOW${DIVIDER1:0:$SBUSx}$DGRAY
+   PROGRESS_BAR=$PROGRESS_BAR${DIVIDER0:0:$SBUR}$NORMAL
+
+   echo -e $PROGRESS_BAR  | tee -a $BUILD_LOG
+} #End Progress_Bar
+
+
 ########################################
 # D-LFS global variables
 
+SCREEN_WIDTH=80  #(Set to tput col, then set DIVIDER{0,1, } lengths.)
+
+DIVIDER0='................................................................................'
+DIVIDER1='--------------------------------------------------------------------------------'
 DIVIDER="================================================================================"
 BLANKLINE="                                                                                "
 

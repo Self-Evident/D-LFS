@@ -14,7 +14,7 @@ cat << "EOF"
 
 The SBU will now be determined by the time it takes to install this package.
 
-Please note that, unlike in the book, the SBU's in these scripts also includes
+Please note that, unlike in the book, the SBU's in these scripts also include
 the times it takes to extract each package, along with cleanup and other 
 ancillary tasks that may be required for each install.  Additionally, the test
 suites have been commented out so they will not run, and the estimated SBU's
