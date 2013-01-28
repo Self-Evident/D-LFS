@@ -39,8 +39,8 @@ done
 
 sed -i '/k prot/agcc_cv_libc_provides_ssp=yes' gcc/configure
 
-mkdir  -v $BUILD_DIR  &>> BUILD_LOG
-cd        $BUILD_DIR  &>> BUILD_LOG
+mkdir  -v $BUILD_DIR  &>> $BUILD_LOG
+cd        $BUILD_DIR  &>> $BUILD_LOG
 
 echo "Building package..."  | tee -a $BUILD_LOG
 

@@ -1,8 +1,9 @@
 #/bin/bash
 source D-LFS.functions #
 
-AUTO_BUILD="" #if=3, the "Enter YES ..." prompt below would be skipped
+AUTO_BUILD="1" #if=3, the "Enter YES ..." prompt below would be skipped
 BUILD_LOG="/tmp/$(basename $0).log"
+
 
 clear
 echo
@@ -18,13 +19,13 @@ echo "   1) Undo 6.02 (umount virtual kernal file system)"
 echo "   2) delete the $LFS_USER user account & files from the host system"
 echo "   3) delete /tools & $D_LFS_WORKING_DIR symlinks"
 echo "   4) delete $TMP_BUILD_LOGS"
+
 if [[ "$2" == "f" ]]; then
    echo -e "   5) ${YELLOW}reformat the LFS partition: $DEV_LFS ${NORMAL}"
 fi
 echo
 
 if [[ "$1" != "Y" ]]; then  Enter_YES_to_continue;  fi 
-
 
 echo -n "Working... "
 

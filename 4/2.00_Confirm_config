@@ -8,9 +8,7 @@ SBUS="0.0"
 
 source D-LFS.functions
 
-
 header <0/ENTER #Skip "Press Enter to continue:"
-
 
 echo -e \
 "Per values provided in ${YELLOW}D-LFS.config${NORMAL}: \n\n"\
@@ -24,7 +22,6 @@ $YELLOW $LFS_USER $NORMAL                                  | tee -a $BUILD_LOG
 echo
 echo -e "${YELLOW}If anything needs correcting- DO IT NOW.${NORMAL}"
 echo
-
 
 footer
 

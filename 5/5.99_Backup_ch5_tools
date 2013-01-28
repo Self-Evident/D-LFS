@@ -38,13 +38,14 @@ EOF
 log_start_time
 echo
 
-cd $LFS
+cd $LFS  &>> $BUILD_LOG
 VERS=$LFS_VERSION
 
 { #group for easier save of output to log
-echo -n  "Renaming: ";  mv -v  tools  tools.ch5;
+echo -n  "Renaming: ";  mv -v  tools  tools.ch5
 echo -en "Creating:  ${BOLD}${LFS}/LFS_${VERS}_tools.ch5.tar.gz${NORMAL} ..."
-tar -czf LFS_${LFS_VERSION}_tools.ch5.tar.gz  tools.ch5;  echo    " Done."
+tar -czf LFS_${LFS_VERSION}_tools.ch5.tar.gz  tools.ch5
+echo    " Done."
 echo -n  "Renaming: ";  mv -v  tools.ch5  tools;
 }  2>&1 | tee -a $BUILD_LOG #close group, save output
 

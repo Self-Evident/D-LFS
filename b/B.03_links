@@ -4,8 +4,19 @@
 PACKAGE_NAME="links-2.7"
 PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
 PACKAGE_DESC=""
-#SBUS="0.2"
+SBUS="0.2"
 
 source D-LFS.functions
 
-Build_Common_Package /usr
+header_log_prep
+
+{ #Braces group command output
+./configure --prefix=/usr &&
+make
+make install &&
+install -v -d -m755 /usr/share/doc/links-2.7 &&
+install -v -m644 doc/links_cal/* KEYS BRAILLE_HOWTO \
+    /usr/share/doc/links-2.7            
+} &>> $BUILD_LOG #close group, save output
+
+cleanup_log_footer

@@ -10,10 +10,9 @@ source D-LFS.functions
 
 header_log_prep
 
-make mrproper  &>> $BUILD_LOG
-
+make mrproper       &>> $BUILD_LOG
 make headers_check  &>> $BUILD_LOG
 make INSTALL_HDR_PATH=dest headers_install  &>> $BUILD_LOG
-cp -rv dest/include/* /tools/include  &>> $BUILD_LOG
+cp -rv dest/include/* /tools/include        &>> $BUILD_LOG
 
 cleanup_log_footer

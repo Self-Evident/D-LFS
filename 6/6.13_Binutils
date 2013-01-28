@@ -19,13 +19,13 @@ echo spawn ls                                        &>> $BUILD_LOG
 echo -e "========================================\n" &>> $BUILD_LOG 
 
 
-rm -fv etc/standards.info &>> $BUILD_LOG   &>> BUILD_LOG
+rm -fv etc/standards.info      &>> $BUILD_LOG 
 sed -i.bak '/^INFO/s/standards.info //' etc/Makefile.in 
 
-patch -Np1 -i ../${PACKAGE_NAME}-build_fix-1.patch  &>> BUILD_LOG
+patch -Np1 -i ../${PACKAGE_NAME}-build_fix-1.patch  &>> $BUILD_LOG
 
-mkdir -v $BUILD_DIR  &>> BUILD_LOG
-cd       $BUILD_DIR  &>> BUILD_LOG
+mkdir -v $BUILD_DIR  &>> $BUILD_LOG
+cd       $BUILD_DIR  &>> $BUILD_LOG
 
 ../$PACKAGE_NAME/configure --prefix=/usr --enable-shared &>> $BUILD_LOG 
 

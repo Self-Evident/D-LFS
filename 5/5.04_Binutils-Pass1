@@ -23,11 +23,13 @@ the build will affect build times.
 
 EOF
 
-patch -Np1 -i ../binutils-2.22-build_fix-1.patch &>> $BUILD_LOG
-echo >> $BUILD_LOG
+{ #braces group command output 
 
-mkdir  -v $BUILD_DIR  &>> $BUILD_LOG
-cd        $BUILD_DIR  &>> $BUILD_LOG
+patch -Np1 -i ../binutils-2.22-build_fix-1.patch
+echo
+
+mkdir  -v $BUILD_DIR
+cd        $BUILD_DIR
 
 ../$PACKAGE_NAME/configure     \
     --prefix=/tools            \
@@ -35,17 +37,19 @@ cd        $BUILD_DIR  &>> $BUILD_LOG
     --with-lib-path=/tools/lib \
     --target=$LFS_TGT          \
     --disable-nls              \
-    --disable-werror           &>> $BUILD_LOG
+    --disable-werror
 
-make &>> $BUILD_LOG
+make
 
 # If building on x86_64, ensure the sanity of the toolchain:
 case $(uname -m) in
-  x86_64) mkdir -v /tools/lib && ln -sv lib /tools/lib64 &>> $BUILD_LOG ;;
+  x86_64) mkdir -v /tools/lib && ln -sv lib /tools/lib64 ;;
 esac
 
-make install &>> $BUILD_LOG
+make install
 
+} &>> $BUILD_LOG #close group, save output
+ 
 cleanup
 
 Calculate_SBU 

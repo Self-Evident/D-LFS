@@ -24,7 +24,7 @@ cd        $BUILD_DIR  &>> $BUILD_LOG
 
 echo "### Create configparms file... ###"   &>>   $BUILD_LOG
 case `uname -m` in
-  i?86) echo "CFLAGS += -march=i486 -mtune=native" | tee configparms >> $BUILD_LOG ;;
+  i?86) echo "CFLAGS += -march=i486 -mtune=native" | tee configparms &>> $BUILD_LOG ;;
 esac
 
 echo >> $BUILD_LOG

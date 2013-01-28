@@ -142,7 +142,7 @@ function prepare_package {
    grep -n "Cannot open" $BUILD_LOG #show error if PACKAGE_FILE not found by tar
    cd      $PACKAGE_NAME                   &>> $BUILD_LOG
 
-   #Will sometimes echo "Building package..." later in package script.
+   #Sometimes want "Building package..." message later in package script.
    if [ "$1" != "0"  ]; then echo "Building package..." | tee -a $BUILD_LOG; fi 
 }
 
@@ -153,8 +153,8 @@ function cleanup {
    #When this function is called, the pwd may still be a sub-directory of 
    #sources/$PACKAGE_NAME. (not all pkg's return to the same dir they started)
    cd $LFS_SOURCES            2>> $BUILD_LOG  
-   rm -rf $PACKAGE_NAME
-   rm -rf $BUILD_DIR
+   rm -rf $PACKAGE_NAME       2>> $BUILD_LOG  
+   rm -rf $BUILD_DIR          2>> $BUILD_LOG  
 }
 
 

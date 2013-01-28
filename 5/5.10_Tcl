@@ -10,16 +10,14 @@ source D-LFS.functions
 
 header_log_prep
 
-cd unix
+cd unix                      &>> $BUILD_LOG
 ./configure --prefix=/tools  &>> $BUILD_LOG
 
-make  &>> $BUILD_LOG
-
+make          &>> $BUILD_LOG
 #TZ=UTC make test
-
 make install  &>> $BUILD_LOG
 chmod -v u+w /tools/lib/libtcl8.5.so  &>> $BUILD_LOG
-make install-private-headers  &>> $BUILD_LOG
-ln -sv tclsh8.5 /tools/bin/tclsh  &>> $BUILD_LOG
+make install-private-headers          &>> $BUILD_LOG
+ln -sv tclsh8.5 /tools/bin/tclsh      &>> $BUILD_LOG
 
 cleanup_log_footer

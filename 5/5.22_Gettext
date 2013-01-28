@@ -11,7 +11,7 @@ source D-LFS.functions
 header_log_prep
 
 sed -i -e '/gets is a/d' gettext-*/*/stdio.in.h
-cd gettext-tools
+cd gettext-tools    &>> $BUILD_LOG
 EMACS="no" ./configure --prefix=/tools --disable-shared &>> $BUILD_LOG 
 make -C gnulib-lib  &>> $BUILD_LOG
 make -C src msgfmt  &>> $BUILD_LOG

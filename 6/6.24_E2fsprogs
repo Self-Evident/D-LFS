@@ -11,8 +11,8 @@ source D-LFS.functions
 header_log_prep
 
 #Docs recommends that the package be built in a subdirectory of the source tree:
-mkdir -v BUILD_DIR  &>> BUILD_LOG
-cd       BUILD_DIR  &>> BUILD_LOG
+mkdir -v BUILD_DIR  &>> $BUILD_LOG
+cd       BUILD_DIR  &>> $BUILD_LOG
 
 ../configure --prefix=/usr  \
     --with-root-prefix=""   \

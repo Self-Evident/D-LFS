@@ -10,13 +10,17 @@ source D-LFS.functions
 
 header
 
-echo Adding group $LFS_USER...                   | tee -a $BUILD_LOG
-groupadd $LFS_USER                               | tee -a $BUILD_LOG
+{ #braces group command output
 
-echo Adding user $LFS_USER...                    | tee -a $BUILD_LOG
-useradd -s /bin/bash -g $LFS_USER -m -k /dev/null $LFS_USER  | tee -a $BUILD_LOG
+echo Adding group $LFS_USER...
+groupadd $LFS_USER
 
-passwd --delete $LFS_USER                        | tee -a $BUILD_LOG
+echo Adding user $LFS_USER...
+useradd -s /bin/bash -g $LFS_USER -m -k /dev/null $LFS_USER
+
+passwd --delete $LFS_USER
+
+} | tee -a $BUILD_LOG #close group, save output
 
 echo "The chown and su commands indicated in the book will be performed"
 echo "in the next section."
