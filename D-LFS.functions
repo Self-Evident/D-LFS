@@ -125,7 +125,7 @@ function header {
 
    Display_Estimated_Times_Total                           | tee -a $BUILD_LOG
 
-   #A few pkg's don't log time, such as the 6.04 & 6.64 chroots.
+   #A few pkg's don't log time, such as the 6.04 & 6.65 chroots.
    #A few others log_start_time sometime after the header (may have a prompt)
    #So, in general, log_start_time unless $1=0
    if [ "$1" != "0"  ]; then log_start_time; fi 
@@ -231,7 +231,7 @@ function Build_Common_Package {
 function Prep_chroot_for_supergo {
    # Called in supergo-all
    # Add lines to $LFS/root/.profile that will start supergo6 or 7,
-   # next time only, upon entering the 6.04 or 6.64 Chroot.
+   # next time only, upon entering the 6.04 or 6.65 Chroot.
    #
    echo "rm /root/.profile"   >  $LFS/root/.profile
    echo "cd $LFS_SCRIPTS"     >> $LFS/root/.profile
@@ -242,7 +242,7 @@ function Prep_chroot_for_supergo {
 
 
 function Prepare_chroot_profile {
-   # Called in 6.04 & 6.64 before the chroots
+   # Called in 6.04 & 6.65 before the chroots
    #(The .profile lines below are only realized if supergo-all is not used.)
    #
    echo "sed -i '/#REMOVE#/d' /root/.profile 2>/dev/null" >> $LFS/root/.profile

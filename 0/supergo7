@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# The remainder of the build should be run from within the 6.64 New Chroot.
+# The remainder of the build should be run from within the 6.65 New Chroot.
 #
 set -e
 

@@ -10,19 +10,18 @@ source D-LFS.functions
 
 header
 
-{ #braces group command output
-echo '# Begin /etc/fstab'
-echo '# file system  mount-point type      options              dump   fsck'
-echo '#                                                                order'
-echo "$DEV_LFS      /           ext3      defaults             1      1"
-echo "$DEV_SWP      swap        swap      pri=1                0      0"
-echo 'proc           /proc       proc      nosuid,noexec,nodev  0      0'
-echo 'sysfs          /sys        sysfs     nosuid,noexec,nodev  0      0'
-echo 'devpts         /dev/pts    devpts    gid=5,mode=620       0      0'
-echo 'tmpfs          /run        tmpfs     defaults             0      0'
-echo 'devtmpfs       /dev        devtmpfs  mode=0755,nosuid     0      0'
-echo '# End /etc/fstab'
-} > /etc/fstab  #close group, save output.
+cat > /etc/fstab < EOF
+#/etc/fstab'
+# file system  mount-point type      options              dump   fsck
+#                                                                order
+$DEV_LFS      /           ext3      defaults             1      1
+$DEV_SWP      swap        swap      pri=1                0      0
+proc           /proc       proc      nosuid,noexec,nodev  0      0
+sysfs          /sys        sysfs     nosuid,noexec,nodev  0      0
+devpts         /dev/pts    devpts    gid=5,mode=620       0      0
+tmpfs          /run        tmpfs     defaults             0      0
+devtmpfs       /dev        devtmpfs  mode=0755,nosuid     0      0
+EOF
 
 cat /etc/fstab >> $BUILD_LOG
 

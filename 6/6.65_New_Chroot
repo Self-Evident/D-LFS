@@ -14,7 +14,7 @@ Prepare_chroot_profile
 
 Change_HOST_to  LFS-chroot
 
-echo "Entering the 6.64 New chroot... HOST=$HOST"           | tee -a $BUILD_LOG
+echo "Entering the 6.65 New chroot... HOST=$HOST"           | tee -a $BUILD_LOG
 
 chroot $LFS /usr/bin/env -i \
    HOME=/root TERM="$TERM" PS1='[\u@$HOST] \w \$ ' \

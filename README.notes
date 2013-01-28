@@ -135,9 +135,9 @@ Errors (ignored)  (as of D-LFS 5.5 & LFS 7.2)
 Below is a list of errors grep'ed from the logs my builds produce.  These
 "ignored" errors do not seem to represent any actual, functional, issues
 as far as the completed builds are concerned.  However, don't take my word
-for it - trouble-shooting consisted of little more than a successful boot
-into the new system.
-So, review your logs around all errors to ascertain cause & importance.
+for it - trouble-shooting generally consists of little more than a successful
+boot into the new system.  So, review your logs, and all indicated errors, to
+ascertain cause & importance.
 
 
 5.07_Glibc.log:make[2]: [/tools/libexec/pt_chown] Error 1 (ignored)
@@ -188,25 +188,34 @@ line in file
 another line in file
 EOF
 
-However, this method does not work if we wish to use the value of a bash 
-variable, such as those found in D-LFS.config, in "/some/file".*  For example, 
-this won't work as might be expected:
+3 years after starting this project, I learned that the above is called a
+"here doc", and also that there is a difference between quoting & not quoting
+the "EOF" deliminator in the first line. Ie:"
 
 cat > /some/file << "EOF"
+        -vs- 
+cat > /some/file << EOF
+
+It seems that the latter, unquoted form, allows for $variable expansion, etc.
+For example:
+
+cat > /some/file << EOF
 SOMESETTING=$SOMEVAR
 EOF
 
-Instead of the value of $SOMEVAR getting inserted in our file, the line, 
-exactly as it appears after the cat command, is what ends up in the file.
+In this example, if $SOMEVAR=somevalue, then "SOMESETTING=somevalue" is
+written to /some/file.  However, if EOF was quoted in the first line, as "EOF",
+then $SOMEVAR would not get expanded, and "SOMESETTING=$SOMEVAR" would end up
+in /some/file instead.  Or something like that...
 
-Therefore, in order to accommodate values that may be configured in
-D-LFS.config, and subsequently used, for example, in some etc config file, 
-these scripts use the following method in a few places:
-
+Of course, an alternative to the "here doc" is to simply use use echo. For
+creating files with only a couple of lines, this method is probably a bit simpler. 
 echo #Example config file        >  /etc/some/config/file
 echo "SOMESETTING=$SOMEVAR"      >> /etc/some/config/file
-echo #End of example config file >> /etc/some/config/file
 
+However, for creating files with more than a couple of lines, such as the fstab
+created in 8.02, the "here doc" provides a method that is a bit less cumbersome
+and cleaner looking.
 
 A note about the "EOF" indicator:
 The line used to terminate the cat command, EOF in the example above, should
@@ -215,13 +224,6 @@ will continue to read from stdin, and subsequent commands in a script will fail.
 
 Also, it is ok to use something other than the string "EOF" to end a cat.
 For example, "EndOftheLine" would work just the same.
-
-*Note: 3 years after writting the above, I learned about the difference between
-quoting & not quoting the "EOF" deliminator at the start of a "here doc":
-cat << "EOF"
-  -vs- 
-cat << EOF
-It seems that the latter allows for $variable expansion, etc. Oh well...
 ========================================
 
 
@@ -229,8 +231,8 @@ It seems that the latter allows for $variable expansion, etc. Oh well...
 cat -vs- cp
 
 In addition to echo, in a few other places these scripts also simply copy a 
-pre-existing/ previously created file (usually from the /misc directory) to 
-the appropriate location within the new LFS build. 
+pre-existing file (usually from the misc/ directory) to the appropriate location
+within the new LFS build. 
 
 For example, passwd and group are created this way in 6.06_Essential_Files.
 ========================================

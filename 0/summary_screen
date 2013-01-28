@@ -30,7 +30,7 @@ echo
 echo -en "Build logs can be found in:  ${BOLD}$BUILD_LOGS${NORMAL}"
 echo
 
-cat <<"EOF"
+cat << "EOF"
 It may be a good idea to take a look and check for build errors, particularly
 if the actual build time is significantly less than the estimated build time.
 A good start is to run the following commands from the build logs directory:
