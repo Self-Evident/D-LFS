@@ -37,14 +37,14 @@ echo -en "Remove  $LFS/$WORKING_BASE/${BOLD}build_logs${NORMAL}  ?:"
 read -p  ""
 if [ "$REPLY" == "Y" ]; then
    rm  -rfv  $LFS/$WORKING_BASE/build_logs  &>> $BUILD_LOG
-   echo "removed: $LFS/$WORKING_BASE/build_logs"
+   echo "Done."
 fi
 
 echo -en "Remove  $LFS/$WORKING_BASE/${BOLD}scripts${NORMAL}     ?:"
 read -p  ""
 if [ "$REPLY" == "Y" ]; then
    rm  -rfv  $LFS/$WORKING_BASE/scripts     &>> $BUILD_LOG
-   echo "removed: $LFS/$WORKING_BASE/scripts"
+   echo "Done."
 fi
 
 echo "If sources/, build_logs/, & scripts/ have been removed, would you like to also "
@@ -52,9 +52,9 @@ echo -en "Remove  $LFS/${BOLD}$WORKING_BASE${NORMAL}             ?:"
 read -p  ""
 if [ "$REPLY" == "Y" ]; then
    rm  -rfv  $LFS/$WORKING_BASE             &>> $BUILD_LOG
-   echo "removed: $LFS/$WORKING_BASE"
+   echo "Done."
    rm  -fv  /$WORKING_BASE                  &>> $BUILD_LOG
-   echo "removed: $LFS/$WORKING_BASE/scripts"
+   echo "Done."
 fi
 
 echo &>> $BUILD_LOG

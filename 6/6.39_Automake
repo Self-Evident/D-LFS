@@ -4,7 +4,7 @@
 PACKAGE_NAME="automake-1.12.3"
 PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
 PACKAGE_DESC=""
-SBUS="0.0"  #34.1 including test suites
+SBUS="0.0"  #34.1
 
 source D-LFS.functions 
 

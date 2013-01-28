@@ -4,7 +4,7 @@
 PACKAGE_NAME="gcc-4.7.1"
 PACKAGE_FILE="${PACKAGE_NAME}.tar.bz2"
 PACKAGE_DESC=""
-SBUS="7.5"  #53.5 including test suites
+SBUS="7.5"  #53.5
 
 source D-LFS.functions 
 

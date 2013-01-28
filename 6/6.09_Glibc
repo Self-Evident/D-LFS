@@ -4,7 +4,7 @@
 PACKAGE_NAME="glibc-2.16.0"
 PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
 PACKAGE_DESC=""
-SBUS="5.9"  #17.6 including test suites
+SBUS="5.9"  #17.6
 
 source D-LFS.functions 
 
