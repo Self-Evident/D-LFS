@@ -382,7 +382,9 @@ function Calculate_Estimated_Build_Time_Total {
 function Display_Estimated_Times_Total {
    # Display Estimated Times for Entire Build
  
-   echo -n "Entire Build   :  $START_TIME_long,  $SBUT SBUs"
+   #$DETT_LEAD is also used in Display_Estimated_Times_Package
+   DETT_LEAD="Entire Build   :"
+   echo -n "$DETT_LEAD  $START_TIME_long,  $SBUT SBUs"
 
    #Check if SBU has been determined (by 5.04).
    if [[ $SBU_ -le "0" ]] ; then  #can't display estimated times...
@@ -402,6 +404,8 @@ function Display_Estimated_Times_Package {
    if [ ${#SBUS} -eq 4 ]; then PAD=""; fi
 
    local ST=`$TIMESTAMP_long` #Start Time for Current Package (now)
+
+   #Start of string to be displayed
    DETP="Current package:  $ST, $PAD $SBUS SBUs"
 
    #Check if SBU has been determined (by 5.04).
@@ -413,7 +417,10 @@ function Display_Estimated_Times_Package {
       DETP="$DETP $EQ $EBTP_long,  $EFTP_long"
    fi
 
-   echo "$DETP"  >> $BUILD_LOG
+   #Add start time to last header in the log.  Appends as line 6 normally.
+   #$DETT_LEAD set in Display_Estimated_Times_Total
+   LINE_num="`grep -n "$DETT_LEAD" $BUILD_LOG | tail -n1 | cut -d: -f1`"
+   sed -i ${LINE_num}a\ "$DETP"  $BUILD_LOG
 
    #Add start time to header on screen.
    tput sc       #Save cursor postion
