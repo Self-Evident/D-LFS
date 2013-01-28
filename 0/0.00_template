@@ -8,10 +8,11 @@ SBUS="0.0"
 
 source D-LFS.functions
 
+rm $BUILD_LOG ####################
+
 header 0  #Remove the 0 if you wish to log_start_time in the header
 
-#Only use this line if not logged in header, but still want to log_start_time
-#log_start_time
+#log_start_time  #Only log here if it's not logged in the header.
 
 #prepare_package
 
@@ -22,7 +23,6 @@ header 0  #Remove the 0 if you wish to log_start_time in the header
 
 #cleanup
 
-#Only use this line if not logged in footer, but still want to log_end_time
-#log_end_time
+#log_end_time  #Only log here if it's not logged in the footer.
 
 footer 0  #Remove the 0 if you wish to log_end_time in the footer

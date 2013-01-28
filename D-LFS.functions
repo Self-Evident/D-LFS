@@ -48,17 +48,19 @@ function Init_BUILD_LOGS {
 
 
 function log_start_time {
-   TIME_START=`$TIMESTAMP`  #Also used in Calculate_ABUS_and_DIFF
-   echo -n $PACKAGE_NUMB $SBUS $TIME_START" " >> $BUILD_TIMES
-   Display_Estimated_Times_Package      | tee -a $BUILD_LOG
+   #Also used in Calculate_ABUS_and_DIFF
+   #Saved to $BUILD_TIMES in log_end_time.
+   TIME_START=`$TIMESTAMP`
+   Display_Estimated_Times_Package
 }
 
 
 
 function log_end_time {
-   TIME_END=`$TIMESTAMP`    #Also used in Calculate_ABUS_and_DIFF
+   #Also used in Calculate_ABUS_and_DIFF
+   TIME_END=`$TIMESTAMP`
    Calculate_ABUS_and_DIFF
-   echo $TIME_END $ABUS $DIFF >> $BUILD_TIMES
+   echo $PACKAGE_NUMB $SBUS $TIME_START $TIME_END $ABUS $DIFF >> $BUILD_TIMES
 }
 
 
@@ -118,17 +120,21 @@ function header {
    echo $DIVIDER                                           | tee -a $BUILD_LOG
    echo -e "$header_TITLE $PAD $WHOatHOST"                 | tee -a $BUILD_LOG
    echo "$PACKAGE_NUMB : $PACKAGE_NAME $PACKAGE_DESC"      | tee -a $BUILD_LOG
-   echo "                                 started        (1 SBU =   $SBU_long)"\
-        "est. finish" | tee -a $BUILD_LOG
+   echo "                                started        (1 SBU =   $SBU_long)"\
+        " est. finish" | tee -a $BUILD_LOG
 
    Press_Enter_to_continue #pause here, before log_start_time
 
    Display_Estimated_Times_Total                           | tee -a $BUILD_LOG
 
    #A few pkg's don't log time, such as the 6.04 & 6.65 chroots.
-   #A few others log_start_time sometime after the header (may have a prompt)
-   #So, in general, log_start_time unless $1=0
-   if [ "$1" != "0"  ]; then log_start_time; fi 
+   #Some have another prompt and log_start_time after the header.
+   #So, if header's $1==0, don't log start time here.
+   if [ "$1" != "0"  ]; then log_start_time ;  fi 
+
+   #If $1!=0, moves cursor down since tput sc/tput rc is this line. See $DETP
+   #If $1==0, leaves a blank line for log_start_time later.
+   echo 
 
    echo $DIVIDER                                           | tee -a $BUILD_LOG
 } #End header
@@ -136,34 +142,32 @@ function header {
 
 
 function prepare_package {
-   local  TAR_ERR  CD_ERR  CD_ERR2  last_logged_pkg  log_time=""
+   local  TAR_ERR  CD1_ERR  CD2_ERR  last_logged_pkg  log_time=""
 
    echo "Extracting $PACKAGE_FILE..." | tee -a $BUILD_LOG
    cd   $LFS_SOURCES                       &>> $BUILD_LOG  
-   CD_ERR=$?
+   CD1_ERR=$?
    tar -xf $PACKAGE_FILE                   &>> $BUILD_LOG 
    TAR_ERR=$?
    cd      $PACKAGE_NAME                   &>> $BUILD_LOG
-   CD_ERR2=$?
+   CD2_ERR=$?
 
    #Check for and abort on any error.
-   if [[ ($TAR_ERR != 0) || ($CD_ERR != 0) || ($CD_ERR2 != 0) ]]; then
+   if [[ ($TAR_ERR != 0) || ($CD1_ERR != 0) || ($CD2_ERR != 0) ]]; then
       echo "Error during tar or cd of prepare_package."  >> $BUILD_LOG
       echo -en $BOLD
       grep  " cd: "   $BUILD_LOG
       grep  "^tar: "  $BUILD_LOG
       echo -en $NORMAL
 
-      #If start time not logged, set $log_time=0 to not log_end_time in footer.
-      last_logged_pkg=`tail -n1 $BUILD_TIMES`
-      last_logged_pkg=${last_logged_pkg:0:4} #get X.xx of last logged time.
-      if [[ $last_logged_pkg != $PACKAGE_NUMB ]]; then log_time=0; fi
+      #If start time not logged, do not log_end_time in footer.
+      if [[ $TIME_START -le 0 ]]; then log_time=0; fi
 
       footer $log_time
       exit #This will also end auto-builds.
    fi #End if errors
 
-   #Sometimes, the this message is not needed yet.
+   #Sometimes, the this message is not yet needed.
    if [ "$1" != "0"  ]; then echo "Building package..." | tee -a $BUILD_LOG; fi 
 } #End prepare_package
 
@@ -378,13 +382,13 @@ function Calculate_Estimated_Build_Time_Total {
 function Display_Estimated_Times_Total {
    # Display Estimated Times for Entire Build
  
-   echo -n "Entire LFS system:  $START_TIME_long, $SBUT SBUs"
- 
+   echo -n "Entire Build   :  $START_TIME_long,  $SBUT SBUs"
+
    #Check if SBU has been determined (by 5.04).
    if [[ $SBU_ -le "0" ]] ; then  #can't display estimated times...
       echo "  (est. times unavailable)"
    else
-      echo " = $EBTT_long, $EFTT_long"
+      echo " = $EBTT_long,  $EFTT_long"
    fi
 
 } #End Display_Estimated_Times_Total
@@ -394,22 +398,28 @@ function Display_Estimated_Times_Total {
 function Display_Estimated_Times_Package {
    #Called in function log_start_time 
 
-   PAD=" "  #Spacing for displaying SBUS: 1 if n.nn, 0 for nn.nn
+   local PAD=" "  #Spacing for displaying SBUS: 1 if n.nn, 0 for nn.nn
    if [ ${#SBUS} -eq 4 ]; then PAD=""; fi
 
-   ST=`$TIMESTAMP_long` #Start Time for Current Package (now)
-   echo -n "Current package  :  $ST,$PAD $SBUS SBUs"
+   local ST=`$TIMESTAMP_long` #Start Time for Current Package (now)
+   DETP="Current package:  $ST, $PAD $SBUS SBUs"
 
    #Check if SBU has been determined (by 5.04).
    if [[ $SBU_ -le "0" ]] ; then  #can't display estimated times...
-      echo "  (est. times unavailable)"
-      return 0
+      DETP="$DETP  (est. times unavailable)"
+   else
+      Calculate_Estimated_Build_Time_Package  #Determines EBTP & EFTP
+      if [ "$SBUS" == "0.0" ]; then EQ="<"; else EQ="="; fi
+      DETP="$DETP $EQ $EBTP_long,  $EFTP_long"
    fi
 
-   Calculate_Estimated_Build_Time_Package  #Determines EBTP & EFTP
+   echo "$DETP"  >> $BUILD_LOG
 
-   if [ "$SBUS" == "0.0" ]; then EQ="<"; else EQ="="; fi
-   echo    " $EQ $EBTP_long, $EFTP_long"
+   #Add start time to header on screen.
+   tput sc       #Save cursor postion
+   tput cup 5 0  #Move cursor to line 6 on screen.
+   echo "$DETP"
+   tput rc       #Return cursor to saved position.
 
 } #End Display_Estimated_Times_Package
 
@@ -513,7 +523,7 @@ BUILD_LOGS="${D_LFS_WORKING_DIR}/build_logs"
 #Some packages use a build dir seperate from their source dir
 BUILD_DIR="${LFS_SOURCES}/BUILD_DIR.${PACKAGE_NUMB}"
 
-#See if the $BUILD_LOGS directory exists. If not, setup & use a tmp location.
+#If the $BUILD_LOGS directory doesn't exist, setup & use a tmp location.
 if [ ! -d $BUILD_LOGS ]; then  Init_BUILD_LOGS;  fi
 
 BUILD_LOG="${BUILD_LOGS}/${PACKAGE_SCRIPT}.log"

@@ -11,7 +11,6 @@ source D-LFS.functions
 header 0 < 0/ENTER  #0 suppresses log_start_time in header
                     #"< 0/ENTER" skips "Press Enter to continue:"
 
-echo
 echo "Make sure you are still in the 6.04 chroot before running this script."
 echo "If you have exited it, re-enter it."
 echo "You (probably) do not want to run the strip command on you host machine."
@@ -25,7 +24,6 @@ EOF
 echo         >> $BUILD_LOG
 
 Enter_YES_to_continue  # Will exit if YES is not entered.
-
 
 log_start_time
 
