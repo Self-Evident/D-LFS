@@ -34,7 +34,7 @@ function Init_BUILD_LOGS {
 
    BUILD_INFO="${BUILD_LOGS}/BUILD_INFO"
 
-   #if $BUILD_INFO exists, Init_BUILD_LOGS has already ran once
+   #if the file $BUILD_INFO exists, Init_BUILD_LOGS has already ran once
    if [ -f $BUILD_INFO ]; then  return 0;  fi;
 
    mkdir -pv  $TMP_BUILD_LOGS
@@ -502,7 +502,7 @@ BUILD_TIMES="${BUILD_LOGS}/BUILD_TIMES"
 
 
 #get various build time values
-source $BUILD_INFO  2>/dev/null #discard error that $BUILD_INFO not yet ready
+source $BUILD_INFO  2>/dev/null #discard error if $BUILD_INFO not yet ready
 
 #
 # END D-LFS.functions 

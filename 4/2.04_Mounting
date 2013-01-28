@@ -16,9 +16,11 @@ mkdir -vp $LFS                          | tee -a $BUILD_LOG
 mount -v -t ext3  $DEV_LFS $LFS         | tee -a $BUILD_LOG
 
 echo                                    | tee -a $BUILD_LOG
-echo "Creating directory (& symlink) "\
-"to contain the scripts, sources, and build logs:"
+echo "Creating directory (& symlink)"\
+     "to contain the scripts, sources, and build logs:"
 
+#D_LFS_WORKING_BASE = /$WORKING_BASE (defined in D-LFS.functions)
+#This lets the workding folder be available in or out of the chroot.
 mkdir -v $LFS/$WORKING_BASE             | tee -a $BUILD_LOG
 ln -sv   $LFS/$WORKING_BASE  /          | tee -a $BUILD_LOG
 

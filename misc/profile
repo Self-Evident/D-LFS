@@ -3,21 +3,17 @@
 export LANG=en_US  # With LANG=en_US, ls sorts without regard to case
 
 alias cls="clear"
-alias less="less -RX"
 alias cd..="cd .."
+alias less="less -RX"
 
 alias  ls="ls -FAC --si --color --group-directories-first"
 alias   d="ls -l"
-
-
-
 
 unalias  lsd  2> /dev/null        # Before defining a function, make sure
 function lsd { ls $1 | less; }    # the desired function name is not 
                                   # already aliased as something else,
 unalias  dir  2>  /dev/null       # or the function may not get used. 
 function dir { ls -l $1 | less; } #
-
 
 alias rm="rm -I "
 alias cp="cp -i "
@@ -27,7 +23,7 @@ alias grep="grep --color=always"
 alias g="grep"
 
 #A few color codes for use in prompt strings (PS1).
-#Uses \[ and \], unlike the codes used with echo -e.
+#Uses \[ and \], unlike color codes used with echo -e.
 PS_NORMAL='\[\e[0m\]'
    PS_Red='\[\e[0;31m\]'
    PS_RED='\[\e[1;31m\]'
