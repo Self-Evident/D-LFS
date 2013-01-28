@@ -20,7 +20,7 @@ echo 'Check for $LFS and $LFS/tools directory:'
 ls -dl $LFS       2>&1
 ls -dl $LFS/tools 2>&1
 ls -dl /tools     2>&1
-} | tee -a $BUILD_LOG #close group, save output
+} | tee -a $BUILD_LOG  #close group, save output
 echo
 echo "Do not continue with build unless the above is correct."
 

@@ -20,7 +20,7 @@ useradd -s /bin/bash -g $LFS_USER -m -k /dev/null $LFS_USER
 
 passwd --delete $LFS_USER
 
-} | tee -a $BUILD_LOG #close group, save output
+} | tee -a $BUILD_LOG  #close group, save output
 
 echo "The chown and su commands indicated in the book"
 echo "will be performed in the next section."

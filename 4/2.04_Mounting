@@ -27,7 +27,7 @@ ln -sv   $LFS/$WORKING_BASE  /
 echo
 mkdir -v  $BUILD_LOGS_standard
 
-} | tee -a $BUILD_LOG #close group, save output
+} | tee -a $BUILD_LOG  #close group, save output
 
 source D-LFS.functions  #Resets $BUILD_LOGS, $BUILD_LOG, $BUILD_TIMES, etc...
 

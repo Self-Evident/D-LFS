@@ -32,6 +32,6 @@ make -C ld clean
 make -C ld LIB_PATH=/usr/lib:/lib
 cp -v ld/ld-new /tools/bin
 
-} &>> $BUILD_LOG #close group, save output
+} &>> $BUILD_LOG  #close group, save output
 
 cleanup_log_footer

@@ -23,7 +23,7 @@ the build will affect build times.
 
 EOF
 
-{ #braces group command output 
+{ #braces group command output
 
 patch -Np1 -i ../binutils-2.22-build_fix-1.patch
 echo
@@ -48,7 +48,7 @@ esac
 
 make install
 
-} &>> $BUILD_LOG #close group, save output
+} &>> $BUILD_LOG  #close group, save output
  
 cleanup
 

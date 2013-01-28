@@ -15,7 +15,7 @@ TBT=`date -ud @$BUILD_TIME +%H:%M:%S`      #packages, waiting for prompts, etc
 
 cd $BUILD_LOGS
 
-{ #braces group commands for easier save of output to the log
+{ #braces group command output
 echo $DIVIDER
 echo "Congratulations - your LFS build is complete!"
 echo "               Finish Time:   $FINISH_TIME_long"

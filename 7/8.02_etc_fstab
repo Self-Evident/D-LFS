@@ -10,7 +10,7 @@ source D-LFS.functions
 
 header
 
-{ #braces group commands for easier save of output to file
+{ #braces group command output
 echo '# Begin /etc/fstab'
 echo '# file system  mount-point type      options              dump   fsck'
 echo '#                                                                order'

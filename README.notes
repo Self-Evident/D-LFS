@@ -233,11 +233,12 @@ For example, passwd and group are created this way in 6.06_Essential_Files.
 ========================================
 SBUT (Standard Build Units, Total)
 
-The SBUT is figured by  grep|sed|cut'ing every file in 4/,/5,/6,/7 and /B for 
+The SBUT is figured by  grep|sed|cut'ing every file in 4/,/5,/6, and /7 for 
 the "SBUS=" line. So, any file in any of those directories that is not used 
 for a given build, but that has such a line, will skew the results. This is of
 no consequence to the actual build, of course, but I thought some might like 
-to be aware of it. (commenting out the line takes care of this issue)
+to be aware of it. Commenting out the line takes care of this issue. Also, the
+directory used for Beyond LFS scripts, B/, is not figured in the SBUT.
 ========================================
 
 

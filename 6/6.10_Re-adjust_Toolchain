@@ -29,7 +29,8 @@ echo 'main(){}'              > dummy.c
 cc dummy.c -v -Wl,--verbose &> dummy.log
 
 
-{ #Run the sanity checks. Braces group command output for easier save to log.
+#Run the sanity checks. 
+{ #braces group command output
 echo
 echo
 
@@ -87,7 +88,7 @@ echo
 
 rm -v dummy.c a.out dummy.log
 
-} &>> $BUILD_LOG #Close group, save output to log
+} &>> $BUILD_LOG  #close group, save output to log
 
 echo "The results of several toolchain tests can be found in the build log."
 echo "Be sure to review the log to ensure success of the tests."
