@@ -38,7 +38,7 @@ A good start is to run the following commands from the build logs directory:
   grep "Error " *
 However, results from those commands may not be all inclusive, nor necessarily
 indicative, of any actual issues.  For some additional information, read the
-file "ignored_errors" in the "scripts/misc" directory.
+section "Errors (ignored)" in the README.notes file.
 
 In any case, when ready, configure your boot manager, and reboot!
 EOF

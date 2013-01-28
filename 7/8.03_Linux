@@ -4,7 +4,7 @@ VERSION=3.5.2  #Linux Kernel Version
 PACKAGE_NAME="linux-${VERSION}"
 PACKAGE_FILE="${PACKAGE_NAME}.tar.xz"
 PACKAGE_DESC=""
-SBUS="6.8"  #5.0
+SBUS="6.9"  #5.0
 
 source D-LFS.functions
 

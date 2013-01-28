@@ -4,7 +4,7 @@
 PACKAGE_NAME="libpipeline-1.2.1"
 PACKAGE_FILE="${PACKAGE_NAME}.tar.gz"
 PACKAGE_DESC=""
-SBUS="0.2"
+SBUS="0.1"  #0.2
 
 source D-LFS.functions 
 

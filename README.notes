@@ -129,6 +129,26 @@ Outline of build envinronments/contexts
 
 
 
+================================================================================
+Errors (ignored)  (D-LFS 5.5 following LFS 7.2) 
+
+Below is a list of errors grep'ed from the logs my builds produce.  These
+"ignored" errors do not seem to represent any actual, functional, issues for the
+completed builds.  However, don't take my word for it - the trouble-shooting 
+consisted of little more than a successful boot into the new system.
+So, review your logs around all errors to ascertain cause & importance.
+
+
+5.07_Glibc.log:make[2]: [/tools/libexec/pt_chown] Error 1 (ignored)
+5.09_GCC-Pass2.log:make[2]: [stamp-parallel] Error 1 (ignored)
+5.14_Ncurses.log:make[1]: [/tools/lib/libncurses.so.5.9] Error 1 (ignored)
+5.14_Ncurses.log:make[1]: [/tools/lib/libpanel.so.5.9] Error 1 (ignored)
+5.14_Ncurses.log:make[1]: [/tools/lib/libmenu.so.5.9] Error 1 (ignored)
+5.14_Ncurses.log:make[1]: [/tools/lib/libform.so.5.9] Error 1 (ignored)
+6.24_E2fsprogs.log:make[1]: [libext2fs.dvi] Error 1 (ignored)
+6.45_Groff.log:make[2]: [install_data] Error 1 (ignored)
+
+
 
 ================================================================================
 MISC NOTES

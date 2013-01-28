@@ -48,7 +48,7 @@ function Init_BUILD_LOGS {
 
 
 function log_start_time {
-   TIME_START=`$TIMESTAMP`
+   TIME_START=`$TIMESTAMP`  #Also used in Calculate_ABUS_and_DIFF
    echo -n $PACKAGE_NUMB $SBUS $TIME_START" " >> $BUILD_TIMES
    Display_Estimated_Times_Package      | tee -a $BUILD_LOG
 }
@@ -56,7 +56,7 @@ function log_start_time {
 
 
 function log_end_time {
-   TIME_END=`$TIMESTAMP`
+   TIME_END=`$TIMESTAMP`    #Also used in Calculate_ABUS_and_DIFF
    Calculate_ABUS_and_DIFF
    echo $TIME_END $ABUS $DIFF >> $BUILD_TIMES
 }
@@ -393,7 +393,7 @@ function Display_Estimated_Times_Package {
 
 function Calculate_ABUS_and_DIFF {
    # ABUS = Actual Build UnitS to build this package
-   # DIFF = SBUS - ABUS
+   # DIFF = ABUS - SBUS
    # called by log_end_time, saved to BUILD_TIMES
 
    # TIME_{START,END} are set in functions log_{start,end}_time
@@ -410,7 +410,7 @@ function Calculate_ABUS_and_DIFF {
    ABUS=$[ $ABUSx10 / 10 ].$[ $ABUSx10 % 10 ]
 
    SBUSx10=`echo $SBUS | sed 's/\.//'`
-   DIFFx10=$[ 10#$SBUSx10 - 10#$ABUSx10 ]
+   DIFFx10=$[ 10#$ABUSx10 - 10#$SBUSx10 ]
    if [[ $DIFFx10 -ge 0 ]]; then   NEG="";        #To avoid "DIFF=-0.-1",
    else NEG="-"; DIFFx10=$(( -1*DIFFx10 )); fi    #if DIFF<0, make DIFF pos &
    DIFF=$NEG$[ $DIFFx10 / 10 ].$[ $DIFFx10 % 10 ] #use $NEG for sign

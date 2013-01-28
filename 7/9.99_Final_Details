@@ -10,7 +10,7 @@ source D-LFS.functions
 
 header
 
-{ #braces group command output
+{ #braces group commands for easier save of output to the log
 
 echo -n "Section 7.07:  cp "
 cp -v  misc/inittab  /etc/              2>&1
@@ -35,13 +35,10 @@ echo -n "        9.01:  "
 echo $LFS_VERSION > /etc/lfs-release
 echo  "Created /etc/lfs-release"
 
-echo -n " (from BLFS):  "
-echo "[H[2J"                           > /etc/issue
-echo "\\l LFS v$LFS_VERSION Kernal v\\r"  >> /etc/issue
-echo                                      >> /etc/issue
-echo "Created /etc/issue"
+echo -n " (from BLFS):  cp "
+cp -v  misc/issue    /etc/issue         2>&1
 
-} | tee -a $BUILD_LOG  #close group, save output
+} | tee -a $BUILD_LOG    #close group, save output
 
 
 footer
