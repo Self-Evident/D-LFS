@@ -178,3 +178,8 @@ Display_Estimated_Times_Package: improved a bit -
 
 2013-01-25 Added Progress_Bar() 
 
+2013-02-01 
+Calculate_SBUT: Adjusted grep|sed|cut to grep|cut|sed. Seems better.
+                Added a $var for a file name.
+
+

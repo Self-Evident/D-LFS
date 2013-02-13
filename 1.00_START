@@ -49,9 +49,9 @@ fi
 cat << "EOF"
 
 Option 1, manual/Single Action build selected.  To continue:
-  Run each* script, in order, in each of the directories:  4, 5, 6, 7
+  Run each script, in order*, in each of the directories:  4, 5, 6, 7
+    (* Except for 5/5.98_Less, run it before 5.33_Stripping)
   Run them from this (the scripts) directory.
-    (*Except for 5/5.98_Less, run it before 5.33_Stripping)
 
   IE: To continue, run:  4/2.00_Confirm
 

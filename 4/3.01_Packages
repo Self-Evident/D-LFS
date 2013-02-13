@@ -11,7 +11,6 @@ source D-LFS.functions
 header 0 < 0/ENTER  #0 suppresses log_start_time in header
                     #"< 0/ENTER" skips "Press Enter to continue:"
 
-echo "pwd = $PWD"                      |tee -a $BUILD_LOG
 echo
 echo "This script assumes all package source files have been downloaded,"
 echo "and are located in ../sources  (relative to these scripts)."

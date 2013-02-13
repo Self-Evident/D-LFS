@@ -12,10 +12,10 @@
 # D-LFS.functions  &  variables
 #
 # Uses bash only functionality. bc, perl, or other scripting tools may not be
-# available during portions of build.
+# available during portions of the build.
 #
 
-D_LFS_version=5.5.RC2
+D_LFS_version=5.5
 
 source ./D-LFS.config     #Get config values.
 
@@ -308,31 +308,32 @@ function Calculate_SBU {
 
 
 function Calculate_SBUT {
-   # Sum of SBUS from all packages = SBUT (SBU's Total)
+   # SBUT = Sum of SBUS from all packages (SBU's Total)
    # Called at end of Init_BUILD_LOGS, on first run of D-LFS.functions only.
    # Note: while $BUILD_LOGS has been setup at this point, $BUILD_LOG has not.
 
    #only want raw matched lines, so make sure color etc. is off. 
-   unalias grep     2>/dev/null #discard error if grep not aliased
+   unalias grep   2>/dev/null   #discard error if grep not aliased
 
-   # Get SBUS="nn.n" lines from scripts (the lines may also have a #comment)
-   #   The B/ folder, used for "Beyond LFS" scripts, is not counted.
+   SBUTx10_list="$BUILD_LOGS/SBUTx10.list" #Temp file for SBUTx10 values.
+
+   # Get SBUS="nn.n" lines from scripts. (the lines may also have a #comment)
+   # Files in the B/ folder, used for "Beyond LFS" scripts, are not counted.
+   # Remove any #comments, or anything else, after the SBUS="nn.n".
+   # Remove SBUS=, leaving only "nn.n".
    # Remove quotes & decimal point (Makes an integer and multiplies by 10)
-   # Remove any #comment
-   # Remove SBUS=
    # Save to a new file, writing one value per line of form: nnn  (or just nn)
-   grep -h -e "^SBUS=" {4,5,6,7}/*    | \
-   sed 's/"//g'                       | \
-   sed 's/\.//'                       | \
-   cut -d"#" -f1                      | \
-   cut -d"=" -f2 > $BUILD_LOGS/SBUTx10.list
+   grep -h -e "^SBUS=" {4,5,6,7}/*   | \
+   cut -d" " -f1                     | \
+   cut -d"=" -f2                     | \
+   sed 's/["\.]//g'  > $SBUTx10_list
 
    # Now add them all up
    SBUTx10=0   # Initialize
    while read LINE ; do
       SBUTx10=$[ $SBUTx10 + 10#$LINE ] 
-   done < $BUILD_LOGS/SBUTx10.list
-   rm  $BUILD_LOGS/SBUTx10.list  #done with this file
+   done < $SBUTx10_list
+   rm     $SBUTx10_list  #done with this file
 
    SBUT=$[ $SBUTx10 / 10 ].$[ $SBUTx10 % 10 ]
 
